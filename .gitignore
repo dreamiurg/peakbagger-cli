@@ -93,3 +93,4 @@ peaks_export.csv
 tmp/
 temp/
 *.tmp
+.claude

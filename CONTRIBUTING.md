@@ -1,6 +1,6 @@
 # Contributing to peakbagger-cli
 
-Thank you for your interest in contributing to peakbagger-cli! This document provides guidelines and instructions for contributing to the project.
+Thank you for your interest in contributing to peakbagger-cli! This document provides guidelines and instructions for contributing.
 
 ## Table of Contents
 
@@ -50,7 +50,7 @@ git remote add upstream https://github.com/ORIGINAL-OWNER/peakbagger-cli.git
 
 ### Using uv (Recommended)
 
-`uv` is a fast Python package manager that makes development easier:
+`uv` is a fast Python package manager that simplifies development:
 
 ```bash
 # Install uv if you haven't already
@@ -163,7 +163,7 @@ uv run peakbagger info 2296 --format json
 
 ### Writing Tests
 
-Tests should be placed in the `tests/` directory:
+Place tests in the `tests/` directory:
 
 ```python
 # tests/test_scraper.py
@@ -177,7 +177,7 @@ def test_parse_peak_detail():
     scraper = PeakBaggerScraper()
     peak = scraper.parse_peak_detail(html, "2296")
 
-    assert peak is not None
+    assert peak
     assert peak.name == "Mount Rainier"
     assert peak.elevation_ft == 14406
 ```
@@ -204,7 +204,7 @@ This project uses automated tools to maintain code quality and consistency.
 
 ### Pre-commit Hooks
 
-We use pre-commit hooks to automatically check code before commits:
+Pre-commit hooks automatically check code before commits:
 
 ```bash
 # Install hooks (one time setup)
@@ -218,7 +218,7 @@ uv run pre-commit run --all-files
 uv run pre-commit run ruff --all-files
 ```
 
-**What the hooks check:**
+**Hooks verify:**
 - **Ruff**: Formatting and linting (replaces Black, isort, flake8)
 - **Trailing whitespace**: Removes trailing spaces
 - **End of file**: Ensures files end with newline
@@ -230,7 +230,7 @@ uv run pre-commit run ruff --all-files
 
 ### Manual Formatting and Linting
 
-You can also run Ruff manually:
+Run Ruff manually when needed:
 
 ```bash
 # Format code
@@ -265,7 +265,7 @@ def parse_elevation(html: str) -> Optional[int]:
         html: HTML content from peak detail page
 
     Returns:
-        Elevation in feet, or None if not found
+        Elevation in feet, or None if parsing fails
     """
     soup = BeautifulSoup(html, 'lxml')
     h2 = soup.find('h2')
@@ -313,23 +313,23 @@ git push origin feature/your-feature-name
 ```
 
 3. **Create a Pull Request** on GitHub:
-   - Go to your fork on GitHub
+   - Open your fork on GitHub
    - Click "New Pull Request"
    - Select your feature branch
-   - Fill out the PR template
+   - Complete the PR template
 
 4. **PR Requirements**:
    - Clear description of changes
    - All tests pass
-   - Code is formatted and linted with Ruff
+   - Ruff formats and lints code
    - Pre-commit hooks pass
-   - Documentation is updated
-   - Follows project code style
+   - Documentation updates included
+   - Code follows project style
 
 5. **Review Process**:
-   - Maintainers will review your PR
-   - Address any feedback or requested changes
-   - Once approved, your PR will be merged!
+   - Maintainers review your PR
+   - Address feedback or requested changes
+   - Your PR merges once approved
 
 ### PR Template
 
@@ -363,10 +363,10 @@ For CLI output changes, include before/after screenshots
 
 When reporting bugs, please include:
 
-1. **Description**: Clear description of the bug
-2. **Steps to Reproduce**: Exact steps to reproduce the issue
-3. **Expected Behavior**: What you expected to happen
-4. **Actual Behavior**: What actually happened
+1. **Description**: Clear bug description
+2. **Steps to Reproduce**: Exact reproduction steps
+3. **Expected Behavior**: Expected outcome
+4. **Actual Behavior**: Actual outcome
 5. **Environment**:
    - OS (macOS, Linux, Windows)
    - Python version
@@ -399,12 +399,12 @@ Error: Failed to fetch https://www.peakbagger.com/search.aspx: 403 Forbidden
 
 ### Feature Requests
 
-When requesting features, please include:
+Feature requests require:
 
-1. **Use Case**: Why is this feature needed?
-2. **Proposed Solution**: How should it work?
-3. **Alternatives**: Other solutions you've considered
-4. **Additional Context**: Any other relevant information
+1. **Use Case**: Describe the need for this feature
+2. **Proposed Solution**: Explain how it should work
+3. **Alternatives**: Describe other solutions considered
+4. **Additional Context**: Provide relevant information
 
 ## Development Tips
 
@@ -435,7 +435,7 @@ uv run peakbagger search "test" --rate-limit 5.0
 
 ### Working with HTML Parsing
 
-When updating scraper logic:
+When updating scraper logic, follow these steps:
 
 1. Save sample HTML for testing:
 ```python
@@ -456,14 +456,14 @@ with open('test_peak.html', 'w') as f:
 
 ## Recognition
 
-Contributors will be recognized in:
+Contributors receive recognition in:
 - CHANGELOG.md for significant contributions
 - GitHub contributors page
-- Special thanks in release notes
+- Release notes with special thanks
 
 ## License
 
-By contributing to peakbagger-cli, you agree that your contributions will be licensed under the MIT License.
+Contributing to peakbagger-cli means your contributions receive MIT License terms.
 
 ---
 

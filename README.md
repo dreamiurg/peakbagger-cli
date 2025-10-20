@@ -2,7 +2,7 @@
 
 A modern command-line interface for searching and retrieving mountain peak data from [PeakBagger.com](https://www.peakbagger.com).
 
-Built with Python 3.12+, Click, and Rich for a beautiful terminal experience.
+Python 3.12+, Click, and Rich deliver a beautiful terminal experience.
 
 ## Features
 
@@ -16,6 +16,21 @@ Built with Python 3.12+, Click, and Rich for a beautiful terminal experience.
 
 ## Installation
 
+### Using uvx (Recommended - No Installation Required)
+
+Run directly without installation using `uvx`:
+
+```bash
+# Run commands directly
+uvx peakbagger-cli search "Mount Rainier"
+uvx peakbagger-cli info 2296
+
+# With options
+uvx peakbagger-cli search "Denali" --format json
+```
+
+This fetches and runs the latest version automatically. No installation or virtual environment needed.
+
 ### From PyPI (once published)
 
 ```bash
@@ -24,7 +39,7 @@ pip install peakbagger-cli
 
 ### From Source
 
-Using `uv` (recommended):
+Using `uv`:
 
 ```bash
 git clone https://github.com/yourusername/peakbagger-cli.git
@@ -99,7 +114,7 @@ peakbagger search "Rainier" --rate-limit 3.0
 │ 163756  │ Mount Rainier - Columbia Crest       │
 └─────────┴──────────────────────────────────────┘
 
-Found 3 peak(s). Use 'peakbagger info <PID>' for details.
+Found 3 peaks. Use 'peakbagger info <PID>' for details.
 ```
 
 ### Info Command
@@ -212,7 +227,7 @@ for peak in peaks:
 
 ### Rate Limiting
 
-By default, the CLI waits 2 seconds between requests to be respectful to PeakBagger.com's servers. You can adjust this:
+The CLI waits 2 seconds between requests by default to respect PeakBagger.com's servers. Adjust this as needed:
 
 ```bash
 # Wait 3 seconds between requests
@@ -284,22 +299,22 @@ uv run peakbagger --version
 1. **Search**: Queries PeakBagger.com's search endpoint with your query
 2. **Parse**: Extracts peak information from HTML using BeautifulSoup
 3. **Format**: Displays results as Rich tables (text) or JSON
-4. **Rate Limit**: Automatically waits between requests to be respectful
+4. **Rate Limit**: Waits between requests to respect the server
 
 ### Data Sources
 
-All data is scraped from [PeakBagger.com](https://www.peakbagger.com), which aggregates peak information from various sources including USGS, LIDAR data, and user contributions.
+This tool scrapes all data from [PeakBagger.com](https://www.peakbagger.com), which aggregates peak information from USGS, LIDAR data, and user contributions.
 
 ## Limitations
 
-- **No official API**: This tool scrapes HTML, so changes to the website may break functionality
-- **Rate limiting**: Intentionally slow to respect the website (2s default between requests)
+- **No official API**: This tool scrapes HTML; website changes may break functionality
+- **Rate limiting**: Runs slowly to respect the website (2s default between requests)
 - **Data accuracy**: Depends on PeakBagger.com's data quality
-- **No authentication**: Currently only accesses public peak data
+- **No authentication**: Accesses public peak data only
 
 ## Ethical Use
 
-This tool is designed for **personal use and educational purposes** only. Please:
+Use this tool for **personal and educational purposes** only. Please:
 
 - ✅ Respect the default rate limits (or increase them)
 - ✅ Use for personal research and trip planning
@@ -308,16 +323,16 @@ This tool is designed for **personal use and educational purposes** only. Please
 - ❌ Don't use for commercial purposes without permission
 - ❌ Don't bypass rate limits to hammer the server
 
-PeakBagger.com provides this data as a free service to the climbing community. Please use this tool responsibly.
+PeakBagger.com provides this data as a free service to the climbing community. Use this tool responsibly.
 
 ## Troubleshooting
 
 ### Cloudflare blocks
 
-If you get Cloudflare errors, try:
-- Increasing the rate limit: `--rate-limit 3.0`
-- Waiting a few minutes before retrying
-- Checking if PeakBagger.com is accessible in your browser
+Cloudflare errors require these actions:
+- Increase the rate limit: `--rate-limit 3.0`
+- Wait a few minutes before retrying
+- Check PeakBagger.com access in your browser
 
 ### No results found
 
@@ -327,7 +342,7 @@ If you get Cloudflare errors, try:
 
 ### Installation issues
 
-Make sure you have Python 3.12+ installed:
+Verify Python 3.12+ installation:
 
 ```bash
 python3 --version  # Should be 3.12 or higher
@@ -335,7 +350,7 @@ python3 --version  # Should be 3.12 or higher
 
 ## Contributing
 
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, code style guidelines, and how to submit changes.
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, code style guidelines, and submission instructions.
 
 ## Support
 
