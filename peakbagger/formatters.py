@@ -69,14 +69,32 @@ class PeakFormatter:
             self.console.print("[yellow]No results found.[/yellow]")
             return
 
-        table: Table = Table(title="Search Results", show_header=True, header_style="bold cyan", expand=True)
-        table.add_column("Peak ID", style="dim")
+        table: Table = Table(title="Search Results", show_header=True, header_style="bold cyan")
+        table.add_column("Peak ID", style="dim", no_wrap=True)
         table.add_column("Name", style="green")
+        table.add_column("Location", style="cyan", no_wrap=True)
+        table.add_column("Range", style="magenta")
+        table.add_column("Elevation", style="yellow", no_wrap=True)
         table.add_column("URL", style="blue", overflow="fold")
 
         for result in results:
+            # Format location
+            location: str = result.location if result.location else "-"
+
+            # Format range
+            range_name: str = result.range if result.range else "-"
+
+            # Format elevation (ft/m)
+            elevation: str = "-"
+            if result.elevation_ft:
+                elevation = f"{result.elevation_ft:,} ft"
+                if result.elevation_m:
+                    elevation += f" / {result.elevation_m:,} m"
+
+            # Format URL
             url: str = f"https://www.peakbagger.com/{result.url}"
-            table.add_row(result.pid, result.name, url)
+
+            table.add_row(result.pid, result.name, location, range_name, elevation, url)
 
         self.console.print(table)
         self.console.print(

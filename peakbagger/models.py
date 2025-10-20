@@ -61,11 +61,21 @@ class SearchResult:
     pid: str  # Peak ID
     name: str  # Peak name
     url: str  # Relative URL to peak page
+    location: str | None = None  # Location (e.g., "USA-WA")
+    range: str | None = None  # Mountain range (e.g., "Cascade Range")
+    elevation_ft: int | None = None  # Elevation in feet
+    elevation_m: int | None = None  # Elevation in meters
 
-    def to_dict(self) -> dict[str, str]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert search result to dictionary."""
         return {
             "pid": self.pid,
             "name": self.name,
             "url": f"https://www.peakbagger.com/{self.url}",
+            "location": self.location,
+            "range": self.range,
+            "elevation": {
+                "feet": self.elevation_ft,
+                "meters": self.elevation_m,
+            },
         }

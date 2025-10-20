@@ -28,18 +28,66 @@ class PeakBaggerScraper:
         soup: BeautifulSoup = BeautifulSoup(html, "lxml")
         results: list[SearchResult] = []
 
-        # Find all links to peak pages
-        peak_links: list[Tag] = soup.find_all("a", href=lambda x: x and "peak.aspx?pid=" in x)
+        # Find the search results table (has "Peak Search Results" header before it)
+        # Format: <h2>Peak Search Results</h2><table class="gray">...
+        search_header: Tag | None = soup.find("h2", string="Peak Search Results")  # type: ignore[assignment]
+        if not search_header:
+            return results
 
-        for link in peak_links:
+        # Find the next table after the header
+        table: Tag | None = search_header.find_next("table", class_="gray")  # type: ignore[assignment]
+        if not table:
+            return results
+
+        # Skip header row, process data rows
+        rows: list[Tag] = table.find_all("tr")[1:]  # type: ignore[assignment]
+
+        for row in rows:
+            cells: list[Tag] = row.find_all("td")  # type: ignore[assignment]
+            if len(cells) < 5:  # Need at least: Type, Name, Location, Range, Elevation
+                continue
+
+            # Extract peak link (2nd column)
+            link: Tag | None = cells[1].find("a", href=lambda x: x and "peak.aspx?pid=" in x)  # type: ignore[assignment]
+            if not link:
+                continue
+
             href: str = link["href"]  # type: ignore[assignment]
             name: str = link.get_text(strip=True)
 
             # Extract peak ID from URL
             match = re.search(r"pid=(-?\d+)", href)
-            if match:
-                pid = match.group(1)
-                results.append(SearchResult(pid=pid, name=name, url=href))
+            if not match:
+                continue
+
+            pid: str = match.group(1)
+
+            # Extract location (3rd column)
+            location: str = cells[2].get_text(strip=True)
+
+            # Extract range (4th column)
+            range_name: str = cells[3].get_text(strip=True)
+
+            # Extract elevation in feet (5th column)
+            elevation_ft_str: str = cells[4].get_text(strip=True)
+            elevation_ft: int | None = None
+            if elevation_ft_str and elevation_ft_str.isdigit():
+                elevation_ft = int(elevation_ft_str)
+
+            # Convert to meters (approximate: 1 ft = 0.3048 m)
+            elevation_m: int | None = None
+            if elevation_ft:
+                elevation_m = int(elevation_ft * 0.3048)
+
+            results.append(SearchResult(
+                pid=pid,
+                name=name,
+                url=href,
+                location=location if location else None,
+                range=range_name if range_name else None,
+                elevation_ft=elevation_ft,
+                elevation_m=elevation_m,
+            ))
 
         return results
 

@@ -105,19 +105,24 @@ peakbagger search "Rainier" --rate-limit 3.0
 **Sample Output (text):**
 
 ```
-                  Search Results
-┏━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ Peak ID ┃ Name                             ┃ URL                             ┃
-┡━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
-│ 2296    │ Mount Rainier                    │ https://www.peakbagger.com/peak │
-│         │                                  │ .aspx?pid=2296                  │
-│ 24166   │ Mount Rainier - Southeast Crater │ https://www.peakbagger.com/peak │
-│         │ Rim                              │ .aspx?pid=24166                 │
-│ 163756  │ Mount Rainier - Columbia Crest   │ https://www.peakbagger.com/peak │
-│         │                                  │ .aspx?pid=163756                │
-└─────────┴──────────────────────────────────┴─────────────────────────────────┘
+                                 Search Results
+┏━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┓
+┃ Peak ID ┃ Name      ┃ Location ┃ Range     ┃ Elevation           ┃ URL       ┃
+┡━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━┩
+│ 2296    │ Mount     │ USA-WA   │ Cascade   │ 14,406 ft / 4,390 m │ https://w │
+│         │ Rainier   │          │ Range     │                     │ ww.peakba │
+│         │           │          │           │                     │ gger.com/ │
+│         │           │          │           │                     │ peak.aspx │
+│         │           │          │           │                     │ ?pid=2296 │
+│ 24166   │ Mount     │ USA-WA   │ Cascade   │ 14,200 ft / 4,328 m │ https://w │
+│         │ Rainier - │          │ Range     │                     │ ww.peakba │
+│         │ Southeast │          │           │                     │ gger.com/ │
+│         │ Crater    │          │           │                     │ peak.aspx │
+│         │ Rim       │          │           │                     │ ?pid=2416 │
+│         │           │          │           │                     │ 6         │
+└─────────┴───────────┴──────────┴───────────┴─────────────────────┴───────────┘
 
-Found 3 peaks. Use 'peakbagger info <PID>' for details.
+Found 2 peaks. Use 'peakbagger info <PID>' for details.
 ```
 
 ### Info Command
