@@ -223,6 +223,8 @@ for peak in peaks:
     print(f"{peak['name']}: {peak['pid']}")
 ```
 
+**More examples:** See the [`examples/`](examples/) directory for complete scripts including batch processing, CSV export, and filtering by elevation.
+
 ## Configuration
 
 ### Rate Limiting
