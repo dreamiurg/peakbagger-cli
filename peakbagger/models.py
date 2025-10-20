@@ -46,6 +46,7 @@ class Peak:
                 "miles": self.isolation_mi,
                 "kilometers": self.isolation_km,
             },
+            "url": f"https://www.peakbagger.com/peak.aspx?pid={self.pid}",
         }
 
 
