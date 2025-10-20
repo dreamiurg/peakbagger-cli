@@ -447,6 +447,167 @@ with open('test_peak.html', 'w') as f:
 2. Test parsing locally without network requests
 3. Update tests with new HTML structure
 
+## Release Process
+
+### Overview
+
+This project uses [python-semantic-release](https://python-semantic-release.readthedocs.io/) to automate version management and releases. The tool analyzes commit messages to determine version bumps and generates changelogs automatically.
+
+### Commit Message Format
+
+Follow the [Conventional Commits](https://www.conventionalcommits.org/) specification:
+
+```
+<type>: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+**Types that trigger releases:**
+- `fix:` - Patches a bug (PATCH version bump: 0.1.0 → 0.1.1)
+- `feat:` - Adds a new feature (MINOR version bump: 0.1.0 → 0.2.0)
+- `perf:` - Performance improvement (PATCH version bump)
+- `BREAKING CHANGE:` in footer - Breaking change (MAJOR version bump: 0.1.0 → 1.0.0)
+
+**Types that don't trigger releases:**
+- `docs:` - Documentation changes
+- `style:` - Code style changes (formatting, missing semicolons, etc.)
+- `refactor:` - Code refactoring without feature changes
+- `test:` - Adding or updating tests
+- `chore:` - Maintenance tasks, dependency updates
+- `ci:` - CI/CD configuration changes
+- `build:` - Build system changes
+
+**Examples:**
+
+```bash
+# Patch release (0.1.0 → 0.1.1)
+git commit -m "fix: correct elevation parsing for peaks without prominence data"
+
+# Minor release (0.1.0 → 0.2.0)
+git commit -m "feat: add support for searching peaks by elevation range"
+
+# Major release (0.1.0 → 1.0.0)
+git commit -m "feat: redesign CLI interface
+
+BREAKING CHANGE: The --full flag has been replaced with --detailed"
+
+# No release
+git commit -m "docs: update installation instructions"
+git commit -m "chore: update dependencies"
+```
+
+### Creating a Release (Maintainers Only)
+
+#### Step 1: Ensure Commits Follow Convention
+
+Review recent commits to ensure they follow the conventional commit format:
+
+```bash
+git log --oneline
+```
+
+If needed, amend or reword recent commits before releasing.
+
+#### Step 2: Run Semantic Release
+
+```bash
+# Dry run to preview changes (recommended)
+uv run semantic-release --noop version
+
+# Actually create the release
+uv run semantic-release version
+```
+
+This command will:
+1. Analyze commit messages since the last release
+2. Determine the next version number
+3. Update `pyproject.toml` and `peakbagger/__init__.py`
+4. Generate/update `CHANGELOG.md`
+5. Create a git commit with these changes
+6. Create a git tag (e.g., `v0.2.0`)
+7. Push the commit and tag to GitHub
+
+#### Step 3: Build and Publish to PyPI
+
+```bash
+# Build the package
+uv build
+
+# Publish to TestPyPI (optional - for testing)
+uv tool run twine upload --repository testpypi dist/*
+
+# Publish to PyPI
+uv tool run twine upload dist/*
+```
+
+**Note:** You need PyPI credentials configured (see main README for setup).
+
+#### Step 4: Create GitHub Release
+
+After publishing to PyPI, create a GitHub release:
+
+```bash
+gh release create v0.2.0 --notes-from-tag
+```
+
+Or manually create the release on GitHub using the changelog content.
+
+### Version Bumping Examples
+
+Given the current version is `0.1.0`:
+
+| Commit Type | Example | New Version |
+|-------------|---------|-------------|
+| `fix:` | `fix: handle missing county data` | `0.1.1` |
+| `feat:` | `feat: add JSON export for search results` | `0.2.0` |
+| `feat:` with breaking change | `feat: new CLI structure`<br>`BREAKING CHANGE: ...` | `1.0.0` |
+| Multiple `fix:` commits | 3x `fix:` commits | `0.1.1` (single bump) |
+| `fix:` + `feat:` | Both types present | `0.2.0` (highest bump wins) |
+
+### Checking What Would Be Released
+
+Before creating a release, preview what would happen:
+
+```bash
+# Show what version would be created
+uv run semantic-release version --print
+
+# Show full details without making changes
+uv run semantic-release --noop version
+```
+
+### Manual Version Override
+
+If you need to manually set a specific version:
+
+```bash
+# Bump to a specific version
+uv run semantic-release version --patch  # Force patch bump
+uv run semantic-release version --minor  # Force minor bump
+uv run semantic-release version --major  # Force major bump
+
+# Or set an exact version
+uv run semantic-release version --bump-version 0.3.0
+```
+
+### Troubleshooting
+
+**"No release will be made"**
+- No commits since last release follow conventional format
+- Add a conventional commit or use `--patch/--minor/--major` flag
+
+**"Token value is missing"**
+- This warning is safe to ignore for manual releases
+- Only needed for GitHub Actions automation
+
+**Wrong version calculated**
+- Review commits: `git log v0.1.0..HEAD --oneline`
+- Check commit types match conventional format
+- Use `--noop` flag to preview before committing
+
 ## Getting Help
 
 - **Questions**: Open a GitHub Discussion
