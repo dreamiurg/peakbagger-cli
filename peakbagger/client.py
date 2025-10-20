@@ -1,6 +1,7 @@
 """HTTP client for PeakBagger.com with rate limiting and Cloudflare bypass."""
 
 import time
+from typing import Any, cast
 
 import cloudscraper
 
@@ -10,20 +11,20 @@ from peakbagger import __version__
 class PeakBaggerClient:
     """HTTP client for accessing PeakBagger.com with respectful rate limiting."""
 
-    BASE_URL = "https://www.peakbagger.com"
+    BASE_URL: str = "https://www.peakbagger.com"
 
-    def __init__(self, rate_limit_seconds: float = 2.0):
+    def __init__(self, rate_limit_seconds: float = 2.0) -> None:
         """
         Initialize the client.
 
         Args:
             rate_limit_seconds: Minimum seconds between requests (default: 2.0)
         """
-        self.rate_limit = rate_limit_seconds
+        self.rate_limit: float = rate_limit_seconds
         self._last_request_time: float | None = None
 
         # Create cloudscraper session to bypass Cloudflare
-        self.session = cloudscraper.create_scraper(
+        self.session: Any = cloudscraper.create_scraper(
             browser={"browser": "chrome", "platform": "windows", "mobile": False}
         )
 
@@ -41,7 +42,7 @@ class PeakBaggerClient:
             if elapsed < self.rate_limit:
                 time.sleep(self.rate_limit - elapsed)
 
-    def get(self, url: str, params: dict | None = None) -> str:
+    def get(self, url: str, params: dict[str, str] | None = None) -> str:
         """
         Make a GET request with rate limiting.
 
@@ -66,7 +67,7 @@ class PeakBaggerClient:
             response = self.session.get(url, params=params)
             response.raise_for_status()
             self._last_request_time = time.time()
-            return response.text
+            return cast("str", response.text)
         except Exception as e:
             raise Exception(f"Failed to fetch {url}: {e!s}") from e
 

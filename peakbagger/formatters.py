@@ -1,6 +1,7 @@
 """Output formatters for peak data (Rich tables and JSON)."""
 
 import json
+from typing import Any
 
 from rich.console import Console
 from rich.table import Table
@@ -11,8 +12,8 @@ from peakbagger.models import Peak, SearchResult
 class PeakFormatter:
     """Formatter for peak data output."""
 
-    def __init__(self):
-        self.console = Console()
+    def __init__(self) -> None:
+        self.console: Console = Console()
 
     def format_search_results(
         self, results: list[SearchResult], output_format: str = "text"
@@ -58,7 +59,7 @@ class PeakFormatter:
                 if peak != peaks[-1]:  # Add separator between peaks
                     self.console.print("\n" + "─" * 80 + "\n")
 
-    def _print_json(self, data: dict | list) -> None:
+    def _print_json(self, data: dict[str, Any] | list[dict[str, Any]]) -> None:
         """Print data as formatted JSON."""
         print(json.dumps(data, indent=2))
 
@@ -68,7 +69,7 @@ class PeakFormatter:
             self.console.print("[yellow]No results found.[/yellow]")
             return
 
-        table = Table(title="Search Results", show_header=True, header_style="bold cyan")
+        table: Table = Table(title="Search Results", show_header=True, header_style="bold cyan")
         table.add_column("Peak ID", style="dim")
         table.add_column("Name", style="green")
 
@@ -83,14 +84,14 @@ class PeakFormatter:
     def _print_peak_detail(self, peak: Peak) -> None:
         """Print detailed peak information as formatted text."""
         # Title
-        title = f"{peak.name}"
+        title: str = f"{peak.name}"
         if peak.state:
             title += f", {peak.state}"
         self.console.print(f"\n[bold cyan]{title}[/bold cyan]")
         self.console.print(f"[dim]Peak ID: {peak.pid}[/dim]\n")
 
         # Create details table
-        table = Table(show_header=False, box=None, padding=(0, 2))
+        table: Table = Table(show_header=False, box=None, padding=(0, 2))
         table.add_column("Field", style="yellow", width=20)
         table.add_column("Value", style="white")
 

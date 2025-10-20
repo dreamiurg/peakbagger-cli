@@ -1,5 +1,7 @@
 """CLI interface for peakbagger."""
 
+from typing import TYPE_CHECKING
+
 import click
 
 from peakbagger import __version__
@@ -7,10 +9,13 @@ from peakbagger.client import PeakBaggerClient
 from peakbagger.formatters import PeakFormatter
 from peakbagger.scraper import PeakBaggerScraper
 
+if TYPE_CHECKING:
+    from peakbagger.models import Peak
+
 
 @click.group()
 @click.version_option(version=__version__)
-def main():
+def main() -> None:
     """PeakBagger CLI - Search and retrieve mountain peak data from PeakBagger.com"""
     pass
 
@@ -35,7 +40,7 @@ def main():
     default=2.0,
     help="Seconds between requests (default: 2.0)",
 )
-def search(query: str, output_format: str, full: bool, rate_limit: float):
+def search(query: str, output_format: str, full: bool, rate_limit: float) -> None:
     """
     Search for peaks by name.
 
@@ -49,9 +54,9 @@ def search(query: str, output_format: str, full: bool, rate_limit: float):
 
       peakbagger search "Whitney" --full
     """
-    client = PeakBaggerClient(rate_limit_seconds=rate_limit)
-    scraper = PeakBaggerScraper()
-    formatter = PeakFormatter()
+    client: PeakBaggerClient = PeakBaggerClient(rate_limit_seconds=rate_limit)
+    scraper: PeakBaggerScraper = PeakBaggerScraper()
+    formatter: PeakFormatter = PeakFormatter()
 
     try:
         # Fetch search results
@@ -68,7 +73,7 @@ def search(query: str, output_format: str, full: bool, rate_limit: float):
         # If --full flag, fetch details for each peak
         if full:
             click.echo(f"Fetching details for {len(results)} peak(s)...\n")
-            peaks = []
+            peaks: list[Peak] = []
             for result in results:
                 detail_html = client.get(f"/{result.url}")
                 peak = scraper.parse_peak_detail(detail_html, result.pid)
@@ -102,7 +107,7 @@ def search(query: str, output_format: str, full: bool, rate_limit: float):
     default=2.0,
     help="Seconds between requests (default: 2.0)",
 )
-def info(peak_id: str, output_format: str, rate_limit: float):
+def info(peak_id: str, output_format: str, rate_limit: float) -> None:
     """
     Get detailed information about a specific peak.
 
@@ -114,9 +119,9 @@ def info(peak_id: str, output_format: str, rate_limit: float):
 
       peakbagger info 2296 --format json
     """
-    client = PeakBaggerClient(rate_limit_seconds=rate_limit)
-    scraper = PeakBaggerScraper()
-    formatter = PeakFormatter()
+    client: PeakBaggerClient = PeakBaggerClient(rate_limit_seconds=rate_limit)
+    scraper: PeakBaggerScraper = PeakBaggerScraper()
+    formatter: PeakFormatter = PeakFormatter()
 
     try:
         # Fetch peak detail page

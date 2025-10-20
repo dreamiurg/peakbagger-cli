@@ -119,5 +119,7 @@ patch_tags = ["fix", "perf"]
 
 [dependency-groups]
 dev = [
+    "mypy>=1.18.2",
     "python-semantic-release>=10.4.1",
+    "types-beautifulsoup4>=4.12.0.20250516",
 ]

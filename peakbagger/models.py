@@ -1,6 +1,7 @@
 """Data models for PeakBagger entities."""
 
 from dataclasses import dataclass
+from typing import Any
 
 
 @dataclass
@@ -21,7 +22,7 @@ class Peak:
     county: str | None = None  # County/region
     country: str | None = None  # Country
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, Any]:
         """Convert peak to dictionary for JSON serialization."""
         return {
             "pid": self.pid,
@@ -56,7 +57,7 @@ class SearchResult:
     name: str  # Peak name
     url: str  # Relative URL to peak page
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, str]:
         """Convert search result to dictionary."""
         return {
             "pid": self.pid,
