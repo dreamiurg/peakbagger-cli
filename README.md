@@ -169,10 +169,15 @@ Routes (3)
 
 Peak Lists (39 total)
   • Mountaineers 6-Peak Pin - New Version (Rank #1)
+    https://www.peakbagger.com/list.aspx?lid=5030
   • Mountaineers 5-Peak Pin (Rank #1)
+    https://www.peakbagger.com/list.aspx?lid=5031
   • Contiguous 48 U.S. State High Points (Rank #3)
+    https://www.peakbagger.com/list.aspx?lid=12005
   • U.S. State High Points (Rank #4)
+    https://www.peakbagger.com/list.aspx?lid=12003
   • Washington Bulger List (Rank #1)
+    https://www.peakbagger.com/list.aspx?lid=5003
   ... and 34 more
 ```
 
@@ -205,11 +210,13 @@ Peak Lists (39 total)
   "peak_lists": [
     {
       "list_name": "Mountaineers 6-Peak Pin - New Version",
-      "rank": 1
+      "rank": 1,
+      "url": "https://www.peakbagger.com/list.aspx?lid=5030"
     },
     {
       "list_name": "U.S. State High Points",
-      "rank": 4
+      "rank": 4,
+      "url": "https://www.peakbagger.com/list.aspx?lid=12003"
     }
   ],
   "routes": [

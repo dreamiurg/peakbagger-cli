@@ -160,7 +160,10 @@ class PeakFormatter:
             for peak_list in display_lists:
                 list_name = peak_list["list_name"]
                 rank = peak_list["rank"]
+                url = peak_list.get("url", "")
                 self.console.print(f"  • {list_name} [dim](Rank #{rank})[/dim]")
+                if url:
+                    self.console.print(f"    [blue]{url}[/blue]")
             if len(peak.peak_lists) > 10:
                 remaining = len(peak.peak_lists) - 10
                 self.console.print(f"  [dim]... and {remaining} more[/dim]")

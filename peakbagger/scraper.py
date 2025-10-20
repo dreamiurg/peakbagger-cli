@@ -138,18 +138,23 @@ class PeakBaggerScraper:
             html: HTML content from peak detail page
 
         Returns:
-            List of dicts with list_name and rank
+            List of dicts with list_name, rank, and url
         """
         lists: list[dict[str, Any]] = []
 
         # Find the "Peak Lists" section
         # Format: <a href="list.aspx?lid=5030">List Name</a> (Rank #1)
-        pattern = r'<a href="list\.aspx\?lid=\d+">([^<]+)</a>\s*\(Rank #(\d+)\)'
+        pattern = r'<a href="(list\.aspx\?lid=\d+)">([^<]+)</a>\s*\(Rank #(\d+)\)'
 
         for match in re.finditer(pattern, html):
-            list_name: str = match.group(1)
-            rank: int = int(match.group(2))
-            lists.append({"list_name": list_name, "rank": rank})
+            url: str = match.group(1)
+            list_name: str = match.group(2)
+            rank: int = int(match.group(3))
+            lists.append({
+                "list_name": list_name,
+                "rank": rank,
+                "url": f"https://www.peakbagger.com/{url}"
+            })
 
         return lists
 
