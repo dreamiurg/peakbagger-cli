@@ -106,13 +106,16 @@ peakbagger search "Rainier" --rate-limit 3.0
 
 ```
                   Search Results
-┏━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ Peak ID ┃ Name                                 ┃
-┡━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
-│ 2296    │ Mount Rainier                        │
-│ 24166   │ Mount Rainier - Southeast Crater Rim │
-│ 163756  │ Mount Rainier - Columbia Crest       │
-└─────────┴──────────────────────────────────────┘
+┏━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Peak ID ┃ Name                             ┃ URL                             ┃
+┡━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ 2296    │ Mount Rainier                    │ https://www.peakbagger.com/peak │
+│         │                                  │ .aspx?pid=2296                  │
+│ 24166   │ Mount Rainier - Southeast Crater │ https://www.peakbagger.com/peak │
+│         │ Rim                              │ .aspx?pid=24166                 │
+│ 163756  │ Mount Rainier - Columbia Crest   │ https://www.peakbagger.com/peak │
+│         │                                  │ .aspx?pid=163756                │
+└─────────┴──────────────────────────────────┴─────────────────────────────────┘
 
 Found 3 peaks. Use 'peakbagger info <PID>' for details.
 ```
@@ -154,6 +157,7 @@ Peak ID: 2296
   Coordinates             46.851731, -121.760395
   County                  Pierce
   Country                 United States
+  URL                     https://www.peakbagger.com/peak.aspx?pid=2296
 ```
 
 **Sample Output (JSON):**

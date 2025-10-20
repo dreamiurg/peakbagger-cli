@@ -201,6 +201,28 @@ When changing functionality:
 - Update README.md if user-facing behavior changes
 - Update CONTRIBUTING.md if development process changes
 
+### Critical: When Output Formats Change
+
+**ALWAYS check and update documentation** when modifying CLI output:
+
+1. **README.md** - Check all "Sample Output" examples:
+   - Search command text output (line ~108)
+   - Info command text output (line ~150)
+   - Info command JSON output (line ~165)
+
+2. **CONTRIBUTING.md** - Check command examples in:
+   - Testing section
+   - Development tips
+   - Release examples
+
+3. **CLAUDE.md** - Update if new fields/formats are added
+
+Output changes include:
+- Adding/removing columns in tables
+- Adding/removing fields in JSON
+- Changing field names or formats
+- Modifying table styles or layouts
+
 ## Documentation Philosophy
 
 - **Less is more** - only document project-specific information
