@@ -1,0 +1,128 @@
+"""Output formatters for peak data (Rich tables and JSON)."""
+
+import json
+
+from rich.console import Console
+from rich.table import Table
+
+from peakbagger.models import Peak, SearchResult
+
+
+class PeakFormatter:
+    """Formatter for peak data output."""
+
+    def __init__(self):
+        self.console = Console()
+
+    def format_search_results(
+        self, results: list[SearchResult], output_format: str = "text"
+    ) -> None:
+        """
+        Format and print search results.
+
+        Args:
+            results: List of SearchResult objects
+            output_format: Either 'text' or 'json'
+        """
+        if output_format == "json":
+            self._print_json([r.to_dict() for r in results])
+        else:
+            self._print_search_table(results)
+
+    def format_peak_detail(self, peak: Peak, output_format: str = "text") -> None:
+        """
+        Format and print detailed peak information.
+
+        Args:
+            peak: Peak object
+            output_format: Either 'text' or 'json'
+        """
+        if output_format == "json":
+            self._print_json(peak.to_dict())
+        else:
+            self._print_peak_detail(peak)
+
+    def format_peaks(self, peaks: list[Peak], output_format: str = "text") -> None:
+        """
+        Format and print multiple peaks with full details.
+
+        Args:
+            peaks: List of Peak objects
+            output_format: Either 'text' or 'json'
+        """
+        if output_format == "json":
+            self._print_json([p.to_dict() for p in peaks])
+        else:
+            for peak in peaks:
+                self._print_peak_detail(peak)
+                if peak != peaks[-1]:  # Add separator between peaks
+                    self.console.print("\n" + "─" * 80 + "\n")
+
+    def _print_json(self, data: dict | list) -> None:
+        """Print data as formatted JSON."""
+        print(json.dumps(data, indent=2))
+
+    def _print_search_table(self, results: list[SearchResult]) -> None:
+        """Print search results as a Rich table."""
+        if not results:
+            self.console.print("[yellow]No results found.[/yellow]")
+            return
+
+        table = Table(title="Search Results", show_header=True, header_style="bold cyan")
+        table.add_column("Peak ID", style="dim")
+        table.add_column("Name", style="green")
+
+        for result in results:
+            table.add_row(result.pid, result.name)
+
+        self.console.print(table)
+        self.console.print(
+            f"\n[dim]Found {len(results)} peak(s). Use 'peakbagger info <PID>' for details.[/dim]"
+        )
+
+    def _print_peak_detail(self, peak: Peak) -> None:
+        """Print detailed peak information as formatted text."""
+        # Title
+        title = f"{peak.name}"
+        if peak.state:
+            title += f", {peak.state}"
+        self.console.print(f"\n[bold cyan]{title}[/bold cyan]")
+        self.console.print(f"[dim]Peak ID: {peak.pid}[/dim]\n")
+
+        # Create details table
+        table = Table(show_header=False, box=None, padding=(0, 2))
+        table.add_column("Field", style="yellow", width=20)
+        table.add_column("Value", style="white")
+
+        # Add elevation
+        if peak.elevation_ft:
+            elev_text = f"{peak.elevation_ft:,} ft"
+            if peak.elevation_m:
+                elev_text += f" ({peak.elevation_m:,} m)"
+            table.add_row("Elevation", elev_text)
+
+        # Add prominence
+        if peak.prominence_ft:
+            prom_text = f"{peak.prominence_ft:,} ft"
+            if peak.prominence_m:
+                prom_text += f" ({peak.prominence_m} m)"
+            table.add_row("Prominence", prom_text)
+
+        # Add isolation
+        if peak.isolation_mi:
+            iso_text = f"{peak.isolation_mi} mi"
+            if peak.isolation_km:
+                iso_text += f" ({peak.isolation_km} km)"
+            table.add_row("Isolation", iso_text)
+
+        # Add location
+        if peak.latitude and peak.longitude:
+            table.add_row("Coordinates", f"{peak.latitude}, {peak.longitude}")
+
+        if peak.county:
+            table.add_row("County", peak.county)
+
+        if peak.country:
+            table.add_row("Country", peak.country)
+
+        self.console.print(table)
