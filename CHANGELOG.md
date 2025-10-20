@@ -2,6 +2,35 @@
 
 <!-- version list -->
 
+## v0.3.0 (2025-10-20)
+
+### Bug Fixes
+
+- Add URLs to peak list output
+  ([`773b39a`](https://github.com/dreamiurg/peakbagger-cli/commit/773b39a4276e3a57e80a01e0247364f1af2ea1cb))
+
+- Correct ascent list sorting and clean date parsing
+  ([`275fe29`](https://github.com/dreamiurg/peakbagger-cli/commit/275fe29617fe4e0d6080587e2b099fd186241bf4))
+
+### Chores
+
+- Update uv.lock after version bump
+  ([`26387cc`](https://github.com/dreamiurg/peakbagger-cli/commit/26387cc4ab29dc0f33207e4d7fca7441c4c457a2))
+
+### Documentation
+
+- Update output examples in README and add documentation checklist
+  ([`73f4bd2`](https://github.com/dreamiurg/peakbagger-cli/commit/73f4bd2cd3b1cb90d332dcd0b8db40867ef1ae65))
+
+### Features
+
+- Add Location, Range, and Elevation columns to search results
+  ([`fd70c18`](https://github.com/dreamiurg/peakbagger-cli/commit/fd70c18efe0a5bb334ae768f5653294e44f2911f))
+
+- Add peak lists and route information to info command
+  ([`4ffd353`](https://github.com/dreamiurg/peakbagger-cli/commit/4ffd353d30cd0fc8d6eb70480ddf067e85023263))
+
+
 ## v0.2.0 (2025-10-20)
 
 ### Bug Fixes
