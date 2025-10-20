@@ -1,7 +1,7 @@
 """HTML parsing and data extraction for PeakBagger.com."""
 
 import re
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from bs4 import BeautifulSoup
 
@@ -116,9 +116,82 @@ class PeakBaggerScraper:
             if county_match:
                 peak.county = county_match.group(2).strip()
 
+            # Extract peak lists with ranks
+            peak.peak_lists = PeakBaggerScraper._extract_peak_lists(html)
+
+            # Extract route information
+            peak.routes = PeakBaggerScraper._extract_routes(html)
+
             return peak
 
         except Exception as e:
             # Log error but don't crash
             print(f"Error parsing peak detail: {e}")
             return None
+
+    @staticmethod
+    def _extract_peak_lists(html: str) -> list[dict[str, Any]]:
+        """
+        Extract peak lists and ranks from peak detail page.
+
+        Args:
+            html: HTML content from peak detail page
+
+        Returns:
+            List of dicts with list_name and rank
+        """
+        lists: list[dict[str, Any]] = []
+
+        # Find the "Peak Lists" section
+        # Format: <a href="list.aspx?lid=5030">List Name</a> (Rank #1)
+        pattern = r'<a href="list\.aspx\?lid=\d+">([^<]+)</a>\s*\(Rank #(\d+)\)'
+
+        for match in re.finditer(pattern, html):
+            list_name: str = match.group(1)
+            rank: int = int(match.group(2))
+            lists.append({"list_name": list_name, "rank": rank})
+
+        return lists
+
+    @staticmethod
+    def _extract_routes(html: str) -> list[dict[str, Any]]:
+        """
+        Extract route information from peak detail page.
+
+        Args:
+            html: HTML content from peak detail page
+
+        Returns:
+            List of dicts with route details
+        """
+        routes: list[dict[str, Any]] = []
+
+        # Find route sections
+        # Format: <tr><td valign=top>Route #1 </td><td>Glacier Climb: Disappointment Cleaver<br/>...
+        route_pattern = r'<tr><td valign=top>Route #\d+\s*</td><td>([^<]+)<br/>(.*?)</td></tr>'
+
+        for match in re.finditer(route_pattern, html, re.DOTALL):
+            route_name: str = match.group(1).strip()
+            route_details: str = match.group(2)
+
+            route: dict[str, Any] = {"name": route_name}
+
+            # Extract trailhead
+            trailhead_match = re.search(r'Trailhead:\s*([^<(]+)\s*(?:\([^)]+\))?\s*([\d,]+)\s*ft', route_details)
+            if trailhead_match:
+                route["trailhead"] = trailhead_match.group(1).strip()
+                route["trailhead_elevation_ft"] = int(trailhead_match.group(2).replace(",", ""))
+
+            # Extract vertical gain
+            gain_match = re.search(r'Vertical Gain:\s*([\d,]+)\s*ft', route_details)
+            if gain_match:
+                route["vertical_gain_ft"] = int(gain_match.group(1).replace(",", ""))
+
+            # Extract distance
+            distance_match = re.search(r'Distance \(one way\):\s*([\d.]+)\s*mi', route_details)
+            if distance_match:
+                route["distance_mi"] = float(distance_match.group(1))
+
+            routes.append(route)
+
+        return routes

@@ -158,6 +158,22 @@ Peak ID: 2296
   County                  Pierce
   Country                 United States
   URL                     https://www.peakbagger.com/peak.aspx?pid=2296
+
+Routes (3)
+  1. Glacier Climb: Disappointment Cleaver
+     Trailhead: Paradise (5,420 ft), Gain: 8,986 ft, Distance: 8.0 mi
+  2. Glacier Climb: Emmons Glacier
+     Trailhead: White River Campground (4,260 ft), Gain: 10,346 ft, Distance: 7.45 mi
+  3. Glacier Climb: Kautz Glacier
+     Trailhead: Paradise (5,420 ft), Gain: 9,286 ft, Distance: 5.65 mi
+
+Peak Lists (39 total)
+  • Mountaineers 6-Peak Pin - New Version (Rank #1)
+  • Mountaineers 5-Peak Pin (Rank #1)
+  • Contiguous 48 U.S. State High Points (Rank #3)
+  • U.S. State High Points (Rank #4)
+  • Washington Bulger List (Rank #1)
+  ... and 34 more
 ```
 
 **Sample Output (JSON):**
@@ -184,7 +200,27 @@ Peak ID: 2296
   "isolation": {
     "miles": 731.13,
     "kilometers": 1176.64
-  }
+  },
+  "url": "https://www.peakbagger.com/peak.aspx?pid=2296",
+  "peak_lists": [
+    {
+      "list_name": "Mountaineers 6-Peak Pin - New Version",
+      "rank": 1
+    },
+    {
+      "list_name": "U.S. State High Points",
+      "rank": 4
+    }
+  ],
+  "routes": [
+    {
+      "name": "Glacier Climb: Disappointment Cleaver",
+      "trailhead": "Paradise",
+      "trailhead_elevation_ft": 5420,
+      "vertical_gain_ft": 8986,
+      "distance_mi": 8.0
+    }
+  ]
 }
 ```
 
@@ -198,6 +234,15 @@ peakbagger info 2296 --format json | jq '.elevation.feet'
 
 # Search and extract peak IDs
 peakbagger search "Rainier" --format json | jq '.[].pid'
+
+# Get all route names for a peak
+peakbagger info 2296 --format json | jq '.routes[].name'
+
+# Find peaks on a specific list (search multiple peaks, filter by list)
+peakbagger info 2296 --format json | jq '.peak_lists[] | select(.list_name | contains("Bulger"))'
+
+# Get the easiest route (shortest distance)
+peakbagger info 2296 --format json | jq '.routes | sort_by(.distance_mi) | .[0]'
 ```
 
 ### Batch processing

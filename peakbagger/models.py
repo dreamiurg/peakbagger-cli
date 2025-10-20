@@ -21,6 +21,8 @@ class Peak:
     isolation_km: float | None = None  # True isolation in kilometers
     county: str | None = None  # County/region
     country: str | None = None  # Country
+    peak_lists: list[dict[str, Any]] | None = None  # Peak lists with ranks
+    routes: list[dict[str, Any]] | None = None  # Route information
 
     def to_dict(self) -> dict[str, Any]:
         """Convert peak to dictionary for JSON serialization."""
@@ -47,6 +49,8 @@ class Peak:
                 "kilometers": self.isolation_km,
             },
             "url": f"https://www.peakbagger.com/peak.aspx?pid={self.pid}",
+            "peak_lists": self.peak_lists if self.peak_lists else [],
+            "routes": self.routes if self.routes else [],
         }
 
 

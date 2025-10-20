@@ -133,3 +133,34 @@ class PeakFormatter:
         table.add_row("URL", f"[blue]{peak_url}[/blue]")
 
         self.console.print(table)
+
+        # Add routes section
+        if peak.routes and len(peak.routes) > 0:
+            self.console.print(f"\n[bold yellow]Routes ({len(peak.routes)})[/bold yellow]")
+            for i, route in enumerate(peak.routes, 1):
+                route_text = f"  {i}. [green]{route['name']}[/green]"
+                details = []
+                if "trailhead" in route:
+                    th_text = route["trailhead"]
+                    if "trailhead_elevation_ft" in route:
+                        th_text += f" ({route['trailhead_elevation_ft']:,} ft)"
+                    details.append(f"Trailhead: {th_text}")
+                if "vertical_gain_ft" in route:
+                    details.append(f"Gain: {route['vertical_gain_ft']:,} ft")
+                if "distance_mi" in route:
+                    details.append(f"Distance: {route['distance_mi']} mi")
+                if details:
+                    route_text += f"\n     {', '.join(details)}"
+                self.console.print(route_text)
+
+        # Add peak lists section (show first 10)
+        if peak.peak_lists and len(peak.peak_lists) > 0:
+            self.console.print(f"\n[bold yellow]Peak Lists ({len(peak.peak_lists)} total)[/bold yellow]")
+            display_lists = peak.peak_lists[:10]
+            for peak_list in display_lists:
+                list_name = peak_list["list_name"]
+                rank = peak_list["rank"]
+                self.console.print(f"  • {list_name} [dim](Rank #{rank})[/dim]")
+            if len(peak.peak_lists) > 10:
+                remaining = len(peak.peak_lists) - 10
+                self.console.print(f"  [dim]... and {remaining} more[/dim]")
