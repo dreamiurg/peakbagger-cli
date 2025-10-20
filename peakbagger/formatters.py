@@ -69,12 +69,14 @@ class PeakFormatter:
             self.console.print("[yellow]No results found.[/yellow]")
             return
 
-        table: Table = Table(title="Search Results", show_header=True, header_style="bold cyan")
+        table: Table = Table(title="Search Results", show_header=True, header_style="bold cyan", expand=True)
         table.add_column("Peak ID", style="dim")
         table.add_column("Name", style="green")
+        table.add_column("URL", style="blue", overflow="fold")
 
         for result in results:
-            table.add_row(result.pid, result.name)
+            url: str = f"https://www.peakbagger.com/{result.url}"
+            table.add_row(result.pid, result.name, url)
 
         self.console.print(table)
         self.console.print(
@@ -125,5 +127,9 @@ class PeakFormatter:
 
         if peak.country:
             table.add_row("Country", peak.country)
+
+        # Add PeakBagger URL
+        peak_url: str = f"https://www.peakbagger.com/peak.aspx?pid={peak.pid}"
+        table.add_row("URL", f"[blue]{peak_url}[/blue]")
 
         self.console.print(table)
