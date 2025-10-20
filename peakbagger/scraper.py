@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Any
 
 from bs4 import BeautifulSoup
 
-from peakbagger.models import Peak, SearchResult
+from peakbagger.models import Ascent, Peak, SearchResult
 
 if TYPE_CHECKING:
     from bs4.element import Tag
@@ -79,15 +79,17 @@ class PeakBaggerScraper:
             if elevation_ft:
                 elevation_m = int(elevation_ft * 0.3048)
 
-            results.append(SearchResult(
-                pid=pid,
-                name=name,
-                url=href,
-                location=location if location else None,
-                range=range_name if range_name else None,
-                elevation_ft=elevation_ft,
-                elevation_m=elevation_m,
-            ))
+            results.append(
+                SearchResult(
+                    pid=pid,
+                    name=name,
+                    url=href,
+                    location=location if location else None,
+                    range=range_name if range_name else None,
+                    elevation_ft=elevation_ft,
+                    elevation_m=elevation_m,
+                )
+            )
 
         return results
 
@@ -198,11 +200,9 @@ class PeakBaggerScraper:
             url: str = match.group(1)
             list_name: str = match.group(2)
             rank: int = int(match.group(3))
-            lists.append({
-                "list_name": list_name,
-                "rank": rank,
-                "url": f"https://www.peakbagger.com/{url}"
-            })
+            lists.append(
+                {"list_name": list_name, "rank": rank, "url": f"https://www.peakbagger.com/{url}"}
+            )
 
         return lists
 
@@ -221,7 +221,7 @@ class PeakBaggerScraper:
 
         # Find route sections
         # Format: <tr><td valign=top>Route #1 </td><td>Glacier Climb: Disappointment Cleaver<br/>...
-        route_pattern = r'<tr><td valign=top>Route #\d+\s*</td><td>([^<]+)<br/>(.*?)</td></tr>'
+        route_pattern = r"<tr><td valign=top>Route #\d+\s*</td><td>([^<]+)<br/>(.*?)</td></tr>"
 
         for match in re.finditer(route_pattern, html, re.DOTALL):
             route_name: str = match.group(1).strip()
@@ -230,21 +230,145 @@ class PeakBaggerScraper:
             route: dict[str, Any] = {"name": route_name}
 
             # Extract trailhead
-            trailhead_match = re.search(r'Trailhead:\s*([^<(]+)\s*(?:\([^)]+\))?\s*([\d,]+)\s*ft', route_details)
+            trailhead_match = re.search(
+                r"Trailhead:\s*([^<(]+)\s*(?:\([^)]+\))?\s*([\d,]+)\s*ft", route_details
+            )
             if trailhead_match:
                 route["trailhead"] = trailhead_match.group(1).strip()
                 route["trailhead_elevation_ft"] = int(trailhead_match.group(2).replace(",", ""))
 
             # Extract vertical gain
-            gain_match = re.search(r'Vertical Gain:\s*([\d,]+)\s*ft', route_details)
+            gain_match = re.search(r"Vertical Gain:\s*([\d,]+)\s*ft", route_details)
             if gain_match:
                 route["vertical_gain_ft"] = int(gain_match.group(1).replace(",", ""))
 
             # Extract distance
-            distance_match = re.search(r'Distance \(one way\):\s*([\d.]+)\s*mi', route_details)
+            distance_match = re.search(r"Distance \(one way\):\s*([\d.]+)\s*mi", route_details)
             if distance_match:
                 route["distance_mi"] = float(distance_match.group(1))
 
             routes.append(route)
 
         return routes
+
+    @staticmethod
+    def parse_peak_ascents(html: str) -> list[Ascent]:
+        """
+        Parse ascent list from PeakAscents.aspx page.
+
+        Args:
+            html: HTML content from peak ascents page
+
+        Returns:
+            List of Ascent objects
+        """
+        soup: BeautifulSoup = BeautifulSoup(html, "lxml")
+        ascents: list[Ascent] = []
+
+        # Find all tables
+        tables: list[Tag] = soup.find_all("table")  # type: ignore[assignment]
+
+        # Look for the data table (has specific header structure)
+        data_table: Tag | None = None
+        for table in tables:
+            rows: list[Tag] = table.find_all("tr")  # type: ignore[assignment]
+            if len(rows) < 10:
+                continue
+
+            # Check if second row has expected headers
+            if len(rows) > 1:
+                header_row: Tag = rows[1]
+                headers: list[Tag] = header_row.find_all(["th", "td"])  # type: ignore[assignment]
+                if len(headers) == 14:
+                    header_texts: list[str] = [h.get_text(strip=True) for h in headers]
+                    # Check for "Climber" and "Ascent Date" (may have non-breaking spaces)
+                    if (
+                        "Climber" in header_texts
+                        and "Ascent" in header_texts[1]
+                        and "Date" in header_texts[1]
+                    ):
+                        data_table = table
+                        break
+
+        if not data_table:
+            return ascents
+
+        rows = data_table.find_all("tr")
+
+        # Process data rows (skip first 2 rows: separator and header)
+        for row in rows[2:]:
+            cells: list[Tag] = row.find_all(["td", "th"])  # type: ignore[assignment]
+            if len(cells) != 14:
+                continue
+
+            # Extract climber name and ID (column 0)
+            climber_cell: Tag = cells[0]
+            climber_link: Tag | None = climber_cell.find(
+                "a", href=lambda x: x and "climber.aspx?cid=" in x
+            )  # type: ignore[assignment]
+            if not climber_link:
+                continue
+
+            climber_name: str = climber_link.get_text(strip=True)
+            climber_href: str = climber_link["href"]  # type: ignore[assignment]
+            climber_id_match = re.search(r"cid=(\d+)", climber_href)
+            climber_id: str | None = climber_id_match.group(1) if climber_id_match else None
+
+            # Extract ascent date and ID (column 1)
+            date_cell: Tag = cells[1]
+            date_link: Tag | None = date_cell.find(
+                "a", href=lambda x: x and "ascent.aspx?aid=" in x
+            )  # type: ignore[assignment]
+            if not date_link:
+                continue
+
+            date_text: str = date_link.get_text(strip=True)
+            # Skip rows with "Unknown" dates or invalid formats
+            if date_text == "Unknown" or not date_text:
+                date_text_value: str | None = None
+            else:
+                # Extract date format (YYYY, YYYY-MM, or YYYY-MM-DD) - ignore trailing characters
+                date_pattern = re.compile(r"^\d{4}(-\d{2})?(-\d{2})?")
+                match = date_pattern.match(date_text)
+                date_text_value = match.group(0) if match else None
+
+            ascent_href: str = date_link["href"]  # type: ignore[assignment]
+            ascent_id_match = re.search(r"aid=(\d+)", ascent_href)
+            if not ascent_id_match:
+                continue
+            ascent_id: str = ascent_id_match.group(1)
+
+            # Check for GPX track (column 3)
+            gps_cell: Tag = cells[3]
+            gps_img: Tag | None = gps_cell.find("img", src=lambda x: x and "GPS.gif" in x)  # type: ignore[assignment]
+            has_gpx: bool = gps_img is not None
+
+            # Check for trip report (column 4)
+            tr_cell: Tag = cells[4]
+            tr_text: str = tr_cell.get_text(strip=True)
+            has_trip_report: bool = tr_text.startswith("TR-")
+            trip_report_words: int | None = None
+            if has_trip_report:
+                # Extract word count (format: "TR-123")
+                tr_match = re.search(r"TR-(\d+)", tr_text)
+                if tr_match:
+                    trip_report_words = int(tr_match.group(1))
+
+            # Extract route name (column 5)
+            route_cell: Tag = cells[5]
+            route: str | None = route_cell.get_text(strip=True) or None
+
+            ascents.append(
+                Ascent(
+                    ascent_id=ascent_id,
+                    climber_name=climber_name,
+                    climber_id=climber_id,
+                    date=date_text_value,
+                    has_gpx=has_gpx,
+                    has_trip_report=has_trip_report,
+                    trip_report_words=trip_report_words,
+                    route=route,
+                )
+            )
+
+        return ascents

@@ -8,9 +8,10 @@ Python 3.12+, Click, and Rich deliver a beautiful terminal experience.
 
 - 🔍 **Search peaks** by name with instant results
 - 📊 **Detailed peak info** including elevation, prominence, isolation, and location
+- 📈 **Ascent statistics** - analyze climbing activity, seasonal patterns, and trip reports
 - 🎨 **Beautiful output** with Rich-formatted tables and colors
 - 🤖 **JSON output** for automation and scripting
-- ⚡ **Fast and modern** using `uv` for dependency management
+- ⚡ **Fast and modern** using `uv` for dependency management and Pydantic models
 - 🛡️ **Respectful scraping** with configurable rate limiting
 - 🌐 **Cloudflare bypass** for reliable access
 
@@ -63,6 +64,9 @@ peakbagger search "Mount Rainier"
 
 # Get detailed information
 peakbagger info 2296
+
+# Analyze ascent statistics
+peakbagger peak-ascents 1798
 
 # Get JSON output for scripting
 peakbagger search "Denali" --format json
@@ -235,6 +239,107 @@ Peak Lists (39 total)
   ]
 }
 ```
+
+### Peak Ascents Command
+
+Analyze ascent statistics for a specific peak:
+
+```bash
+peakbagger peak-ascents PEAK_ID [OPTIONS]
+```
+
+**Arguments:**
+- `PEAK_ID`: The PeakBagger peak ID (e.g., "1798" for Mount Pilchuck)
+
+**Options:**
+- `--format [text|json]`: Output format (default: text)
+- `--stats`: Show temporal and seasonal statistics (always shown in current version)
+- `--list-ascents`: Include list of all ascents with URLs (sorted newest first)
+- `--after DATE`: Filter ascents on or after date (YYYY-MM-DD)
+- `--before DATE`: Filter ascents on or before date (YYYY-MM-DD)
+- `--within PERIOD`: Filter ascents within period from today (e.g., '3m', '1y', '10d')
+- `--with-gpx`: Only show ascents with GPX tracks
+- `--with-tr`: Only show ascents with trip reports
+- `--reference-date DATE`: Reference date for seasonal analysis (YYYY-MM-DD, default: today)
+- `--seasonal-window N`: Days before/after reference date for seasonal window (default: 14)
+- `--rate-limit FLOAT`: Seconds between requests (default: 2.0)
+
+**Examples:**
+
+```bash
+# Basic ascent statistics (Mount Pilchuck)
+peakbagger peak-ascents 1798
+
+# Show ascents from the last year
+peakbagger peak-ascents 1798 --within 1y
+
+# Filter by date range
+peakbagger peak-ascents 1798 --after 2020-01-01 --before 2023-12-31
+
+# Include list of all ascents (sorted newest first, with URLs)
+peakbagger peak-ascents 1798 --list-ascents
+
+# Show only ascents with GPX tracks
+peakbagger peak-ascents 1798 --with-gpx --list-ascents
+
+# Show only ascents with trip reports
+peakbagger peak-ascents 1798 --with-tr --list-ascents
+
+# Combine filters (ascents from last year with trip reports)
+peakbagger peak-ascents 1798 --within 1y --with-tr --list-ascents
+
+# JSON output
+peakbagger peak-ascents 1798 --format json
+
+# Custom seasonal analysis (check July climbing conditions)
+peakbagger peak-ascents 1798 --reference-date 2024-07-15 --seasonal-window 30
+```
+
+**Sample Output (text):**
+
+```
+Fetching ascents for peak 1798...
+Found 1305 ascents
+
+
+=== Overall Statistics ===
+
+  Total ascents                1305
+  With GPX tracks              26 (2.0%)
+  With trip reports            98 (7.5%)
+
+=== Temporal Breakdown ===
+
+  Last 3 months                28
+  Last year                    72
+  Last 5 years                 260
+
+=== Seasonal Pattern ===
+
+  October     : 88
+  November    : 2
+
+=== Monthly Distribution ===
+
+  January     : 81
+  February    : 16
+  March       : 15
+  April       : 25
+  May         : 91
+  June        : 142
+  July        : 234
+  August      : 173
+  September   : 153
+  October     : 105
+  November    : 62
+  December    : 19
+```
+
+**Use Cases:**
+- **Trip Planning**: Check how many people have climbed a peak recently to gauge popularity and current conditions
+- **Seasonal Analysis**: Find the best time of year to climb based on historical ascent patterns
+- **Route Research**: See which routes are most popular (with `--list-ascents`)
+- **Data Analysis**: Export to JSON for custom analysis and visualization
 
 ## Automation Examples
 

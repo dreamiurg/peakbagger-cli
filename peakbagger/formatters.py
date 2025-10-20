@@ -6,7 +6,7 @@ from typing import Any
 from rich.console import Console
 from rich.table import Table
 
-from peakbagger.models import Peak, SearchResult
+from peakbagger.models import Ascent, AscentStatistics, Peak, SearchResult
 
 
 class PeakFormatter:
@@ -173,7 +173,9 @@ class PeakFormatter:
 
         # Add peak lists section (show first 10)
         if peak.peak_lists and len(peak.peak_lists) > 0:
-            self.console.print(f"\n[bold yellow]Peak Lists ({len(peak.peak_lists)} total)[/bold yellow]")
+            self.console.print(
+                f"\n[bold yellow]Peak Lists ({len(peak.peak_lists)} total)[/bold yellow]"
+            )
             display_lists = peak.peak_lists[:10]
             for peak_list in display_lists:
                 list_name = peak_list["list_name"]
@@ -185,3 +187,163 @@ class PeakFormatter:
             if len(peak.peak_lists) > 10:
                 remaining = len(peak.peak_lists) - 10
                 self.console.print(f"  [dim]... and {remaining} more[/dim]")
+
+    def format_ascent_statistics(
+        self,
+        stats: AscentStatistics,
+        ascents: list[Ascent] | None = None,
+        output_format: str = "text",
+        show_list: bool = False,
+    ) -> None:
+        """
+        Format and print ascent statistics.
+
+        Args:
+            stats: AscentStatistics object
+            ascents: Optional list of ascents to display
+            output_format: Either 'text' or 'json'
+            show_list: Whether to include list of ascents
+        """
+        if output_format == "json":
+            data = stats.to_dict()
+            if show_list and ascents:
+                data["ascents"] = [a.to_dict() for a in ascents]
+            self._print_json(data)
+        else:
+            self._print_ascent_statistics(stats, ascents if show_list else None)
+
+    def _print_ascent_statistics(
+        self,
+        stats: AscentStatistics,
+        ascents: list[Ascent] | None = None,
+    ) -> None:
+        """Print ascent statistics as formatted text."""
+        # Overall Statistics
+        self.console.print("\n[bold cyan]=== Overall Statistics ===[/bold cyan]\n")
+        overall_table: Table = Table(show_header=False, box=None, padding=(0, 2))
+        overall_table.add_column("Metric", style="yellow", width=25)
+        overall_table.add_column("Value", style="white")
+
+        overall_table.add_row("Total ascents", str(stats.total_ascents))
+
+        if stats.total_ascents > 0:
+            gpx_pct = (stats.ascents_with_gpx / stats.total_ascents) * 100
+            tr_pct = (stats.ascents_with_trip_reports / stats.total_ascents) * 100
+            overall_table.add_row("With GPX tracks", f"{stats.ascents_with_gpx} ({gpx_pct:.1f}%)")
+            overall_table.add_row(
+                "With trip reports", f"{stats.ascents_with_trip_reports} ({tr_pct:.1f}%)"
+            )
+
+        self.console.print(overall_table)
+
+        # Temporal Breakdown
+        self.console.print("\n[bold cyan]=== Temporal Breakdown ===[/bold cyan]\n")
+        temporal_table: Table = Table(show_header=False, box=None, padding=(0, 2))
+        temporal_table.add_column("Period", style="yellow", width=25)
+        temporal_table.add_column("Ascents", style="white")
+
+        temporal_table.add_row("Last 3 months", str(stats.last_3_months))
+        temporal_table.add_row("Last year", str(stats.last_year))
+        temporal_table.add_row("Last 5 years", str(stats.last_5_years))
+
+        self.console.print(temporal_table)
+
+        # Seasonal Pattern
+        if stats.seasonal_pattern:
+            self.console.print("\n[bold cyan]=== Seasonal Pattern ===[/bold cyan]\n")
+            seasonal_months = [
+                (month, count) for month, count in stats.seasonal_pattern.items() if count > 0
+            ]
+            if seasonal_months:
+                for month, count in seasonal_months:
+                    self.console.print(f"  {month:12s}: {count}")
+            else:
+                self.console.print("  [dim]No ascents in seasonal window[/dim]")
+
+        # Monthly Distribution
+        self.console.print("\n[bold cyan]=== Monthly Distribution ===[/bold cyan]\n")
+        for month, count in stats.monthly_distribution.items():
+            self.console.print(f"  {month:12s}: {count}")
+
+        # List of ascents (if requested)
+        if ascents:
+            self.console.print(
+                f"\n[bold cyan]=== Ascent List ({len(ascents)} total) ===[/bold cyan]\n"
+            )
+
+            # Sort ascents by date (newest first), with None dates at the end
+            from datetime import datetime
+
+            def parse_date_for_sort(ascent: Ascent) -> datetime:
+                """Return date for sorting. None/invalid dates sort to the end."""
+                if not ascent.date:
+                    return datetime.min  # None dates go to end (when sorted with reverse=True)
+                try:
+                    # Parse different date formats
+                    date_parts = ascent.date.split("-")
+                    if len(date_parts) == 3:
+                        return datetime.strptime(ascent.date, "%Y-%m-%d")
+                    elif len(date_parts) == 2:
+                        return datetime.strptime(ascent.date, "%Y-%m")
+                    elif len(date_parts) == 1:
+                        return datetime.strptime(ascent.date, "%Y")
+                    else:
+                        return datetime.min  # Invalid format goes to end
+                except ValueError:
+                    return datetime.min  # Parse error goes to end
+
+            sorted_ascents = sorted(ascents, key=parse_date_for_sort, reverse=True)
+
+            # Create table for ascents
+            ascent_table: Table = Table(show_header=True, header_style="bold cyan", box=None)
+            ascent_table.add_column("#", style="dim", no_wrap=True)
+            ascent_table.add_column("Date", style="yellow", no_wrap=True)
+            ascent_table.add_column("Climber", style="green")
+            ascent_table.add_column("GPX", style="green", justify="center", no_wrap=True)
+            ascent_table.add_column("TR", style="yellow", justify="center", no_wrap=True)
+            ascent_table.add_column("Route", style="cyan")
+            ascent_table.add_column("URL", style="blue", overflow="fold")
+
+            # Helper to strip emojis from text
+            def strip_emojis(text: str) -> str:
+                """Remove emoji characters from text."""
+                import re
+
+                # Pattern matches emoji ranges
+                emoji_pattern = re.compile(
+                    "["
+                    "\U0001f600-\U0001f64f"  # emoticons
+                    "\U0001f300-\U0001f5ff"  # symbols & pictographs
+                    "\U0001f680-\U0001f6ff"  # transport & map symbols
+                    "\U0001f1e0-\U0001f1ff"  # flags (iOS)
+                    "\U00002702-\U000027b0"
+                    "\U000024c2-\U0001f251"
+                    "]+",
+                    flags=re.UNICODE,
+                )
+                return emoji_pattern.sub("", text).strip()
+
+            for i, ascent in enumerate(sorted_ascents[:100], 1):  # Limit to first 100
+                date_str = ascent.date if ascent.date else "Unknown"
+                gpx_indicator = "✓" if ascent.has_gpx else "-"
+                tr_indicator = str(ascent.trip_report_words) if ascent.has_trip_report else "-"
+                route_str = ascent.route if ascent.route else "-"
+                climber_name = strip_emojis(ascent.climber_name)
+                ascent_url = (
+                    f"https://www.peakbagger.com/climber/ascent.aspx?aid={ascent.ascent_id}"
+                )
+
+                ascent_table.add_row(
+                    str(i),
+                    date_str,
+                    climber_name,
+                    gpx_indicator,
+                    tr_indicator,
+                    route_str,
+                    ascent_url,
+                )
+
+            self.console.print(ascent_table)
+
+            if len(ascents) > 100:
+                self.console.print(f"\n[dim]Showing first 100 of {len(ascents)} ascents[/dim]")
