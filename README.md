@@ -22,16 +22,16 @@ Run directly without installation using `uvx`:
 
 ```bash
 # Run commands directly
-uvx peakbagger-cli search "Mount Rainier"
-uvx peakbagger-cli info 2296
+uvx --from peakbagger-cli peakbagger search "Mount Rainier"
+uvx --from peakbagger-cli peakbagger info 2296
 
 # With options
-uvx peakbagger-cli search "Denali" --format json
+uvx --from peakbagger-cli peakbagger search "Denali" --format json
 ```
 
 This fetches and runs the latest version automatically. No installation or virtual environment needed.
 
-### From PyPI (once published)
+### From PyPI
 
 ```bash
 pip install peakbagger-cli
