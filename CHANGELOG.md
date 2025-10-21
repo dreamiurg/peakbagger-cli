@@ -1,3 +1,10 @@
+# [0.6.0](https://github.com/dreamiurg/peakbagger-cli/compare/v0.5.0...v0.6.0) (2025-10-21)
+
+
+### Features
+
+* improve peak lists formatting in info command ([92006cf](https://github.com/dreamiurg/peakbagger-cli/commit/92006cf83fc755f3a6c580a5875012e9d2f56f8d)), closes [#1](https://github.com/dreamiurg/peakbagger-cli/issues/1)
+
 # [0.5.0](https://github.com/dreamiurg/peakbagger-cli/compare/v0.4.0...v0.5.0) (2025-10-21)
 
 
