@@ -15,9 +15,17 @@ if TYPE_CHECKING:
 
 @click.group()
 @click.version_option(version=__version__)
-def main() -> None:
+@click.option(
+    "--quiet",
+    "-q",
+    is_flag=True,
+    help="Suppress informational messages",
+)
+@click.pass_context
+def main(ctx: click.Context, quiet: bool) -> None:
     """PeakBagger CLI - Search and retrieve mountain peak data from PeakBagger.com"""
-    pass
+    ctx.ensure_object(dict)
+    ctx.obj["quiet"] = quiet
 
 
 @main.command()
