@@ -17,6 +17,17 @@ A Python CLI tool for scraping mountain peak data from PeakBagger.com. Uses Clic
 - **Version Management**: python-semantic-release
 - **Pre-commit**: Configured with multiple hooks
 
+## Development Setup
+
+```bash
+# First time setup - configure git hooks and commit template
+bash scripts/setup-git-hooks.sh
+
+# This will:
+# - Install pre-commit hooks (prevents commits to master/main)
+# - Configure commit message template with conventional commit format
+```
+
 ## Development Commands
 
 ```bash
@@ -43,7 +54,7 @@ uv build
 npx semantic-release --dry-run
 
 # Create release (done automatically via GitHub Actions)
-# Just push to main/master with conventional commit
+# Just merge PR to main/master with conventional commit title
 ```
 
 ## Commit Message Format

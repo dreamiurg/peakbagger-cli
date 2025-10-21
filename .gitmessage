@@ -1,0 +1,40 @@
+# <type>: <subject>
+#
+# <body>
+#
+# <footer>
+
+# --- COMMIT TYPES ---
+# feat:     New feature (triggers MINOR version bump)
+# fix:      Bug fix (triggers PATCH version bump)
+# docs:     Documentation only changes (no release)
+# style:    Code style/formatting (no release)
+# refactor: Code refactoring (no release)
+# perf:     Performance improvement (triggers PATCH version bump)
+# test:     Adding or updating tests (no release)
+# chore:    Maintenance, dependencies, tooling (no release)
+# ci:       CI/CD configuration (no release)
+# build:    Build system changes (no release)
+#
+# --- BREAKING CHANGES ---
+# Use ! after type for breaking changes: feat!: or fix!:
+# OR add "BREAKING CHANGE:" in footer
+# Breaking changes trigger MAJOR version bump
+#
+# --- RULES ---
+# - Subject line: max 50 chars, imperative mood, lowercase after colon, no period
+# - Body: wrap at 72 chars, explain WHY not WHAT
+# - Footer: reference issues, breaking changes
+#
+# --- EXAMPLES ---
+# feat: add batch peak lookup with rate limiting
+#
+# fix: handle missing elevation data in scraper
+#
+# feat!: restructure CLI to resource-action pattern
+#
+# BREAKING CHANGE: all command names changed to use resource-action pattern
+#
+# docs: update README with new command examples
+#
+# chore: update dependencies to latest versions
