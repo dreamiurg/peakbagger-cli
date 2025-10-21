@@ -1,3 +1,10 @@
+## [0.6.1](https://github.com/dreamiurg/peakbagger-cli/compare/v0.6.0...v0.6.1) (2025-10-21)
+
+
+### Bug Fixes
+
+* add green color to peak list names for better readability ([6ec65a1](https://github.com/dreamiurg/peakbagger-cli/commit/6ec65a1a0012016843c222974ff8a4db3e76a687))
+
 # [0.6.0](https://github.com/dreamiurg/peakbagger-cli/compare/v0.5.0...v0.6.0) (2025-10-21)
 
 
