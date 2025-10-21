@@ -96,31 +96,8 @@ warn_unused_configs = true
 disallow_untyped_defs = false
 ignore_missing_imports = true
 
-[tool.semantic_release]
-version_toml = ["pyproject.toml:project.version"]
-version_variables = ["peakbagger/__init__.py:__version__"]
-commit_parser = "conventional"
-logging_use_named_masks = false
-build_command = "uv build"
-major_on_zero = true
-allow_zero_version = true
-tag_format = "v{version}"
-
-[tool.semantic_release.branches.main]
-match = "(main|master)"
-prerelease = false
-
-[tool.semantic_release.changelog.default_templates]
-changelog_file = "CHANGELOG.md"
-
-[tool.semantic_release.commit_parser_options]
-allowed_tags = ["build", "chore", "ci", "docs", "feat", "fix", "perf", "style", "refactor", "test"]
-minor_tags = ["feat"]
-patch_tags = ["fix", "perf"]
-
 [dependency-groups]
 dev = [
     "mypy>=1.18.2",
-    "python-semantic-release>=10.4.1",
     "types-beautifulsoup4>=4.12.0.20250516",
 ]

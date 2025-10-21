@@ -166,22 +166,40 @@ peakbagger/
 
 ## Release Process
 
-This project uses **python-semantic-release** for version management.
+This project uses **semantic-release** (Node.js version) for automated version management and releases.
 
-### Before Making Changes
-- Check current version: `uv run semantic-release version --print`
-- Preview what would be released: `uv run semantic-release --noop version`
+### Automated Releases
 
-### Creating a Release
-1. Ensure commits follow conventional format
-2. Run: `uv run semantic-release version`
-3. Build: `uv build`
-4. Publish: `uv tool run twine upload dist/*`
+Releases are **fully automated** via GitHub Actions:
+1. Push commits to `main` or `master` branch
+2. GitHub Actions runs semantic-release
+3. Version is bumped, CHANGELOG.md is updated
+4. Git tag and GitHub release are created automatically
+
+### Configuration Files
+
+- `.releaserc.json` - Semantic-release configuration
+- `.github/workflows/release.yml` - GitHub Actions workflow
+- `scripts/update-version.py` - Updates version in pyproject.toml and __init__.py
+- `package.json` - Node.js dependencies for semantic-release
+
+### Manual Release Testing
+
+To test what would be released (requires Node.js and npm):
+
+```bash
+# Install dependencies (first time only)
+npm install
+
+# Test release in dry-run mode (won't actually release)
+npx semantic-release --dry-run
+```
 
 ### Version Strategy
 - Currently in `0.x.x` (pre-1.0 indicates beta/unstable)
 - Breaking changes in 0.x still bump MINOR (0.1.0 → 0.2.0)
 - After 1.0.0, breaking changes bump MAJOR
+- Releases are created automatically on push to main/master
 
 ## Common Mistakes to Avoid
 
@@ -239,13 +257,21 @@ Output changes include:
 - lxml >= 4.6.0
 - rich >= 10.0.0
 
-### Development
+### Development (Python)
 - pytest + pytest-cov
 - ruff
 - pre-commit
-- python-semantic-release
+- mypy
 
-**Always use `uv add` and `uv add --dev`** to manage dependencies.
+### Development (Node.js - for semantic-release)
+- semantic-release
+- @semantic-release/changelog
+- @semantic-release/git
+- @semantic-release/exec
+- @semantic-release/github
+
+**Always use `uv add` and `uv add --dev`** to manage Python dependencies.
+**Use `npm install`** for Node.js dependencies (semantic-release plugins).
 
 ## Questions or Unclear Instructions?
 

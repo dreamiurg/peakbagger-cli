@@ -94,3 +94,7 @@ tmp/
 temp/
 *.tmp
 .claude
+
+# Node.js (for semantic-release)
+node_modules/
+package-lock.json
