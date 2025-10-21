@@ -1,0 +1,3 @@
+# VCR cassettes are YAML files with recorded HTTP interactions
+# Mark them as binary to avoid unnecessary diffs
+tests/cassettes/*.yaml linguist-generated=true
