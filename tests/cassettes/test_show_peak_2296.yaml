@@ -1,0 +1,598 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8
+      Accept-Encoding:
+      - gzip, deflate
+      Accept-Language:
+      - en-US,en;q=0.9
+      User-Agent:
+      - peakbagger-cli/1.0.0 (personal use; https://github.com/yourusername/peakbagger-cli)
+    method: GET
+    uri: https://www.peakbagger.com/peak.aspx?pid=2296
+  response:
+    body:
+      string: "\r\n<!DOCTYPE html>\r\n<html>\r\n\t<head>\r\n\t\t<!-- Google tag (gtag.js)
+        -->\r\n\t\t<script async src=\"https://www.googletagmanager.com/gtag/js?id=G-LGMGT5T4SQ\"></script>\r\n\t\t<script>window.dataLayer
+        = window.dataLayer || []; function gtag() { dataLayer.push(arguments); } gtag('js',
+        new Date()); gtag('config', 'G-LGMGT5T4SQ');</script>\r\n\r\n\t\t<title>Mount
+        Rainier - Peakbagger.com</title>\r\n\r\n\t\t<script data-no-optimize=\"1\"
+        data-cfasync=\"false\"> (function (w, d) { w.adthrive = w.adthrive || {};
+        w.adthrive.cmd = w.adthrive.cmd || []; w.adthrive.plugin = 'adthrive-ads-manual';
+        w.adthrive.host = 'ads.adthrive.com'; var s = d.createElement('script'); s.async
+        = true; s.referrerpolicy = 'no-referrer-when-downgrade'; s.src = 'https://'
+        + w.adthrive.host + '/sites/68780426af88a65c82363576/ads.min.js?referrer='
+        + w.encodeURIComponent(w.location.href) + '&cb=' + (Math.floor(Math.random()
+        * 100) + 1); var n = d.getElementsByTagName('script')[0]; n.parentNode.insertBefore(s,
+        n); })(window, document); </script>\r\n\r\n\t\t<link href=\"pb.css\" type=\"text/css\"
+        rel=\"stylesheet\" />\r\n\t\t<link rel=\"shortcut icon\" href=\"favicon.ico?\"
+        type=\"image/x-icon\"/>\r\n\t\t<script type=\"text/javascript\">\r\n\t\t\t\tfunction
+        gfi()\r\n\t\t\t\t{ document.Form1.ProcessBox.value = \"GoForIt\" }\r\n\r\n\t\t\t\tfunction
+        Center(plati, plongi, lati, longi, peakid, layer, hj) {\r\n\t\t\t\t    var
+        ifr = document.getElementById('Gmap')\r\n   \t\t\t\t    \r\n\t\t\t\t    var
+        source = \"map/MasterMap.aspx?sy=\" + plati +\r\n\t\t\t\t    \"&sx=\" + plongi
+        + \"&z=15&t=P&d=\" + peakid + \"&a=1&cy=\" +\r\n\t\t\t\t    lati + \"&cx=\"
+        + longi + \"&l=\" + layer + \"&hj=\" + hj;\r\n\r\n\t\t\t\t    ifr.src = source;\r\n\t\t\t}\r\n
+        \           function copyLL(text) {\r\n                var input = document.createElement('textarea');\r\n
+        \               input.innerHTML = text;\r\n                document.body.appendChild(input);\r\n
+        \               input.select();\r\n                var result = document.execCommand('copy');\r\n
+        \               document.body.removeChild(input);\r\n                return
+        result;\r\n            }\r\n        </script>\r\n\t</head>\r\n    \t<body
+        style=\"margin-left:0;margin-top:0\">\r\n\t\t<div class=\"raptive-placeholder-header\"></div><form
+        name=\"Form1\" method=\"post\" action=\"./peak.aspx?pid=2296\" id=\"Form1\">\r\n<input
+        type=\"hidden\" name=\"__VIEWSTATE\" id=\"__VIEWSTATE\" value=\"/wEPDwUKMTcwMTY5OTAxNg8WAh4TVmFsaWRhdGVSZXF1ZXN0TW9kZQIBFgJmD2QWAgIGDxYCHgdWaXNpYmxlaGRkgsxgDvfAW97V5Eg1w+OYDtdV+x3cXVIZdyjDkWoY7FA=\"
+        />\r\n\r\n<input type=\"hidden\" name=\"__VIEWSTATEGENERATOR\" id=\"__VIEWSTATEGENERATOR\"
+        value=\"1AAC9899\" />\r\n<input type=\"hidden\" name=\"__EVENTVALIDATION\"
+        id=\"__EVENTVALIDATION\" value=\"/wEdAALX49ERXe6elLiU8e8yEdbPPNxUf0VbbR18bVcD4NsKR7pkwePgOK3slRCyjriciGIxOSb7qwzv7YE+fU91OdR9\"
+        />\r\n\t\t\t<script type=\"text/javascript\">\r\n  function DoQuickSearch()\r\n
+        \ {\r\n     var searchstr = document.Form1.QuickSearchTB.value;\r\n     if
+        (searchstr != \"\")\r\n         window.location = \"search.aspx?ss=\" + searchstr
+        + \"&tid=M\";\r\n     else\r\n         window.location = \"search.aspx\";\r\n
+        \ }\r\n  \r\n  function SearchKeyPress(e)\r\n  {\r\n    var cc \r\n    if(e
+        && e.which)\r\n    { \r\n        e = e\r\n        cc = e.which\r\n    }\r\n
+        \   else\r\n    {\r\n        e = event\r\n        cc = e.keyCode\r\n    }\r\n
+        \   \r\n    if(cc == 13)\r\n    {\r\n        DoQuickSearch();\r\n        return
+        false;     \r\n    }\r\n    else\r\n    {\r\n        return true;\r\n    }\r\n
+        \ }\r\n\r\n</script>\r\n\r\n\r\n\r\n<table cellpadding=\"0\" cellspacing=\"0\"
+        border=\"0\"\r\n    style=\"background-image:url(image/header.jpg); height:60px\"
+        width=\"100%\">\r\n<tr style=\"height:30px\">\r\n    <td colspan=\"7\" class=\"mainbanner\">\r\n
+        \       <a href=\"Default.aspx\" style=\"font-family: Arial, Helvetica, sans-serif;
+        text-decoration:none; color:black\">&nbsp;Peakbagger.com</a>\r\n    </td>\r\n
+        \   <td class=\"mainmenu\" style=\"width:29.5%\" align=\"right\">        \r\n
+        \       <input type=\"text\" id=\"QuickSearchTB\" name=\"QuickSearchTB\" style=\"width:100px;
+        font-size:x-small\" onkeypress=\"return SearchKeyPress(event)\"/>\r\n        <input
+        type=\"button\" title=\"Quick Search\" id=\"QSButton\" style=\"width:auto;
+        font-size:x-small\" value=\"Quick Search\" onclick=\"DoQuickSearch()\" />\r\n
+        \   </td>\r\n</tr>\r\n\r\n<tr style=\"height:30px\">\r\n    <td class=\"mainmenu\"
+        align=\"center\" style=\"width:11.5%\"><a href=\"ListIndx.aspx\" style=\"font-family:
+        Arial, Helvetica, sans-serif; text-decoration:none; color:black\">&nbsp;Peak
+        Lists</a></td>\r\n    <td class=\"mainmenu\" align=\"center\" style=\"width:10.5%\"><a
+        href=\"ClimbIndx.aspx\" style=\"font-family: Arial, Helvetica, sans-serif;
+        text-decoration:none; color:black\">Climbers</a></td>\r\n    <td class=\"mainmenu\"
+        align=\"center\" style=\"width:10.5%\"><a href=\"RangIndx.aspx\" style=\"font-family:
+        Arial, Helvetica, sans-serif; text-decoration:none; color:black\">Ranges</a></td>\r\n
+        \   <td class=\"mainmenu\" align=\"center\" style=\"width:11.5%\"><a href=\"PBGeog/GeogIndx.aspx\"
+        style=\"font-family: Arial, Helvetica, sans-serif; text-decoration:none; color:black\">Geography</a></td>\r\n
+        \   <td class=\"mainmenu\" align=\"center\" style=\"width:8%\"><a href=\"Help/Help.aspx\"
+        style=\"font-family: Arial, Helvetica, sans-serif; text-decoration:none; color:black\">Help</a></td>\r\n
+        \   <td class=\"mainmenu\" align=\"center\" style=\"width:10.5%\"><a href=\"Search.aspx\"
+        style=\"font-family: Arial, Helvetica, sans-serif; text-decoration:none; color:black\">Search</a></td>\r\n
+        \   <td class=\"mainmenu\" align=\"center\" style=\"width:6%\"><a href=\"Climber/Login.aspx\"
+        style=\"font-family: Arial, Helvetica, sans-serif; text-decoration:none; color:black\">Log
+        In</a></td>\r\n    <td class=\"mainmenu\" align=\"right\" style=\"width:31.5%;
+        font-size:x-small\">\r\n        \r\n        \r\n        \r\n        \r\n        \r\n
+        \       <input type=\"submit\" name=\"qlib\" value=\"Quick Login\" id=\"qlib\"
+        />\r\n    </td>\r\n</tr>\r\n</table>\r\n<table cellpadding=\"0\" cellspacing=\"0\"
+        border=\"0\" width=\"100%\">\r\n<tr><td></td></tr></table>\r\n\t\t\t<table
+        cellpadding=\"10\" width=\"99%\">\r\n\t\t\t\t<tr>\r\n\t\t\t\t\t<td>\r\n\t\t\t\t\t\t\r\n
+        \                       <noscript>\r\n                            <img src=\"https://www.assoc-amazon.com/s/noscript?tag=peakbaggercom-20\"
+        alt=\"\" />\r\n                        </noscript>\t\t\r\n\r\n\t\t\t\t\t\t<h1>Mount
+        Rainier, Washington</h1><table width=\"100%\"><tr><td align=\"left\" width=\"33%\"><br/>Prominence:
+        13241 ft, 4036 m</td><td valign=\"top\" width=\"34%\"><h2>Elevation: 14,406
+        feet, 4391 meters</h2></td><td align=\"right\" width=\"33%\"><br/>True Isolation:
+        731.13 mi, 1176.64 km</td></tr></table><table class=\"gray\" align=\"left\"
+        width=\"49%\"><tr><td valign=top>Highest Summit</td><td>Southwest Crater Rim</td></tr><tr><td
+        valign=top>Peak Type</td><td>Volcano</td></tr><tr><td valign=top>Subpeaks</td><td><a
+        href=\"peak.aspx?pid=163756\">Mount Rainier - Columbia Crest</a> (14,396 ft/4388
+        m)<br/><a href=\"peak.aspx?pid=24166\">Mount Rainier - Southeast Crater Rim</a>
+        (14,200 ft/4328 m)<br/><a href=\"peak.aspx?pid=2298\">Point Success</a> (14,147
+        ft/4312 m)<br/><a href=\"peak.aspx?pid=2294\">Liberty Cap</a> (14,097 ft/4297
+        m)<br/><a href=\"peak.aspx?pid=66192\">Gibraltar Rock</a> (12,660 ft/3859
+        m)<br/><a href=\"peak.aspx?pid=59717\">The Beehive</a> (11,000 ft/3353 m)<br/><a
+        href=\"peak.aspx?pid=2293\">Steamboat Prow</a> (9723 ft/2964 m)<br/><a href=\"peak.aspx?pid=25795\">Anvil
+        Rock</a> (9584 ft/2921 m)<br/><a href=\"peak.aspx?pid=2299\">Whitman Crest</a>
+        (9358 ft/2852 m)<br/><a href=\"peak.aspx?pid=2295\">K Spire</a> (8873 ft/2705
+        m)<br/><a href=\"peak.aspx?pid=2292\">Mount Ruth</a> (8690 ft/2649 m)<br/></td></tr><tr><td
+        valign=top>Name Info</td><td>Official Name<br/>Local or Alternate Name(s):<br/>&nbsp;&nbsp;&nbsp;&nbsp;Indigenous
+        Name:&nbsp;Tahoma<br />&nbsp;&nbsp;&nbsp;&nbsp;Indigenous Name:&nbsp;Tacoma</td></tr><tr><td
+        valign=top>Elevation Info</td><td>Summit:&nbsp;14,406.2 feet (NAVD88 Vertical
+        Datum)<br/>Source/Method: Differential GPS<br/>Notes: NGVD29 Elevation: 14,399.6
+        feet</td></tr><tr><td valign=top>Latitude/Longitude (WGS84)</td><td>46.851731,
+        -121.760395 (Dec Deg)<br/>46&deg 51' 6'' N, 121&deg 45' 37'' W (DMS)<br/>594502
+        E, 5189434 N, Zone 10 (UTM)</td></tr><tr><td valign=top>Map Source</td><td>US
+        Geological Survey (1:24,000) - Main Source<br/>&nbsp;&nbsp;&nbsp;&nbsp;Sheet:
+        Mount Rainier West (O46121g7)<br/>3DEP Contours - USGS (1:5,000)<br/><tr><td
+        valign=top>Nation</td><td>United States</td></tr><tr><td valign=top>State/Province</td><td>Washington
+        (Highest Point)</td></tr><tr><td valign=top>County/Second Level Region</td><td>Pierce
+        (Highest Point)</td></tr><tr><td colspan=2><b>Links</b><br/><br/>Search Engines
+        - search the web for \"Mount Rainier\":<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"https://search.bing.com/results.aspx?q=site:en.wikipedia.org %22Mount
+        Rainier%22\">Wikipedia Search</a><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"https://search.bing.com/results.aspx?q=%22Mount
+        Rainier%22\">Microsoft Bing Search</a><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"https://www.google.com/search?hl=en&ie=UTF-8&oe=UTF-8&q=%22Mount Rainier%22\">Google
+        Search</a><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"https://search.yahoo.com/search?p=%22Mount
+        Rainier%22\">Yahoo Search</a><br/><br />Other Web Sites<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"https://summitpost.org/mountain/150291\" target=\"_blank\">Mount Rainier
+        at SummitPost</a><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"https://listsofjohn.com/peak/16668\"
+        target=\"_blank\">Rainier; Mount at ListsOfJohn</a><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"https://mountain-forecast.com/peaks/Mount-Rainier/forecasts/4392\"
+        target=\"_blank\">Mount Rainier at Mountain-Forecast.com</a><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"https://summits.sota.org.uk/summit/W7W/RS-001\" target=\"_blank\">Mt
+        Rainier - Columbia Crest at Summits on the Air (Amateur Radio)</a><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"https://www.hikr.org/dir/_14375\" target=\"_blank\">Mount Rainier at
+        Hikr.org</a><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"https://edits.nationalmap.gov/apps/gaz-domestic/public/gaz-record/1533614\"
+        target=\"_blank\">Mount Rainier at USGS-GNIS</a><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"http://www.nps.gov/mora/\" target=\"_blank\">Mount Rainier National
+        Park</a><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"http://www.rmiguides.com/\"
+        target=\"_blank\">Rainier Mountaineering Inc. Guide Service</a><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"http://www.alpineascents.com/rainier.asp\" target=\"_blank\">Alpine
+        Ascents International - Rainier</a><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"http://www.mountainguides.com/rainier.shtml\" target=\"_blank\">International
+        Mountain Guides - Rainier</a><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"http://www.chinookpass.com/\"
+        target=\"_blank\">News and Weather for Mt. Rainier and Chinook Pass</a><br
+        />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"http://www.cohp.org/wa/Pierce_1.html\"
+        target=\"_blank\">CoHP.org Trip Report for Pierce, WA by John Roper </a><br
+        />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"http://www.cohp.org/wa/Pierce_2.html\"
+        target=\"_blank\">CoHP.org Trip Report for Pierce, WA by Don Beavon </a><br
+        />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"http://www.cohp.org/wa/Pierce_3.html\"
+        target=\"_blank\">CoHP.org Trip Report for Pierce, WA by Dale Millsap </a><br
+        /><br/>Weather and Snow<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"https://forecast.weather.gov/MapClick.php?lon=-121.760395&lat=46.851731#.VDcJhnlOW1t\">National
+        Weather Service Forecast</a><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"https://www.nohrsc.noaa.gov/interactive/html/map.html?var=ssm_depth&min_x=-121.828780102036&min_y=46.7517303466797&max_x=-121.692002368667&max_y=46.9517303466797&bgvar=dem&shdvar=shading&title=0&width=800&height=450&font=0&lbl=m&palette=0&h_o=0&metric=0&lp=0&no_header=0&snap=1&o7=1&o9=1&o11=1&o13=1\">NOAA
+        Snow Depth Map</a><br/><br />Selected Guidebook(s) for this Peak:<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"http://www.amazon.com/gp/product/0762710861?ie=UTF8&tag=peakbaggercom-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=0762710861\"><img
+        src=\"image/amazontiny.gif\" border=\"0\">&nbsp;&nbsp;Climbing Washingtons
+        Mountains (Smoot)</a><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"http://www.amazon.com/gp/product/0966979583?ie=UTF8&tag=peakbaggercom-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=0966979583\"><img
+        src=\"image/amazontiny.gif\" border=\"0\">&nbsp;&nbsp;Summit Routes: Washington's
+        100 Highest Peaks (Stephenson, Bongiovanni)</a><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"http://www.amazon.com/gp/product/0898865778?ie=UTF8&tag=peakbaggercom-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=0898865778\"><img
+        src=\"image/amazontiny.gif\" border=\"0\">&nbsp;&nbsp;Cascade Alpine Guide,
+        Vol. 1 (Beckey)</a><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"http://www.amazon.com/gp/product/156044889X?ie=UTF8&tag=peakbaggercom-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=156044889X\"><img
+        src=\"image/amazontiny.gif\" border=\"0\">&nbsp;&nbsp;Climbing the Cascade
+        Volcanoes (Smoot)</a><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"http://www.amazon.com/gp/product/0930584074?ie=UTF8&tag=peakbaggercom-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=0930584074\"><img
+        src=\"image/amazontiny.gif\" border=\"0\">&nbsp;&nbsp;Fifty State Summits,
+        Guide with Maps to State Highpoints (Zumwalt)</a><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"http://www.amazon.com/gp/product/0874806453?ie=UTF8&tag=peakbaggercom-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=0874806453\"><img
+        src=\"image/amazontiny.gif\" border=\"0\">&nbsp;&nbsp;Highpoints of the United
+        States: A Guide to the Fifty State Summits (Holmes)</a><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"http://www.amazon.com/gp/product/0898869560?ie=UTF8&tag=peakbaggercom-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=0898869560\"><img
+        src=\"image/amazontiny.gif\" border=\"0\">&nbsp;&nbsp;Mount Rainier: A Climbing
+        Guide (Gauthier)</a><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"http://www.amazon.com/gp/product/089997290X?ie=UTF8&tag=peakbaggercom-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=089997290X\"><img
+        src=\"image/amazontiny.gif\" border=\"0\">&nbsp;&nbsp;Washington's Highest
+        Mountains: Basic Alpine and Glacier Routes (Goldman)</a><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"http://www.amazon.com/gp/product/1463692013?ie=UTF8&tag=peakbaggercom-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=1463692013\"><img
+        src=\"image/amazontiny.gif\" border=\"0\">&nbsp;&nbsp;Highpoint Adventures:
+        The Complete Guide to the 50 State Highpoints (Winger)</a><br /><br/></td></tr><tr><td
+        colspan=\"2\"><b>Ascent Info</b><br/><br/>Total ascents/attempts logged by
+        registered Peakbagger.com users: <b>4388</b><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=climber/PeakAscents.aspx?pid=2296>Show all viewable ascents/attempts</a>
+        (Total: 3960)<br/><br/>Selected Trip Reports - Click on linked Date below
+        for full report.<br />&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:red\"><b>New!</b></span>&nbsp;&nbsp;<a
+        href=\"Map/BigMap.aspx?cy=46.851731&cx=-121.760395&z=14&l=L_CT|L_MT|L_FS|L_3D|L_AG|L_OT|L_OS|L_AI|B_B1|G_SA|L_CA|L_BC&hj=0&t=G&d=2296&c=0&gt=rc\">Peak
+        GPS Map - 10 most recent tracks</a> (or <a href=\"Map/BigMap.aspx?cy=46.851731&cx=-121.760395&z=14&l=L_CT|L_MT|L_FS|L_3D|L_AG|L_OT|L_OS|L_AI|B_B1|G_SA|L_CA|L_BC&hj=0&t=G&d=2296&c=0&gt=rt\">different
+        routes</a>), all on one map<br /><table class = \"gray\"><tr><th>Date</th><th>Climber</th><th>Type</th><th>GPS</th><th>TR
+        Words</th><th>Link</th></tr><tr><td><a href=\"climber/ascent.aspx?aid=2921117\">2025-07-28</a></td><td><a
+        href=\"climber/Climber.aspx?cid=43545\">Zhang, Kostya</td><td><img src=\"image/Suc.gif\"
+        title=\"Successful Ascent\"/></td><td><img src=\"image/GPS.gif\" title=\"Ascent
+        has GPS track\"/></td><td>TR-1304</td><td><a href=\"https://www.alltrails.com/explore/recording/evening-hike-at-mount-rainier-standard-summit-route-7ec69dd\">alltrails.com</a></td></tr><tr><td><a
+        href=\"climber/ascent.aspx?aid=2871459\">2025-06-14</a></td><td><a href=\"climber/Climber.aspx?cid=39376\">Up,
+        Damon</td><td><img src=\"image/Suc.gif\" title=\"Successful Ascent\"/></td><td><img
+        src=\"image/GPS.gif\" title=\"Ascent has GPS track\"/></td><td>TR-665</td><td><a
+        href=\"https://www.youtube.com/watch?v=rymW5PR1rIE\">youtube.com</a></td></tr><tr><td><a
+        href=\"climber/ascent.aspx?aid=2861665\">2025-06-07</a></td><td><a href=\"climber/Climber.aspx?cid=45741\">Birkholz,
+        Dan</td><td><img src=\"image/Suc.gif\" title=\"Successful Ascent\"/></td><td><img
+        src=\"image/GPS.gif\" title=\"Ascent has GPS track\"/></td><td>TR-297</td><td><a
+        href=\"https://www.strava.com/activities/14728575710\">strava.com</a></td></tr><tr><td><a
+        href=\"climber/ascent.aspx?aid=2555789\">2024-06-29</a></td><td><a href=\"climber/Climber.aspx?cid=31927\">Melnikov,
+        Oleg</td><td><img src=\"image/Suc.gif\" title=\"Successful Ascent\"/></td><td><img
+        src=\"image/GPS.gif\" title=\"Ascent has GPS track\"/></td><td>TR-439</td><td></td></tr><tr><td><a
+        href=\"climber/ascent.aspx?aid=2547376\">2024-06-22</a></td><td><a href=\"climber/Climber.aspx?cid=40786\">Deng,
+        Zihao</td><td><img src=\"image/Suc.gif\" title=\"Successful Ascent\"/></td><td><img
+        src=\"image/GPS.gif\" title=\"Ascent has GPS track\"/></td><td>TR-1517</td><td><a
+        href=\"https://www.alltrails.com/explore/recording/evening-hike-e21cece-146\">alltrails.com</a></td></tr><tr><td><a
+        href=\"climber/ascent.aspx?aid=2549158\">2024-06-22</a></td><td><a href=\"climber/Climber.aspx?cid=44830\">Estenson,
+        Wally</td><td><img src=\"image/Suc.gif\" title=\"Successful Ascent\"/></td><td><img
+        src=\"image/GPS.gif\" title=\"Ascent has GPS track\"/></td><td>TR-400</td><td><a
+        href=\"https://www.strava.com/activities/11716424643\">strava.com</a></td></tr><tr><td><a
+        href=\"climber/ascent.aspx?aid=2544720\">2024-06-18</a></td><td><a href=\"climber/Climber.aspx?cid=43073\">Maldonado,
+        Vanessa</td><td><img src=\"image/Suc.gif\" title=\"Successful Ascent\"/></td><td><img
+        src=\"image/GPS.gif\" title=\"Ascent has GPS track\"/></td><td>TR-560</td><td><a
+        href=\"https://www.strava.com/activities/11694912052\">strava.com</a></td></tr><tr><td><a
+        href=\"climber/ascent.aspx?aid=2538216\">2024-06-07</a></td><td><a href=\"climber/Climber.aspx?cid=42356\">Huisman,
+        Laura</td><td><img src=\"image/Suc.gif\" title=\"Successful Ascent\"/></td><td><img
+        src=\"image/GPS.gif\" title=\"Ascent has GPS track\"/></td><td>TR-225</td><td><a
+        href=\"https://www.gaiagps.com/public/NJfxa7iW33Y4YsHn17mTqd9c/\">gaiagps.com</a></td></tr><tr><td><a
+        href=\"climber/ascent.aspx?aid=2251632\">2023-07-15</a></td><td><a href=\"climber/Climber.aspx?cid=30820\">Dahlgren,
+        Aron</td><td><img src=\"image/Suc.gif\" title=\"Successful Ascent\"/></td><td><img
+        src=\"image/GPS.gif\" title=\"Ascent has GPS track\"/></td><td>TR-400</td><td></td></tr><tr><td><a
+        href=\"climber/ascent.aspx?aid=2231932\">2023-06-11</a></td><td><a href=\"climber/Climber.aspx?cid=41888\">Gerasimov,
+        Anton</td><td><img src=\"image/Suc.gif\" title=\"Successful Ascent\"/></td><td><img
+        src=\"image/GPS.gif\" title=\"Ascent has GPS track\"/></td><td>TR-587</td><td><a
+        href=\"https://www.alltrails.com/.../pierce-county-hiking-a11513a\">alltrails.com</a></td></tr><tr><td><a
+        href=\"climber/ascent.aspx?aid=2202296\">2023-05-28</a></td><td><a href=\"climber/Climber.aspx?cid=10787\">Caulfield,
+        Sean</td><td><img src=\"image/Suc.gif\" title=\"Successful Ascent\"/></td><td><img
+        src=\"image/GPS.gif\" title=\"Ascent has GPS track\"/></td><td>TR-1354</td><td><a
+        href=\"https://www.strava.com/activities/9160284638\">strava.com</a></td></tr><tr><td><a
+        href=\"climber/ascent.aspx?aid=2199387\">2023-05-20</a></td><td><a href=\"climber/Climber.aspx?cid=29817\">Wagenaar,
+        Brad</td><td><img src=\"image/Suc.gif\" title=\"Successful Ascent\"/></td><td><img
+        src=\"image/GPS.gif\" title=\"Ascent has GPS track\"/></td><td>TR-1055</td><td></td></tr><tr><td><a
+        href=\"climber/ascent.aspx?aid=1979937\">2022-07-29</a></td><td><a href=\"climber/Climber.aspx?cid=33972\">Centrone,
+        Mickie</td><td><img src=\"image/Suc.gif\" title=\"Successful Ascent\"/></td><td><img
+        src=\"image/GPS.gif\" title=\"Ascent has GPS track\"/></td><td>TR-313</td><td></td></tr><tr><td><a
+        href=\"climber/ascent.aspx?aid=1978162\">2022-07-25</a></td><td><a href=\"climber/Climber.aspx?cid=8965\">R,
+        Bradley</td><td><img src=\"image/Suc.gif\" title=\"Successful Ascent\"/></td><td><img
+        src=\"image/GPS.gif\" title=\"Ascent has GPS track\"/></td><td>TR-1617</td><td></td></tr><tr><td><a
+        href=\"climber/ascent.aspx?aid=1961611\">2022-07-09</a></td><td><a href=\"climber/Climber.aspx?cid=11632\">Robertshaw,
+        Liana</td><td><img src=\"image/Suc.gif\" title=\"Successful Ascent\"/></td><td><img
+        src=\"image/GPS.gif\" title=\"Ascent has GPS track\"/></td><td>TR-984</td><td></td></tr><tr><td><a
+        href=\"climber/ascent.aspx?aid=1952293\">2022-06-26</a></td><td><a href=\"climber/Climber.aspx?cid=35141\">Clouse,
+        John</td><td><img src=\"image/Suc.gif\" title=\"Successful Ascent\"/></td><td><img
+        src=\"image/GPS.gif\" title=\"Ascent has GPS track\"/></td><td>TR-335</td><td></td></tr><tr><td><a
+        href=\"climber/ascent.aspx?aid=1209666\">2019-07-31</a></td><td><a href=\"climber/Climber.aspx?cid=20686\">Hadland,
+        Mark</td><td><img src=\"image/Suc.gif\" title=\"Successful Ascent\"/></td><td><img
+        src=\"image/GPS.gif\" title=\"Ascent has GPS track\"/></td><td>TR-329</td><td></td></tr><tr><td><a
+        href=\"climber/ascent.aspx?aid=1180428\">2019-06-16</a></td><td><a href=\"climber/Climber.aspx?cid=20424\">Martin,
+        Jeremy</td><td><img src=\"image/Suc.gif\" title=\"Successful Ascent\"/></td><td><img
+        src=\"image/GPS.gif\" title=\"Ascent has GPS track\"/></td><td>TR-359</td><td></td></tr><tr><td><a
+        href=\"climber/ascent.aspx?aid=980713\"><span style=\"color:red\">(2018-06-18)</span></a></td><td><a
+        href=\"climber/Climber.aspx?cid=17014\">Valdes, Honorio</td><td><img src=\"image/UnSuc.gif\"
+        title=\"Unsuccessful Attempt\"/></td><td><img src=\"image/GPS.gif\" title=\"Ascent
+        has GPS track\"/></td><td>TR-391</td><td></td></tr><tr><td><a href=\"climber/ascent.aspx?aid=712257\">2016-09-14</a></td><td><a
+        href=\"climber/Climber.aspx?cid=3972\">Benezra, Jeremy</td><td><img src=\"image/Suc.gif\"
+        title=\"Successful Ascent\"/></td><td><img src=\"image/GPS.gif\" title=\"Ascent
+        has GPS track\"/></td><td>TR-1935</td><td></td></tr><tr><td><a href=\"climber/ascent.aspx?aid=681944\">2016-07-24</a></td><td><a
+        href=\"climber/Climber.aspx?cid=13770\">Garg, Dhruv</td><td><img src=\"image/Suc.gif\"
+        title=\"Successful Ascent\"/></td><td><img src=\"image/GPS.gif\" title=\"Ascent
+        has GPS track\"/></td><td>TR-229</td><td><a href=\"http://ari.rdx.net/abc/info/grade_alpine.htm)\">ari.rdx.net</a></td></tr><tr><td><a
+        href=\"climber/ascent.aspx?aid=689667\">2016-06-28</a></td><td><a href=\"climber/Climber.aspx?cid=3031\">Nakajima,
+        Tomoko</td><td><img src=\"image/Suc.gif\" title=\"Successful Ascent\"/></td><td><img
+        src=\"image/GPS.gif\" title=\"Ascent has GPS track\"/></td><td>TR-460</td><td></td></tr><tr><td><a
+        href=\"climber/ascent.aspx?aid=449294\">2014-08-24</a></td><td><a href=\"climber/Climber.aspx?cid=1654\">Barlow,
+        James</td><td><img src=\"image/Suc.gif\" title=\"Successful Ascent\"/></td><td><img
+        src=\"image/GPS.gif\" title=\"Ascent has GPS track\"/></td><td>TR-1741</td><td><a
+        href=\"https://www.flickr.com/gp/32047690@N04/6191Xh\">flickr.com</a></td></tr><tr><td><a
+        href=\"climber/ascent.aspx?aid=439267\">2014-07-27</a></td><td><a href=\"climber/Climber.aspx?cid=1412\">Blume,
+        Walter</td><td><img src=\"image/Suc.gif\" title=\"Successful Ascent\"/></td><td><img
+        src=\"image/GPS.gif\" title=\"Ascent has GPS track\"/></td><td>TR-882</td><td><a
+        href=\"http://rainier.wblume.com/\">rainier.wblume.com</a></td></tr><tr><td><a
+        href=\"climber/ascent.aspx?aid=434935\">2014-06-14</a></td><td><a href=\"climber/Climber.aspx?cid=3721\">Thorman,
+        Marlin</td><td><img src=\"image/Suc.gif\" title=\"Successful Ascent\"/></td><td><img
+        src=\"image/GPS.gif\" title=\"Ascent has GPS track\"/></td><td>TR-1690</td><td></td></tr><tr><td><a
+        href=\"climber/ascent.aspx?aid=434927\">2014-06-01</a></td><td><a href=\"climber/Climber.aspx?cid=3721\">Thorman,
+        Marlin</td><td><img src=\"image/Suc.gif\" title=\"Successful Ascent\"/></td><td><img
+        src=\"image/GPS.gif\" title=\"Ascent has GPS track\"/></td><td>TR-1401</td><td></td></tr><tr><td><a
+        href=\"climber/ascent.aspx?aid=333648\">2013-07-21</a></td><td><a href=\"climber/Climber.aspx?cid=4734\">914,
+        BMS</td><td><img src=\"image/Suc.gif\" title=\"Successful Ascent\"/></td><td><img
+        src=\"image/GPS.gif\" title=\"Ascent has GPS track\"/></td><td>TR-3119</td><td></td></tr><tr><td><a
+        href=\"climber/ascent.aspx?aid=1595\"><span style=\"color:red\">(2002-06-26)</span></a></td><td><a
+        href=\"climber/Climber.aspx?cid=2\">Slayden, Greg</td><td><img src=\"image/UnSuc.gif\"
+        title=\"Unsuccessful Attempt\"/></td><td><img src=\"image/GPS.gif\" title=\"Ascent
+        has GPS track\"/></td><td>TR-757</td><td></td></tr><tr><td><a href=\"climber/ascent.aspx?aid=1459\">1997-07-20</a></td><td><a
+        href=\"climber/Climber.aspx?cid=2\">Slayden, Greg</td><td><img src=\"image/Suc.gif\"
+        title=\"Successful Ascent\"/></td><td><img src=\"image/GPS.gif\" title=\"Ascent
+        has GPS track\"/></td><td>TR-354</td><td></td></tr><tr><td><a href=\"climber/ascent.aspx?aid=1192\"><span
+        style=\"color:red\">(1992-08-11)</span></a></td><td><a href=\"climber/Climber.aspx?cid=2\">Slayden,
+        Greg</td><td><img src=\"image/UnSuc.gif\" title=\"Unsuccessful Attempt\"/></td><td><img
+        src=\"image/GPS.gif\" title=\"Ascent has GPS track\"/></td><td>TR-4518</td><td></td></tr></table><br
+        /></td></tr><tr><td colspan=\"2\"><b>Peak Lists</b> that contain Mount Rainier<br
+        /><br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"list.aspx?lid=5030\">Mountaineers
+        6-Peak Pin - New Version</a> (Rank #1)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"list.aspx?lid=5031\">Mountaineers 5-Peak Pin</a> (Rank #1)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"list.aspx?lid=50301\">Mountaineers 6-Peak Pin [Historic]</a> (Rank
+        #1)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"list.aspx?lid=12005\">Contiguous
+        48 U.S. State High Points</a> (Rank #3)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"list.aspx?lid=12003\">U.S. State High Points</a> (Rank #4)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"list.aspx?lid=5063\">Mazamas Sixteen Northwest Peaks Award</a> (Rank
+        #1)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"list.aspx?lid=120031\">United
+        States State/Territory High Points</a> (Rank #4)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"list.aspx?lid=823\">Triple Crown CoHPs</a> (Rank #1)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"list.aspx?lid=16110\">USA Lower 48 Range3 High Points</a> (Rank #3)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"list.aspx?lid=5012\">Chemeketan Eighteen Northwest Peaks Award</a>
+        (Rank #1)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"list.aspx?lid=31203\">USA
+        Lower 48 Peaks with 100 miles of Isolation</a> (Rank #4)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"list.aspx?lid=5044\">Cascade Volcanoes Peak Pin</a> (Rank #1)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"list.aspx?lid=832\">5000 foot Prominence CoHPs - 48 States</a> (Rank
+        #3)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"list.aspx?lid=5209\">Fred
+        Beckey's Great Peaks of the Continent</a> (Rank #5)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"list.aspx?lid=41203\">USA Lower 48 Peaks with 5000 feet of Prominence</a>
+        (Rank #1)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"list.aspx?lid=852\">High
+        Points of Counties Crossed by the Pacific Crest Trail</a> (Rank #3)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"list.aspx?lid=41207\">Most Prominent Peaks of the U.S. States</a> (Rank
+        #3)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"list.aspx?lid=21300\">USA
+        48-States 14,000-foot Peaks</a> (Rank #5)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"list.aspx?lid=620\">Peaks on US State Quarters</a> (Rank #1)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"list.aspx?lid=6510\">EPIC List - States of the USA</a> (Rank #4)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"list.aspx?lid=21317\">Cascade Range 9000-foot Peaks</a> (Rank #1)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"list.aspx?lid=31301\">Washington State Peaks with 25 Miles of Isolation</a>
+        (Rank #1)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"list.aspx?lid=41204\">USA
+        Lower 48 Top 100 Peaks by Prominence</a> (Rank #1)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"list.aspx?lid=821\">Apex (Toughest) CoHPs</a> (Rank #1)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"list.aspx?lid=41205\">USA Lower 48 Peaks with 4000 feet of Prominence</a>
+        (Rank #1)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"list.aspx?lid=5005\">Smoot's
+        \"Climbing Washington's Mountains\" 100 Peaks</a> (Rank #1)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"list.aspx?lid=831\">2000-foot Prominence CoHPs - 48 States</a> (Rank
+        #1)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"list.aspx?lid=41607\">Washington
+        State County Prominence Peaks</a> (Rank #1)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"list.aspx?lid=18403\">Washington State Wilderness High Points</a> (Rank
+        #1)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"list.aspx?lid=13202\">Washington
+        County High Points</a> (Rank #1)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"list.aspx?lid=21303\">Washington
+        State Top 100 Peaks</a> (Rank #1)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"list.aspx?lid=5003\">Washington
+        Bulger List</a> (Rank #1)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"list.aspx?lid=50030\">Traditional
+        Washington Top 100 x P400</a> (Rank #1)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"list.aspx?lid=41206\">USA Lower 48 Top 400 Peaks by Prominence</a>
+        (Rank #1)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"list.aspx?lid=41307\">Washington
+        State Peaks with 2000 feet of Prominence</a> (Rank #1)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"list.aspx?lid=213031\">Washington State Top 200 Peaks</a> (Rank #1)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=\"list.aspx?lid=41308\">Washington State Top 200 by Prominence</a> (Rank
+        #1)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"list.aspx?lid=640\">Decade
+        Volcanoes</a> (Rank #1)<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"list.aspx?lid=41507\">Washington
+        State Peaks with 1000 feet of Prominence</a> (Rank #1)<br/><span style=\"font-size:smaller\">(Peak
+        is on over 20 lists; Not all shown here.)</span><br/><br/></td></tr><tr><td
+        colspan=\"2\">Nearby Peak Searches:<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href=search.aspx?tid=R&pid=2296>Radius
+        Search - Nearest Peaks to Mount Rainier</a><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=search.aspx?tid=E&pid=2296>Elevation Ladder from Mount Rainier</a><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a
+        href=search.aspx?tid=P&pid=2296>Prominence Ladder from Mount Rainier</a><br/><br/></td></tr><tr><td
+        colspan=2 style=\"padding:10px\"><h2>Elevation Notes</h2><br><p>According
+        to a September, 2024 survey by Eric Gilbertson and Josh Spitzberg, the Southwest
+        Rim of Mount Rainier became the true summit of the peak sometime around 2014.
+        The ice dome of Columbia Crest, which was previously the true summit of Mount
+        Rainier, has melted down over  20 feet since 1999 to a new elevation of 14,389.2
+        ft with a 0.1 foot range of error. </p><br><p>This website will continue to
+        count all ascents to Columbia Crest prior to September of 2024 as valid ascents
+        of Mount Rainier.  The distance between the new and old high points is only
+        500 horizontal feet over trivial terrain, and during much of the year deep
+        snow of variable depth covers both points.  Tracking who visited which points
+        before or after 2014, and assigning or denying summit credit based on that,
+        is a difficult challenge for an online database. </p><br><h2>Description:</h2><br><p>Mount
+        Rainier is perhaps the single most impressive mountain in the 48 contiguous
+        United States.  It ranks fifth in height, a tiny bit lower than California's
+        <a href=peak.aspx?pid=2829>Mt. Whitney</a> (14,494'/4418m) and three Sawatch
+        Range peaks in Colorado.  And it ranks second to <a href=peak.aspx?pid=2477>Mount
+        Shasta</a> in total volume for a single peak.  But no other peak has the combination
+        of high elevation, massive bulk, and extensive glaciation--and  Mt. Rainier
+        stands alone in splendid isolation, with only 40 miles separating sea level
+        at Puget Sound from its glacier-clad summit.  No other peak nearby even remotely
+        challenges its supremacy.</p><br><p>In most of the United States, a hike of
+        3000 vertical feet to the summit of a peak is considered about average; 4000
+        to 5000 vertical feet is considered a very long and extremely tiring trip,
+        and anything above 6000 vertical feet is rare and devastatingly difficult.
+        \ However, Mt. Rainier, by its easiet route, requires ascending 9000 vertical
+        feet (that's 2740m for you non-Americans).  This distance is the same as for
+        the climb from advance basecamp in the Western Cwm to the summit of Mt. Everest.</p><br><p>Even
+        though Rainier's elevation is low by the standards of the Himalaya and the
+        Andes, there are only 20 mountains on earth have more <a href=help/glossary.aspx#prom>topographic
+        prominence</a>--it just beats out K2 for spot #21 on the <a href=list.aspx?lid=403>list
+        of most prominence peaks on earth</a>.  Mount Whitney, at #81, is the next
+        peak in the contiguous USA on that list.</p><p>Mt. Rainier can be seen from
+        150 miles away, and makes an appropriate design for Washington's license plate,
+        since it's visible from such a large chunk of the state.  Looming over Seattle
+        and Tacoma, sometimes above the layer of clouds, Rainier has an overwhelming
+        presence like that of few other peaks in the world.</p><p>The upper mountain
+        is covered with large glaciers and snowfields covering over 30 square miles,
+        much of this terrain covered with yawning crevasses.</p><br><p>To the casual
+        tourist or climber, the only current evidence of volcanic activity on the
+        mountain is some ice caves in the small, shallow summit crater, created by
+        steam melting the snow.  However, geologists consider Rainier an active volcano,
+        and small eruptions were seen in in 1894-1895.  As recently as the year 1400
+        a devastating lahar from the slopes of the mountain inundated large areas
+        of lowland with thick mud deposits.</p><h2>Climbing Notes:</h2><p>As of 2007,
+        the National Park Service allows three professional guide services to conduct
+        clients to the summit of the peak and to offer mountaineering programs on
+        its slopes.  A three-day trip includes a day of training, a day to hike halfway
+        up the peak, and a long third day when you summit and return to base.  See
+        the \"Other Web Sites\" section above for information from these three companies.</p><br><p>Any
+        well-coordinated and experienced hiker in excellent physical shape can make
+        the climb with the guide services.  The biggest variable is the weather--if
+        the date of your scheduled climb is stormy, you might not even make it past
+        the halfway camps of Camp Muir or Camp Schurman (but they still take all your
+        money).  Also, be aware that many guided climbs end at the crater rim, a short
+        trip from the new true summit at the Southwest Crater Rim.</p><br><p>It is
+        certainly possible for very fit and experienced mountaineers to climb the
+        mountain without a guide.  You do have to register with the National Park
+        rangers and pay a small fee, but beyond the sheer scale of the peak the easier
+        routes don't present much of a challenge to those used to crossing glaciers.
+        \ The Camp Muir-Disappointment Cleaver route is usually a wide, trenched-out
+        path made by hundreds of climbers every day, including the 30-strong RMI guided
+        group.</p><br><p>Other routes offer more solitude and/or challenge.  The Interglacier-Emmons
+        Glacier route is the second most-used, and avoids the crumbly rock of the
+        Disappointment Cleaver for an endless glacier trudge.  The Liberty Ridge on
+        the northwest is perhaps the most famous of the more difficult routes, which
+        vary all the way to the nearly-impossible Willis Wall, a 4000-foot north face
+        of crumbling rock and ice.</p><br></td></tr></table><table class=\"gray\"
+        align=\"right\" width=\"50%\"><tr><td colspan=2 align=center><img src=\"https://peakbaggerblobs.blob.core.windows.net/pbphoto/p28.jpg\"><br
+        /><span align=\"center\">The massive, icy form of Mount Rainier in the classic
+        view from the Paradise Inn area on the south side of the mountain (1994-07-19).</span></td></tr><tr><td
+        valign=top>Web Map Links</td><td><a href=\"https://www.peakfinder.org/?lat=46.851731&lng=-121.760395&name=Mount
+        Rainier&ele=4391\">Peakfinder Panorama</a><br/><a href=\"https://tools.wmflabs.org/geohack/geohack.php?pagename=Mount
+        Rainier&params=46.851731_N_121.760395_W_type:mountain_scale:50000_region:US-WA_source:Peakbagger\">GeoHack
+        Links</a>&nbsp;&nbsp;&nbsp;<a href=\"http://caltopo.com/map.html#ll=46.851731,-121.760395&z=14&b=t&o=r&n=0.25\">CalTopo</a>&nbsp;&nbsp;&nbsp;<a
+        href=\"http://www.mytopo.com/maps/?lat=46.851731&lon=-121.760395&z=14\">MyTopo</a>&nbsp;&nbsp;&nbsp;<a
+        href=\"https://maps.bing.com/default.aspx?v=2&cp=46.851731~-121.760395&style=h&lvl=16\">Bing
+        Maps</a><br/><a href=\"https://maps.google.com/maps?ll=46.851731,-121.760395&z=13&t=p\">Google
+        Maps</a>&nbsp;&nbsp;&nbsp;<a href=\"https://www.openstreetmap.org/#map=14/46.851731/-121.760395\">Open
+        Street Map</a> </td></tr><tr><td valign=\"top\"><a style=\"color:black\" href=help/glossary.aspx#prom>Prominence</a></td><td><a
+        href=\"KeyCol.aspx?pid=2296\">Key Col Page</a>&nbsp;&nbsp;(Detailed prominence
+        information)<br/>&nbsp;&nbsp;<a style=\"color:black\" href=help/glossary.aspx#clean>Clean
+        Prominence</a>: 13,241 ft/4036 m<br/>&nbsp;&nbsp;<a style=\"color:black\"
+        href=help/glossary.aspx#lineparent>Line Parent</a>: <a href=\"peak.aspx?pid=5729\">Mount
+        Massive</a><br/>&nbsp;&nbsp;<a style=\"color:black\" href=help/glossary.aspx#keycol>Key
+        Col</a>: Armstrong, BC&nbsp;&nbsp;&nbsp;&nbsp;1165 ft/355 m</td></tr><tr><td
+        valign=top><a style=\"color:black\" href=help/glossary.aspx#isolation>Isolation</a></td><td><a
+        href=\"Isolate.aspx?pid=2296\">Isolation Page</a>&nbsp;&nbsp;(Detailed isolation
+        information)<br/>&nbsp;&nbsp;&nbsp;Distance: 731.13 mi/1176.64 km<br />&nbsp;&nbsp;&nbsp;<a
+        style=\"color:black\" href=\"help/glossary.aspx#ilp\">Isolation Limit Point</a>:
+        36.578956, -118.292532<br /><a style=\"color:black\" href=help/glossary.aspx#nhn>Nearest
+        Higher Neighbor</a> in the <a style=\"color:black\" href=\"help/glossary.aspx#db\">PBC
+        database</a>:<br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"peak.aspx?pid=2829\">Mount
+        Whitney</a>&nbsp;&nbsp;(SSE)<tr><td valign=top>Ranges</td><td>Continent: <a
+        href=\"range.aspx?rid=1\">North America</a><br/>Range2: <a href=\"range.aspx?rid=12\">Pacific
+        Ranges</a><br/>Range3: <a href=\"range.aspx?rid=125\">Cascade Range (Highest
+        Point)</a><br/>Range4: <a href=\"range.aspx?rid=1251\">South Washington Cascades
+        (Highest Point)</a><br/>Range5: <a href=\"range.aspx?rid=12513\">Mount Rainier
+        Area (Highest Point)</a><br/>Range6: <a href=\"range.aspx?rid=125133\">Mount
+        Rainier Massif (Highest Point)</a></td></tr><tr><td valign=top>Drainage Basins</td><td
+        align=center>Major Triple Divide Point<br/><table frame=\"lhs\" class=\"gray\"
+        width=\"100%\"><tr><td valign=top>Puyallup (HP)<br/>Puget Sound (HP)<br/>Strait
+        of Juan de Fuca<br/>Pacific Ocean<br/></td><td valign=top>Nisqually (HP)<br/>Puget
+        Sound (HP)<br/>Strait of Juan de Fuca<br/>Pacific Ocean<br/></td><td valign=top>Mount
+        Rainier Crater (HP)<br/>Internal Drainage-N.A.<br/>Worldwide Internal Drainage<br/></td></tr></table></td></tr><tr><td
+        valign=top>Ownership</td><td>Land: Mount Rainier National Park (Highest Point)<br/>Wilderness/Special
+        Area: Mount Rainier Wilderness Area (Highest Point)</td></tr><tr><td valign=top>First
+        Ascent</td><td>August 17, 1870<br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"climber/climber.aspx?cid=200\">Stevens,
+        Hazard</a><br/>&nbsp;&nbsp;&nbsp;&nbsp;<a href=\"climber/climber.aspx?cid=348\">Van
+        Trump, Philemon</a><br/></td></tr><tr><td valign=top>Route #1 </td><td>Glacier
+        Climb: Disappointment Cleaver<br/>Trailhead: Paradise (Paved Road) 5420 ft/1652
+        m<br/>Vertical Gain: 8986 ft/2739 m<br/>Distance (one way): 8 mi/12.87 km<br/></td></tr><tr><td
+        valign=top>Route #2 </td><td>Glacier Climb: Emmons Glacier<br/>Trailhead:
+        White River Campground (Paved Road) 4260 ft/1298 m<br/>Vertical Gain: 10,346
+        ft/3153 m<br/>Distance (one way): 7.45 mi/11.99 km<br/></td></tr><tr><td valign=top>Route
+        #3 </td><td>Glacier Climb: Kautz Glacier<br/>Trailhead: Paradise (Paved Road)
+        5420 ft/1652 m<br/>Vertical Gain: 9286 ft/2830 m<br/>Distance (one way): 5.65
+        mi/9.09 km<br/></td></tr><tr><td valign=top><a style=\"color:black\" href=help/glossary.aspx#source>Data
+        Source</a></td><td>1:25,000 (or larger) Topographic Survey Map<tr><td colspan=2
+        align=center><b>Dynamic Map</b><br/><iframe id=\"Gmap\" src=\"map/MasterMap.aspx?cy=46.851731&cx=-121.760395&z=14&l=L_CT|L_MT|L_FS|L_3D|L_AG|L_OT|L_OS|L_AI|B_B1|G_SA|L_CA|L_BC&hj=0&t=P&d=2296&c=0&a=0&sx=-119.174504&sy=50.454047&cyn=0\"width=\"100%\"
+        height=\"425px\" frameborder=0 scrolling=\"no\" marginwidth=\"0\" marginheight=\"0\"></iframe><br
+        /><img src=\"image/MainPeakRedCircle.gif\">&nbsp;Mount Rainier&nbsp;&nbsp;&nbsp;(<img
+        src=\"image/ThinMagentaSquare.gif\">&nbsp;<span style=\"font-size: smaller\">Key
+        Col</span>)&nbsp;&nbsp;&nbsp;<img src=\"image/SmallOrangeCircle.gif\">&nbsp;Other
+        Peaks<br/><a href=\"map/BigMap.aspx?cy=46.851731&cx=-121.760395&z=14&l=L_CT|L_MT|L_FS|L_3D|L_AG|L_OT|L_OS|L_AI|B_B1|G_SA|L_CA|L_BC&hj=0&t=P&d=2296&c=0&a=0&sx=-119.174504&sy=50.454047&cyn=0\"><b>Click
+        Here for a Full Screen Map</b></a></td></tr></table><br clear=left><br clear=right><hr><h2>Other
+        Photos</h2><table align=left border=0 width=50%><tr><td align=\"center\"><img
+        src=\"https://peakbaggerblobs.blob.core.windows.net/pbphoto/p29.jpg\"><br
+        /><span align=\"center\">Mount Rainier in winter from the nearby Crystal Mountain
+        ski area (1995-12-23).</span></td></tr></table><table align=right border=0
+        width=50%><tr><td align=\"center\"><img src=\"https://peakbaggerblobs.blob.core.windows.net/pbphoto/p116.jpg\"><br
+        /><span align=\"center\">Skiing at 13,000 feet on the Emmons Glacier (1999-08-01).</span></td></tr></table><br
+        clear=left><br clear=right><table align=left border=0 width=50%><tr><td align=\"center\"><img
+        src=\"https://peakbaggerblobs.blob.core.windows.net/pbphoto/p289.jpg\"><br
+        /><span align=\"center\">The massive icy bulk of Mount Rainier and its Emmons
+        Glacier face (2005-09-25).</span></td></tr></table><table align=right border=0
+        width=50%><tr><td align=\"center\"><a href=\"https://peakbaggerblobs.blob.core.windows.net/pbphoto/p751L.jpg\"
+        target=\"_blank\"><img src=\"https://peakbaggerblobs.blob.core.windows.net/pbphoto/p751.jpg\"
+        alt=\"Click on photo for original larger-size version.\"></a><br /><span align=\"center\">Photo
+        by Lance Colley (2013-07-10).<br /><span style=\"font-size:x-small\"><a href=\"https://peakbaggerblobs.blob.core.windows.net/pbphoto/p751L.jpg\"
+        target=\"_blank\">Click here for larger-size photo.</a></span></span>&nbsp;&nbsp;&nbsp;<span
+        style=\"font-size:x-small\"><a href=\"climber\\photo.aspx?phid=751\">Edit
+        Photo Info</a></span></td></tr></table><br clear=left><br clear=right><table
+        align=left border=0 width=50%><tr><td align=\"center\"><a href=\"https://peakbaggerblobs.blob.core.windows.net/pbphoto/p1423L.jpg\"
+        target=\"_blank\"><img src=\"https://peakbaggerblobs.blob.core.windows.net/pbphoto/p1423.jpg\"
+        alt=\"Click on photo for original larger-size version.\"></a><br /><span align=\"center\">Traversing
+        the Emmons Glacier (2014-08-09).  Photo by <a href=\"climber/climber.aspx?cid=8803\">Aditya
+        Sankar</a>.<br /><span style=\"font-size:x-small\"><a href=\"https://peakbaggerblobs.blob.core.windows.net/pbphoto/p1423L.jpg\"
+        target=\"_blank\">Click here for larger-size photo.</a></span></span></td></tr></table><table
+        align=right border=0 width=50%><tr><td align=\"center\"><a href=\"https://peakbaggerblobs.blob.core.windows.net/pbphoto/p2250L.jpg\"
+        target=\"_blank\"><img src=\"https://peakbaggerblobs.blob.core.windows.net/pbphoto/p2250.jpg\"
+        alt=\"Click on photo for original larger-size version.\"></a><br /><span align=\"center\">Doug
+        Frint Shawn Burrell Summit of Mount Rainier (2013-07-09).<br /><span style=\"font-size:x-small\"><a
+        href=\"https://peakbaggerblobs.blob.core.windows.net/pbphoto/p2250L.jpg\"
+        target=\"_blank\">Click here for larger-size photo.</a></span></span>&nbsp;&nbsp;&nbsp;<span
+        style=\"font-size:x-small\"><a href=\"climber\\photo.aspx?phid=2250\">Edit
+        Photo Info</a></span></td></tr></table><br clear=left><br clear=right><table
+        align=left border=0 width=50%><tr><td align=\"center\"><a href=\"https://peakbaggerblobs.blob.core.windows.net/pbphoto/p2293L.jpg\"
+        target=\"_blank\"><img src=\"https://peakbaggerblobs.blob.core.windows.net/pbphoto/p2293.jpg\"
+        alt=\"Click on photo for original larger-size version.\"></a><br /><span align=\"center\">Our
+        team descending the cleaver after successful summit (2014-09-22).  Photo by
+        <a href=\"climber/climber.aspx?cid=1605\">Ken Curtis</a>.<br /><span style=\"font-size:x-small\"><a
+        href=\"https://peakbaggerblobs.blob.core.windows.net/pbphoto/p2293L.jpg\"
+        target=\"_blank\">Click here for larger-size photo.</a></span></span></td></tr></table><table
+        align=right border=0 width=50%><tr><td align=\"center\"><a href=\"https://peakbaggerblobs.blob.core.windows.net/pbphoto/p2357L.jpg\"
+        target=\"_blank\"><img src=\"https://peakbaggerblobs.blob.core.windows.net/pbphoto/p2357.jpg\"
+        alt=\"Click on photo for original larger-size version.\"></a><br /><span align=\"center\">Creater
+        rim (2014-07-12).  Photo by <a href=\"climber/climber.aspx?cid=10929\">Petro
+        Ksondzyk</a>.<br /><span style=\"font-size:x-small\"><a href=\"https://peakbaggerblobs.blob.core.windows.net/pbphoto/p2357L.jpg\"
+        target=\"_blank\">Click here for larger-size photo.</a></span></span></td></tr></table><br
+        clear=left><br clear=right><table align=left border=0 width=50%><tr><td align=\"center\"><a
+        href=\"https://peakbaggerblobs.blob.core.windows.net/pbphoto/p2429L.jpg\"
+        target=\"_blank\"><img src=\"https://peakbaggerblobs.blob.core.windows.net/pbphoto/p2429.jpg\"
+        alt=\"Click on photo for original larger-size version.\"></a><br /><span align=\"center\">Taken
+        by Andy Knell from just above the Disappointment Cleaver (2006-06-20).  Photo
+        by <a href=\"climber/climber.aspx?cid=11033\">Andrew Knell</a>.<br /><span
+        style=\"font-size:x-small\"><a href=\"https://peakbaggerblobs.blob.core.windows.net/pbphoto/p2429L.jpg\"
+        target=\"_blank\">Click here for larger-size photo.</a></span></span></td></tr></table><table
+        align=right border=0 width=50%><tr><td align=\"center\"><a href=\"https://peakbaggerblobs.blob.core.windows.net/pbphoto/p2431L.jpg\"
+        target=\"_blank\"><img src=\"https://peakbaggerblobs.blob.core.windows.net/pbphoto/p2431.jpg\"
+        alt=\"Click on photo for original larger-size version.\"></a><br /><span align=\"center\">Scott,
+        Jay, Gina, Niave, Andy and Roger on the Rainier Summit with the colors for
+        the 22nd Military Police Battalion (CID).  August 2011 (2011-08-20).  Photo
+        by <a href=\"climber/climber.aspx?cid=11033\">Andrew Knell</a>.<br /><span
+        style=\"font-size:x-small\"><a href=\"https://peakbaggerblobs.blob.core.windows.net/pbphoto/p2431L.jpg\"
+        target=\"_blank\">Click here for larger-size photo.</a></span></span></td></tr></table><br
+        clear=left><br clear=right><br clear=\"left\"><br clear=\"right\"><p align=center><FONT
+        size=\"1\"><br/>This page has been served 2436905 times since 2004-11-01.</font></p><br
+        style=\"clear:both\"/>\r\n<hr/>\r\n<address>\r\n\r\n<table class=\"std\" style=\"width:100%\"><tr><td
+        style=\"text-align:left\" width=\"33%\">\r\n    Copyright \xA9 1987-2025 by
+        Peakbagger.com. All Rights Reserved.\r\n</td><td style=\"text-align:center\"
+        width=\"34%\">\r\n    Questions/Comments/Corrections?  See the <a href=\"contact.aspx\">Contact
+        Page</a>\r\n</td>\r\n<td style=\"text-align:right\" width=\"33%\">\r\n    <a
+        href=\"help/TermsOfService.aspx\">Terms of Service/Privacy Policy</a>\r\n</td></tr></table>\r\n\r\n</address><script
+        type=\"text/javascript\" async src=\"https://btloader.com/tag?o=5698917485248512&upapi=true&domain=peakbagger.com\"></script><script>!function
+        () { \"use strict\"; var e; e = document, function () { var t, n; function
+        r() { var t = e.createElement(\"script\"); t.src = \"https://cafemedia-com.videoplayerhub.com/galleryplayer.js\",
+        e.head.appendChild(t) } function a() { var t = e.cookie.match(\"(^|[^;]+)\\s*__adblocker\\s*=\\s*([^;]+)\");
+        return t && t.pop() } function c() { clearInterval(n) } return { init: function
+        () { var e; \"true\" === (t = a()) ? r() : (e = 0, n = setInterval((function
+        () { 100 !== e && \"false\" !== t || c(), \"true\" === t && (r(), c()), t
+        = a(), e++ }), 50)) } } }().init() }(); </script>\r\n\r\n                        </td>\r\n\t\t\t\t</tr>\r\n\t\t\t</table>\r\n\t\t\t<p></p>\t\t\t\t\t\r\n\t\t</form>\r\n
+        \       <script type=\"text/javascript\" src=\"https://wms.assoc-amazon.com/20070822/US/js/link-enhancer-common.js?tag=peakbaggercom-20\"></script>
+        \       \r\n        <style type=\"text/css\"\">body {margin: 0px!important;}
+        </style>\r\n\t<script defer src=\"https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015\"
+        integrity=\"sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==\"
+        data-cf-beacon='{\"version\":\"2024.11.0\",\"token\":\"ecc052f13b3b4d0abf0d0fca6053ceab\",\"server_timing\":{\"name\":{\"cfCacheStatus\":true,\"cfEdge\":true,\"cfExtPri\":true,\"cfL4\":true,\"cfOrigin\":true,\"cfSpeedBrain\":true},\"location_startswith\":null}}'
+        crossorigin=\"anonymous\"></script>\n</body>\r\n</html>\r\n"
+    headers:
+      CF-RAY:
+      - 9923b8b36f65c384-SEA
+      Cache-Control:
+      - no-cache, no-store
+      Connection:
+      - keep-alive
+      Content-Type:
+      - text/html; charset=utf-8
+      Date:
+      - Tue, 21 Oct 2025 21:06:54 GMT
+      Expires:
+      - '-1'
+      Nel:
+      - '{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}'
+      Pragma:
+      - no-cache
+      Report-To:
+      - '{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=Ls25h4tmMFwjtshk72X6mLQnjbhR0S6X0M9IzUTncXkM09CXWr6I4wipv%2Bu9NzR2vNo%2BYEOUPciiAIQtwGm3luFPcZK%2B1O51s7brc4I1pG6k"}]}'
+      Server:
+      - cloudflare
+      Server-Timing:
+      - cfCacheStatus;desc="DYNAMIC"
+      - cfEdge;dur=6,cfOrigin;dur=136
+      Set-Cookie:
+      - ASP.NET_SessionId=tre3frd3lwvw0hnbbr0cs2nb; HttpOnly; SameSite=Lax; Path=/
+      - ARRAffinity=b0b8fa60bf40272d932f4621c58e82e7b5f6dc4e1e697ccd863dd4b9def82141;
+        HttpOnly; Secure; Path=/; Domain=www.peakbagger.com
+      - ARRAffinitySameSite=b0b8fa60bf40272d932f4621c58e82e7b5f6dc4e1e697ccd863dd4b9def82141;
+        HttpOnly; SameSite=None; Secure; Path=/; Domain=www.peakbagger.com
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+      X-AspNet-Version:
+      - 4.0.30319
+      X-Powered-By:
+      - ASP.NET
+      cf-cache-status:
+      - DYNAMIC
+      content-length:
+      - '48276'
+    status:
+      code: 200
+      message: OK
+version: 1
