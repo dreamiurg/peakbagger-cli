@@ -146,6 +146,13 @@ class PeakFormatter:
         if peak.country:
             table.add_row("Country", peak.country)
 
+        # Add ascent counts
+        if peak.ascent_count is not None:
+            ascent_text = f"{peak.ascent_count:,}"
+            if peak.viewable_ascent_count is not None:
+                ascent_text += f" ({peak.viewable_ascent_count:,} viewable)"
+            table.add_row("Ascents Logged", ascent_text)
+
         # Add PeakBagger URL
         peak_url: str = f"https://www.peakbagger.com/peak.aspx?pid={peak.pid}"
         table.add_row("URL", f"[blue]{peak_url}[/blue]")

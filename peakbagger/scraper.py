@@ -172,6 +172,19 @@ class PeakBaggerScraper:
             # Extract route information
             peak.routes = PeakBaggerScraper._extract_routes(html)
 
+            # Extract ascent counts
+            # Format: "Total ascents/attempts logged by registered Peakbagger.com users: <b>4388</b>"
+            ascent_count_match = re.search(
+                r"Total ascents/attempts logged.*?<b>(\d+)</b>", html, re.DOTALL
+            )
+            if ascent_count_match:
+                peak.ascent_count = int(ascent_count_match.group(1))
+
+            # Format: "(Total: 3960)"
+            viewable_count_match = re.search(r"\(Total:\s*(\d+)\)", html)
+            if viewable_count_match:
+                peak.viewable_ascent_count = int(viewable_count_match.group(1))
+
             return peak
 
         except Exception as e:

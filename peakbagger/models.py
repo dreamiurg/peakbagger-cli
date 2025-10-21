@@ -25,6 +25,8 @@ class Peak(BaseModel):
         default_factory=list, description="Peak lists with ranks"
     )
     routes: list[dict[str, Any]] = Field(default_factory=list, description="Route information")
+    ascent_count: int | None = Field(None, description="Total number of ascents logged")
+    viewable_ascent_count: int | None = Field(None, description="Number of viewable ascents")
 
     def to_dict(self) -> dict[str, Any]:
         """Convert peak to dictionary for JSON serialization."""
@@ -53,6 +55,8 @@ class Peak(BaseModel):
             "url": f"https://www.peakbagger.com/peak.aspx?pid={self.pid}",
             "peak_lists": self.peak_lists,
             "routes": self.routes,
+            "ascent_count": self.ascent_count,
+            "viewable_ascent_count": self.viewable_ascent_count,
         }
 
 
