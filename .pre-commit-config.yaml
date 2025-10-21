@@ -6,6 +6,10 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
+      # Branch protection
+      - id: no-commit-to-branch
+        args: [--branch, master, --branch, main]
+
       # Formatting and whitespace
       - id: trailing-whitespace
         args: [--markdown-linebreak-ext=md]
