@@ -34,6 +34,12 @@ def peak() -> None:
     pass
 
 
+@main.group()
+def ascent() -> None:
+    """Commands for working with ascents."""
+    pass
+
+
 @peak.command()
 @click.argument("query")
 @click.option(
@@ -453,6 +459,59 @@ def stats(
             output_format=output_format,
             show_list=False,
         )
+
+    except Exception as e:
+        click.echo(f"Error: {e}", err=True)
+        raise click.Abort() from e
+    finally:
+        client.close()
+
+
+@ascent.command()
+@click.argument("ascent_id")
+@click.option(
+    "--format",
+    "output_format",
+    type=click.Choice(["text", "json"], case_sensitive=False),
+    default="text",
+    help="Output format (text or json)",
+)
+@click.option(
+    "--rate-limit",
+    type=float,
+    default=2.0,
+    help="Seconds between requests (default: 2.0)",
+)
+def show(ascent_id: str, output_format: str, rate_limit: float) -> None:
+    """
+    Get detailed information about a specific ascent.
+
+    ASCENT_ID: The PeakBagger ascent ID (e.g., "12963" for a Mount Pilchuck ascent)
+
+    Examples:
+
+      peakbagger ascent show 12963
+
+      peakbagger ascent show 12963 --format json
+    """
+    client: PeakBaggerClient = PeakBaggerClient(rate_limit_seconds=rate_limit)
+    scraper: PeakBaggerScraper = PeakBaggerScraper()
+    formatter: PeakFormatter = PeakFormatter()
+
+    try:
+        # Fetch ascent detail page
+        click.echo(f"Fetching ascent {ascent_id}...")
+        html = client.get("/climber/ascent.aspx", params={"aid": ascent_id})
+
+        # Parse ascent data
+        ascent_obj = scraper.parse_ascent_detail(html, ascent_id)
+
+        if not ascent_obj:
+            click.echo(f"Failed to parse ascent data for ID {ascent_id}", err=True)
+            raise click.Abort()
+
+        # Display results
+        formatter.format_ascent_detail(ascent_obj, output_format)
 
     except Exception as e:
         click.echo(f"Error: {e}", err=True)
