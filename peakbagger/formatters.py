@@ -184,13 +184,14 @@ class PeakFormatter:
                 f"\n[bold yellow]Peak Lists ({len(peak.peak_lists)} total)[/bold yellow]"
             )
             display_lists = peak.peak_lists[:10]
-            for peak_list in display_lists:
+            for i, peak_list in enumerate(display_lists, 1):
                 list_name = peak_list["list_name"]
                 rank = peak_list["rank"]
                 url = peak_list.get("url", "")
-                self.console.print(f"  • {list_name} [dim](Rank #{rank})[/dim]")
+                list_text = f"  {i}. {list_name} [dim](Rank #{rank})[/dim]"
                 if url:
-                    self.console.print(f"    [blue]{url}[/blue]")
+                    list_text += f" - [blue]{url}[/blue]"
+                self.console.print(list_text)
             if len(peak.peak_lists) > 10:
                 remaining = len(peak.peak_lists) - 10
                 self.console.print(f"  [dim]... and {remaining} more[/dim]")
