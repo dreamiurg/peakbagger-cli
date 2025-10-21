@@ -1,3 +1,10 @@
+# [0.4.0](https://github.com/dreamiurg/peakbagger-cli/compare/v0.3.0...v0.4.0) (2025-10-21)
+
+
+### Features
+
+* add --quiet flag to suppress informational messages ([7f9c58c](https://github.com/dreamiurg/peakbagger-cli/commit/7f9c58c7b733511a7e49c35f5a98531739e04f69))
+
 # CHANGELOG
 
 <!-- version list -->
