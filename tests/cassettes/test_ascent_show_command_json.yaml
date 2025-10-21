@@ -1,0 +1,148 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8
+      Accept-Encoding:
+      - gzip, deflate
+      Accept-Language:
+      - en-US,en;q=0.9
+      User-Agent:
+      - peakbagger-cli/1.2.0 (personal use; https://github.com/yourusername/peakbagger-cli)
+    method: GET
+    uri: https://www.peakbagger.com/climber/ascent.aspx?aid=12963
+  response:
+    body:
+      string: "\r\n<!DOCTYPE html>\r\n<html>\r\n    <head>\r\n        <!-- Google
+        tag (gtag.js) -->\r\n        <script async src=\"https://www.googletagmanager.com/gtag/js?id=G-LGMGT5T4SQ\"></script>\r\n
+        \       <script>window.dataLayer = window.dataLayer || []; function gtag()
+        { dataLayer.push(arguments); } gtag('js', new Date()); gtag('config', 'G-LGMGT5T4SQ');</script>\r\n\r\n\t
+        \   <title>Ascent of Mount Pilchuck in 1951 - Peakbagger.com</title>\r\n\t
+        \   <link href=\"../pb.css\" type=\"text/css\" rel=\"stylesheet\"/>\r\n\t
+        \   <link rel=\"shortcut icon\" href=\"../favicon.ico\" type=\"image/x-icon\"/>\r\n
+        \   </head>\r\n    <body>\r\n        <form name=\"Form1\" method=\"post\"
+        action=\"./ascent.aspx?aid=12963\" id=\"Form1\">\r\n<input type=\"hidden\"
+        name=\"__VIEWSTATE\" id=\"__VIEWSTATE\" value=\"/wEPDwULLTIwMjcyOTY0NzhkZB5u7zXE6bl490o2MXr8GWzqFrf+Webyxs3chSoh6xSF\"
+        />\r\n\r\n<input type=\"hidden\" name=\"__VIEWSTATEGENERATOR\" id=\"__VIEWSTATEGENERATOR\"
+        value=\"C418EDC2\" />\r\n<input type=\"hidden\" name=\"__EVENTVALIDATION\"
+        id=\"__EVENTVALIDATION\" value=\"/wEdAAK8ZaqVqHsZpelSkTpi95O2PNxUf0VbbR18bVcD4NsKRy+5wXtmHaTcLfXzLEA2kjKtSrzzcSdPxbC+/KJPLQZ7\"
+        />\r\n        <script type=\"text/javascript\">\r\n  function DoQuickSearch()\r\n
+        \ {\r\n     var searchstr = document.Form1.QuickSearchTB.value;\r\n     if
+        (searchstr != \"\")\r\n        window.location = \"../search.aspx?ss=\" +
+        searchstr + \"&tid=M\";\r\n     else\r\n        window.location = \"../search.aspx\";\r\n
+        \ }\r\n  \r\n  function SearchKeyPress(e)\r\n  {\r\n    var cc \r\n    if(e
+        && e.which)\r\n    { \r\n        e = e\r\n        cc = e.which\r\n    }\r\n
+        \   else\r\n    {\r\n        e = event\r\n        cc = e.keyCode\r\n    }\r\n
+        \   \r\n    if(cc == 13)\r\n    {\r\n        DoQuickSearch();\r\n        return
+        false;     \r\n    }\r\n    else\r\n    {\r\n        return true;\r\n    }\r\n
+        \ }\r\n\r\n</script>\r\n\r\n\r\n\r\n<table cellpadding=\"0\" cellspacing=\"0\"
+        border=\"0\"\r\n    style=\"background-image:url(../image/header.jpg); height:60px\"
+        width=\"100%\">\r\n<tr style=\"height:30px\">\r\n    <td colspan=\"7\" class=\"mainbanner\">\r\n
+        \       <a href=\"../Default.aspx\" style=\"font-family: Arial, Helvetica,
+        sans-serif; text-decoration:none; color:black\">&nbsp;Peakbagger.com</a>\r\n
+        \   </td>\r\n    <td class=\"mainmenu\" style=\"width:29.5%\" align=\"right\">
+        \       \r\n        <input type=\"text\" id=\"QuickSearchTB\" name=\"QuickSearchTB\"
+        style=\"width:100px; font-size:x-small\" onkeypress=\"return SearchKeyPress(event)\"/>\r\n
+        \       <input type=\"button\" title=\"Quick Search\" id=\"QSButton\" style=\"width:auto;
+        font-size:x-small\" value=\"Quick Search\" onclick=\"DoQuickSearch()\" />\r\n
+        \   </td>\r\n</tr>\r\n\r\n<tr style=\"height:30px\">\r\n    <td class=\"mainmenu\"
+        align=\"center\" style=\"width:11.5%\"><a href=\"../ListIndx.aspx\" style=\"font-family:
+        Arial, Helvetica, sans-serif; text-decoration:none; color:black\">Peak Lists</a></td>\r\n
+        \   <td class=\"mainmenu\" align=\"center\" style=\"width:10.5%\"><a href=\"../ClimbIndx.aspx\"
+        style=\"font-family: Arial, Helvetica, sans-serif; text-decoration:none; color:black\">Climbers</a></td>\r\n
+        \   <td class=\"mainmenu\" align=\"center\" style=\"width:10.5%\"><a href=\"../RangIndx.aspx\"
+        style=\"font-family: Arial, Helvetica, sans-serif; text-decoration:none; color:black\">Ranges</a></td>\r\n
+        \   <td class=\"mainmenu\" align=\"center\" style=\"width:11.5%\"><a href=\"../PBGeog/GeogIndx.aspx\"
+        style=\"font-family: Arial, Helvetica, sans-serif; text-decoration:none; color:black\">Geography</a></td>\r\n
+        \   <td class=\"mainmenu\" align=\"center\" style=\"width:8%\"><a href=\"../Help/Help.aspx\"
+        style=\"font-family: Arial, Helvetica, sans-serif; text-decoration:none; color:black\">Help</a></td>\r\n
+        \   <td class=\"mainmenu\" align=\"center\" style=\"width:10.5%\"><a href=\"../Search.aspx\"
+        style=\"font-family: Arial, Helvetica, sans-serif; text-decoration:none; color:black\">Search</a></td>\r\n
+        \   <td class=\"mainmenu\" align=\"center\" style=\"width:6%\"><a href=\"../Climber/Login.aspx\"
+        style=\"font-family: Arial, Helvetica, sans-serif; text-decoration:none; color:black\">Log
+        In</a></td>\r\n    <td class=\"mainmenu\" align=\"right\" style=\"width:31.5%;
+        font-size:x-small\">\r\n        \r\n        \r\n        \r\n        \r\n        \r\n
+        \       <input type=\"submit\" name=\"qlib\" value=\"Quick Login\" id=\"qlib\"
+        />\r\n    </td>\r\n</tr>\r\n</table>\r\n<table cellpadding=\"0\" cellspacing=\"0\"
+        border=\"0\" width=\"100%\">\r\n<tr><td></td></tr></table>\r\n        <table
+        cellpadding=\"10\" width=\"99%\">\r\n            <tr>\r\n    \t        <td>\r\n
+        \   \t\t        <h1>Ascent of Mount Pilchuck in 1951</h1><h2>Climber: <a href=climber.aspx?cid=555>Bob
+        Bolton</a></h2><table class=\"gray\" width=\"49%\" align=\"left\"><tr><td
+        valign=top><b>Others in Party:</b></td><td>Earl Bolton<br>others<br></td></tr><tr><td><b>Date:</b></td><td
+        >1951</td></tr><tr><td><b>Ascent Type:</b></td><td><img src=\"../image/suc.gif\">&nbsp;&nbsp;Successful
+        Summit Attained</td></tr><tr><td><b>Peak:</b></td><td ><a href=../peak.aspx?pid=1798>Mount
+        Pilchuck</a></td></tr><tr><td>&nbsp;&nbsp;&nbsp;&nbsp;Location:</td><td >USA-Washington</td></tr><tr><td>&nbsp;&nbsp;&nbsp;&nbsp;Elevation:</td><td
+        >5341 ft / 1627 m</td></tr><tr><td colspan=2><h2>Ascent Trip Report</h2><b>URL
+        Link: </b><a href=\"https://peakbagger.com/climber/ascent.aspx?aid=89382\">peakbagger.com</a><br
+        /><br />My dad took a group of kids to hike Pilchuck including my oldest sister
+        Elsie. Not sure about my next older sister Erlene. I must have begged to go
+        along because I can't believe they would have taken me if I hadn't begged.
+        But I did well for a 4-year-old on the ascent, and always remembered that
+        of the 12 hikers I was 4 years old and 4th to the summit. The descent, on
+        the other hand, was somewhat of a disaster as my quads gave out pretty quickly
+        and I had to ride my dad's shoulders much of the way. This was when I learned
+        I had a problem with my quads that I've struggled with all my life. It affected
+        my running days during the 1990s and 2000s, and every year conditioning my
+        quads has been an important part of \"spring training\", if you will. Note
+        that my dad and I returned to Pilchuck 50 years later when he was 86, see
+        that TR <a href=\"https://peakbagger.com/climber/ascent.aspx?aid=89382\" target=\"_blank\">here</a>.</td></tr></table><table
+        class=\"gray\" align=\"right\" width=\"50%\"><tr><td colspan=2><b>Summary
+        Total Data</b></td></tr></table><br clear=\"left\"><br clear=\"right\"><p
+        align=center><FONT size=\"1\"><br>This page has been served 857 times since
+        2005-01-15.</font></p><br clear=\"left\">\r\n<br clear=\"right\">\r\n<hr>\r\n<address>\r\n
+        \   <table class=\"std\" style=\"width:100%\">\r\n        <tr>\r\n            <td
+        style=\"text-align:left\" width=\"33%\">\r\n                Copyright \xA9
+        1987-2025 by Peakbagger.com. All Rights Reserved.\r\n            </td>\r\n
+        \           <td style=\"text-align:center\" width=\"34%\">\r\n                Questions/Comments/Corrections?
+        \ See the <a href=\"../contact.aspx\">Contact Page</a>\r\n            </td>\r\n
+        \           <td style=\"text-align:right\" width=\"33%\">\r\n                <a
+        href=\"../help/TermsOfService.aspx\">Terms of Service/Privacy Policy</a>\r\n
+        \           </td>\r\n        </tr>\r\n    </table>\r\n</address>\r\n</td>\r\n\r\n\t\t
+        \       </td>\r\n\t        </tr>\r\n        </table>\r\n    </form>\r\n<script
+        defer src=\"https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015\"
+        integrity=\"sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==\"
+        data-cf-beacon='{\"version\":\"2024.11.0\",\"token\":\"ecc052f13b3b4d0abf0d0fca6053ceab\",\"server_timing\":{\"name\":{\"cfCacheStatus\":true,\"cfEdge\":true,\"cfExtPri\":true,\"cfL4\":true,\"cfOrigin\":true,\"cfSpeedBrain\":true},\"location_startswith\":null}}'
+        crossorigin=\"anonymous\"></script>\n</body>\r\n</html>\r\n"
+    headers:
+      CF-RAY:
+      - 9924854edced6e7d-SEA
+      Cache-Control:
+      - private
+      Connection:
+      - keep-alive
+      Content-Type:
+      - text/html; charset=utf-8
+      Date:
+      - Tue, 21 Oct 2025 23:26:35 GMT
+      Nel:
+      - '{"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}'
+      Report-To:
+      - '{"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=W%2B3Q%2BYGcalzU2LaBsJQaLi4Tsv%2F59JA7vSIMjqVTjAlH0bF10z3NGmTa8Nrz6JLqeG6lu%2B8GplTIefWGNHcnvEmEHLOA6OaY2t7%2F6ik7Xq5R"}]}'
+      Server:
+      - cloudflare
+      Server-Timing:
+      - cfCacheStatus;desc="DYNAMIC"
+      - cfEdge;dur=29,cfOrigin;dur=107
+      Set-Cookie:
+      - ASP.NET_SessionId=lpggwuua3ax3tkqotucv4smg; HttpOnly; SameSite=Lax; Path=/
+      - ARRAffinity=b0b8fa60bf40272d932f4621c58e82e7b5f6dc4e1e697ccd863dd4b9def82141;
+        HttpOnly; Secure; Path=/; Domain=www.peakbagger.com
+      - ARRAffinitySameSite=b0b8fa60bf40272d932f4621c58e82e7b5f6dc4e1e697ccd863dd4b9def82141;
+        HttpOnly; SameSite=None; Secure; Path=/; Domain=www.peakbagger.com
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding
+      X-AspNet-Version:
+      - 4.0.30319
+      X-Powered-By:
+      - ASP.NET
+      cf-cache-status:
+      - DYNAMIC
+      content-length:
+      - '7470'
+    status:
+      code: 200
+      message: OK
+version: 1
