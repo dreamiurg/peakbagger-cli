@@ -75,7 +75,7 @@ class PeakFormatter:
         table.add_column("Location", style="cyan", no_wrap=True)
         table.add_column("Range", style="magenta")
         table.add_column("Elevation", style="yellow", no_wrap=True)
-        table.add_column("URL", style="blue", overflow="fold")
+        table.add_column("URL", style="blue not underline", overflow="fold")
 
         for result in results:
             # Format location
@@ -155,7 +155,7 @@ class PeakFormatter:
 
         # Add PeakBagger URL
         peak_url: str = f"https://www.peakbagger.com/peak.aspx?pid={peak.pid}"
-        table.add_row("URL", f"[blue]{peak_url}[/blue]")
+        table.add_row("URL", f"[blue not underline]{peak_url}[/blue not underline]")
 
         self.console.print(table)
 
@@ -190,7 +190,7 @@ class PeakFormatter:
                 url = peak_list.get("url", "")
                 list_text = f"  {i}. [green]{list_name}[/green] [dim](Rank #{rank})[/dim]"
                 if url:
-                    list_text += f" - [blue]{url}[/blue]"
+                    list_text += f" - [blue not underline]{url}[/blue not underline]"
                 self.console.print(list_text)
             if len(peak.peak_lists) > 10:
                 remaining = len(peak.peak_lists) - 10
@@ -310,7 +310,7 @@ class PeakFormatter:
             ascent_table.add_column("GPX", style="green", justify="center", no_wrap=True)
             ascent_table.add_column("TR", style="yellow", justify="center", no_wrap=True)
             ascent_table.add_column("Route", style="cyan")
-            ascent_table.add_column("URL", style="blue", overflow="fold")
+            ascent_table.add_column("URL", style="blue not underline", overflow="fold")
 
             # Helper to strip emojis from text
             def strip_emojis(text: str) -> str:
