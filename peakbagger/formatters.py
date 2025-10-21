@@ -5,6 +5,7 @@ from typing import Any
 
 from rich.console import Console
 from rich.table import Table
+from rich.text import Text
 
 from peakbagger.models import Ascent, AscentStatistics, Peak, SearchResult
 
@@ -366,15 +367,9 @@ class PeakFormatter:
         """
         if output_format == "json":
             # JSON output
-            import json
-
-            data = ascent.to_dict()
-            json_str = json.dumps(data, indent=2)
-            self.console.print(json_str)
+            self._print_json(ascent.to_dict())
         else:
             # Text output with Rich table
-            from rich.table import Table
-
             table = Table(show_header=True, header_style="bold magenta", box=None)
             table.add_column("Field", style="cyan", width=20)
             table.add_column("Value", style="white")
@@ -426,8 +421,6 @@ class PeakFormatter:
                 self.console.print("\n[bold cyan]Trip Report:[/bold cyan]")
                 self.console.print("─" * 60)
                 # Word wrap the trip report
-                from rich.text import Text
-
                 report_text = Text(ascent.trip_report_text)
                 self.console.print(report_text)
 
