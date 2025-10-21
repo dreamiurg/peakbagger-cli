@@ -188,7 +188,7 @@ class PeakFormatter:
                 list_name = peak_list["list_name"]
                 rank = peak_list["rank"]
                 url = peak_list.get("url", "")
-                list_text = f"  {i}. {list_name} [dim](Rank #{rank})[/dim]"
+                list_text = f"  {i}. [green]{list_name}[/green] [dim](Rank #{rank})[/dim]"
                 if url:
                     list_text += f" - [blue]{url}[/blue]"
                 self.console.print(list_text)
