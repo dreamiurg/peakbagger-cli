@@ -21,8 +21,10 @@ A Python CLI tool for scraping mountain peak data from PeakBagger.com. Uses Clic
 
 ```bash
 # Run CLI during development
-uv run peakbagger search "Mount Rainier"
-uv run peakbagger info 2296
+uv run peakbagger peak search "Mount Rainier"
+uv run peakbagger peak show 2296
+uv run peakbagger peak ascents 2296
+uv run peakbagger peak stats 2296
 
 # Format and lint
 uv run ruff format peakbagger tests
@@ -38,10 +40,10 @@ uv run pytest --cov=peakbagger
 uv build
 
 # Preview next release
-uv run semantic-release --noop version
+npx semantic-release --dry-run
 
-# Create release
-uv run semantic-release version
+# Create release (done automatically via GitHub Actions)
+# Just push to main/master with conventional commit
 ```
 
 ## Commit Message Format

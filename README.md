@@ -23,11 +23,11 @@ Run directly without installation using `uvx`:
 
 ```bash
 # Run commands directly
-uvx --from peakbagger-cli peakbagger search "Mount Rainier"
-uvx --from peakbagger-cli peakbagger info 2296
+uvx --from peakbagger-cli peakbagger peak search "Mount Rainier"
+uvx --from peakbagger-cli peakbagger peak show 2296
 
 # With options
-uvx --from peakbagger-cli peakbagger search "Denali" --format json
+uvx --from peakbagger-cli peakbagger peak search "Denali" --format json
 ```
 
 This fetches and runs the latest version automatically. No installation or virtual environment needed.
@@ -60,26 +60,29 @@ pip install -e .
 
 ```bash
 # Search for a peak
-peakbagger search "Mount Rainier"
+peakbagger peak search "Mount Rainier"
 
 # Get detailed information
-peakbagger info 2296
+peakbagger peak show 2296
+
+# List recent ascents
+peakbagger peak ascents 1798
 
 # Analyze ascent statistics
-peakbagger peak-ascents 1798
+peakbagger peak stats 1798
 
 # Get JSON output for scripting
-peakbagger search "Denali" --format json
+peakbagger peak search "Denali" --format json
 ```
 
 ## Usage
 
-### Search Command
+### Peak Search Command
 
 Search for peaks by name:
 
 ```bash
-peakbagger search QUERY [OPTIONS]
+peakbagger peak search QUERY [OPTIONS]
 ```
 
 **Arguments:**
@@ -94,16 +97,16 @@ peakbagger search QUERY [OPTIONS]
 
 ```bash
 # Basic search - shows table with Peak ID and Name
-peakbagger search "Mount Rainier"
+peakbagger peak search "Mount Rainier"
 
 # Get full details for all results
-peakbagger search "Denali" --full
+peakbagger peak search "Denali" --full
 
 # JSON output for automation
-peakbagger search "Whitney" --format json
+peakbagger peak search "Whitney" --format json
 
 # Custom rate limiting (3 seconds between requests)
-peakbagger search "Rainier" --rate-limit 3.0
+peakbagger peak search "Rainier" --rate-limit 3.0
 ```
 
 **Sample Output (text):**
@@ -126,15 +129,15 @@ peakbagger search "Rainier" --rate-limit 3.0
 │         │           │          │           │                     │ 6         │
 └─────────┴───────────┴──────────┴───────────┴─────────────────────┴───────────┘
 
-Found 2 peaks. Use 'peakbagger info <PID>' for details.
+Found 2 peaks. Use 'peakbagger peak show <PID>' for details.
 ```
 
-### Info Command
+### Peak Show Command
 
 Get detailed information about a specific peak:
 
 ```bash
-peakbagger info PEAK_ID [OPTIONS]
+peakbagger peak show PEAK_ID [OPTIONS]
 ```
 
 **Arguments:**
@@ -148,10 +151,10 @@ peakbagger info PEAK_ID [OPTIONS]
 
 ```bash
 # Get peak details (Mount Rainier)
-peakbagger info 2296
+peakbagger peak show 2296
 
 # JSON output
-peakbagger info 2296 --format json
+peakbagger peak show 2296 --format json
 ```
 
 **Sample Output (text):**
@@ -242,10 +245,10 @@ Peak Lists (39 total)
 
 ### Peak Ascents Command
 
-Analyze ascent statistics for a specific peak:
+List ascents for a specific peak with optional filtering:
 
 ```bash
-peakbagger peak-ascents PEAK_ID [OPTIONS]
+peakbagger peak ascents PEAK_ID [OPTIONS]
 ```
 
 **Arguments:**
@@ -253,13 +256,64 @@ peakbagger peak-ascents PEAK_ID [OPTIONS]
 
 **Options:**
 - `--format [text|json]`: Output format (default: text)
-- `--stats`: Show temporal and seasonal statistics (always shown in current version)
-- `--list-ascents`: Include list of all ascents with URLs (sorted newest first)
 - `--after DATE`: Filter ascents on or after date (YYYY-MM-DD)
 - `--before DATE`: Filter ascents on or before date (YYYY-MM-DD)
 - `--within PERIOD`: Filter ascents within period from today (e.g., '3m', '1y', '10d')
 - `--with-gpx`: Only show ascents with GPX tracks
 - `--with-tr`: Only show ascents with trip reports
+- `--limit N`: Maximum number of ascents to display (default: 100)
+- `--rate-limit FLOAT`: Seconds between requests (default: 2.0)
+
+**Examples:**
+
+```bash
+# List recent ascents (Mount Pilchuck)
+peakbagger peak ascents 1798
+
+# Show ascents from the last year
+peakbagger peak ascents 1798 --within 1y
+
+# Filter by date range
+peakbagger peak ascents 1798 --after 2020-01-01 --before 2023-12-31
+
+# Show only ascents with GPX tracks
+peakbagger peak ascents 1798 --with-gpx
+
+# Show only ascents with trip reports
+peakbagger peak ascents 1798 --with-tr
+
+# Combine filters (ascents from last year with trip reports)
+peakbagger peak ascents 1798 --within 1y --with-tr
+
+# Show first 50 ascents only
+peakbagger peak ascents 1798 --limit 50
+
+# JSON output
+peakbagger peak ascents 1798 --format json
+```
+
+**Use Cases:**
+- **Trip Planning**: Check recent climbs to gauge popularity and current conditions
+- **Route Research**: See which routes are most popular
+- **GPX Track Finding**: Filter to ascents with GPS tracks for route planning
+- **Trip Report Research**: Find detailed trip reports for beta
+
+### Peak Stats Command
+
+Show statistical analysis of ascents for a specific peak:
+
+```bash
+peakbagger peak stats PEAK_ID [OPTIONS]
+```
+
+**Arguments:**
+- `PEAK_ID`: The PeakBagger peak ID (e.g., "1798" for Mount Pilchuck)
+
+**Options:**
+- `--format [text|json]`: Output format (default: text)
+- `--after DATE`: Include only ascents on or after date (YYYY-MM-DD)
+- `--before DATE`: Include only ascents on or before date (YYYY-MM-DD)
+- `--within PERIOD`: Analyze ascents within period from today (e.g., '3m', '1y', '10d')
 - `--reference-date DATE`: Reference date for seasonal analysis (YYYY-MM-DD, default: today)
 - `--seasonal-window N`: Days before/after reference date for seasonal window (default: 14)
 - `--rate-limit FLOAT`: Seconds between requests (default: 2.0)
@@ -268,31 +322,19 @@ peakbagger peak-ascents PEAK_ID [OPTIONS]
 
 ```bash
 # Basic ascent statistics (Mount Pilchuck)
-peakbagger peak-ascents 1798
+peakbagger peak stats 1798
 
-# Show ascents from the last year
-peakbagger peak-ascents 1798 --within 1y
+# Analyze ascents from the last 5 years
+peakbagger peak stats 1798 --within 5y
 
 # Filter by date range
-peakbagger peak-ascents 1798 --after 2020-01-01 --before 2023-12-31
-
-# Include list of all ascents (sorted newest first, with URLs)
-peakbagger peak-ascents 1798 --list-ascents
-
-# Show only ascents with GPX tracks
-peakbagger peak-ascents 1798 --with-gpx --list-ascents
-
-# Show only ascents with trip reports
-peakbagger peak-ascents 1798 --with-tr --list-ascents
-
-# Combine filters (ascents from last year with trip reports)
-peakbagger peak-ascents 1798 --within 1y --with-tr --list-ascents
-
-# JSON output
-peakbagger peak-ascents 1798 --format json
+peakbagger peak stats 1798 --after 2020-01-01 --before 2023-12-31
 
 # Custom seasonal analysis (check July climbing conditions)
-peakbagger peak-ascents 1798 --reference-date 2024-07-15 --seasonal-window 30
+peakbagger peak stats 1798 --reference-date 2024-07-15 --seasonal-window 30
+
+# JSON output
+peakbagger peak stats 1798 --format json
 ```
 
 **Sample Output (text):**
@@ -336,9 +378,8 @@ Found 1305 ascents
 ```
 
 **Use Cases:**
-- **Trip Planning**: Check how many people have climbed a peak recently to gauge popularity and current conditions
-- **Seasonal Analysis**: Find the best time of year to climb based on historical ascent patterns
-- **Route Research**: See which routes are most popular (with `--list-ascents`)
+- **Seasonal Analysis**: Find the best time of year to climb based on historical patterns
+- **Popularity Trends**: Understand climbing activity over different time periods
 - **Data Analysis**: Export to JSON for custom analysis and visualization
 
 ## Automation Examples
@@ -347,19 +388,19 @@ Found 1305 ascents
 
 ```bash
 # Get just the elevation in feet
-peakbagger info 2296 --format json | jq '.elevation.feet'
+peakbagger peak show 2296 --format json | jq '.elevation.feet'
 
 # Search and extract peak IDs
-peakbagger search "Rainier" --format json | jq '.[].pid'
+peakbagger peak search "Rainier" --format json | jq '.[].pid'
 
 # Get all route names for a peak
-peakbagger info 2296 --format json | jq '.routes[].name'
+peakbagger peak show 2296 --format json | jq '.routes[].name'
 
 # Find peaks on a specific list (search multiple peaks, filter by list)
-peakbagger info 2296 --format json | jq '.peak_lists[] | select(.list_name | contains("Bulger"))'
+peakbagger peak show 2296 --format json | jq '.peak_lists[] | select(.list_name | contains("Bulger"))'
 
 # Get the easiest route (shortest distance)
-peakbagger info 2296 --format json | jq '.routes | sort_by(.distance_mi) | .[0]'
+peakbagger peak show 2296 --format json | jq '.routes | sort_by(.distance_mi) | .[0]'
 ```
 
 ### Batch processing
@@ -367,7 +408,7 @@ peakbagger info 2296 --format json | jq '.routes | sort_by(.distance_mi) | .[0]'
 ```bash
 # Get details for multiple peaks
 for pid in 2296 271 163756; do
-  peakbagger info $pid --format json >> peaks.json
+  peakbagger peak show $pid --format json >> peaks.json
 done
 ```
 
@@ -379,7 +420,7 @@ import json
 
 # Search for peaks
 result = subprocess.run(
-    ["peakbagger", "search", "Denali", "--format", "json"],
+    ["peakbagger", "peak", "search", "Denali", "--format", "json"],
     capture_output=True,
     text=True
 )
@@ -399,10 +440,10 @@ The CLI waits 2 seconds between requests by default to respect PeakBagger.com's 
 
 ```bash
 # Wait 3 seconds between requests
-peakbagger search "Rainier" --rate-limit 3.0
+peakbagger peak search "Rainier" --rate-limit 3.0
 
 # Minimum recommended: 1 second
-peakbagger info 2296 --rate-limit 1.0
+peakbagger peak show 2296 --rate-limit 1.0
 ```
 
 ## Project Structure
@@ -445,8 +486,8 @@ uv run peakbagger --help
 
 ```bash
 # Run CLI commands during development
-uv run peakbagger search "Rainier"
-uv run peakbagger info 2296
+uv run peakbagger peak search "Rainier"
+uv run peakbagger peak show 2296
 
 # Check version
 uv run peakbagger --version

@@ -28,7 +28,13 @@ def main(ctx: click.Context, quiet: bool) -> None:
     ctx.obj["quiet"] = quiet
 
 
-@main.command()
+@main.group()
+def peak() -> None:
+    """Commands for working with peaks."""
+    pass
+
+
+@peak.command()
 @click.argument("query")
 @click.option(
     "--format",
@@ -56,11 +62,11 @@ def search(query: str, output_format: str, full: bool, rate_limit: float) -> Non
 
     Examples:
 
-      peakbagger search "Mount Rainier"
+      peakbagger peak search "Mount Rainier"
 
-      peakbagger search "Denali" --format json
+      peakbagger peak search "Denali" --format json
 
-      peakbagger search "Whitney" --full
+      peakbagger peak search "Whitney" --full
     """
     client: PeakBaggerClient = PeakBaggerClient(rate_limit_seconds=rate_limit)
     scraper: PeakBaggerScraper = PeakBaggerScraper()
@@ -84,9 +90,9 @@ def search(query: str, output_format: str, full: bool, rate_limit: float) -> Non
             peaks: list[Peak] = []
             for result in results:
                 detail_html = client.get(f"/{result.url}")
-                peak = scraper.parse_peak_detail(detail_html, result.pid)
-                if peak:
-                    peaks.append(peak)
+                peak_obj = scraper.parse_peak_detail(detail_html, result.pid)
+                if peak_obj:
+                    peaks.append(peak_obj)
 
             formatter.format_peaks(peaks, output_format)
         else:
@@ -100,7 +106,7 @@ def search(query: str, output_format: str, full: bool, rate_limit: float) -> Non
         client.close()
 
 
-@main.command()
+@peak.command()
 @click.argument("peak_id")
 @click.option(
     "--format",
@@ -115,7 +121,7 @@ def search(query: str, output_format: str, full: bool, rate_limit: float) -> Non
     default=2.0,
     help="Seconds between requests (default: 2.0)",
 )
-def info(peak_id: str, output_format: str, rate_limit: float) -> None:
+def show(peak_id: str, output_format: str, rate_limit: float) -> None:
     """
     Get detailed information about a specific peak.
 
@@ -123,9 +129,9 @@ def info(peak_id: str, output_format: str, rate_limit: float) -> None:
 
     Examples:
 
-      peakbagger info 2296
+      peakbagger peak show 2296
 
-      peakbagger info 2296 --format json
+      peakbagger peak show 2296 --format json
     """
     client: PeakBaggerClient = PeakBaggerClient(rate_limit_seconds=rate_limit)
     scraper: PeakBaggerScraper = PeakBaggerScraper()
@@ -137,14 +143,14 @@ def info(peak_id: str, output_format: str, rate_limit: float) -> None:
         html = client.get("/peak.aspx", params={"pid": peak_id})
 
         # Parse peak data
-        peak = scraper.parse_peak_detail(html, peak_id)
+        peak_obj = scraper.parse_peak_detail(html, peak_id)
 
-        if not peak:
+        if not peak_obj:
             click.echo(f"Failed to parse peak data for ID {peak_id}", err=True)
             raise click.Abort()
 
         # Display results
-        formatter.format_peak_detail(peak, output_format)
+        formatter.format_peak_detail(peak_obj, output_format)
 
     except Exception as e:
         click.echo(f"Error: {e}", err=True)
@@ -153,7 +159,7 @@ def info(peak_id: str, output_format: str, rate_limit: float) -> None:
         client.close()
 
 
-@main.command(name="peak-ascents")
+@peak.command()
 @click.argument("peak_id")
 @click.option(
     "--format",
@@ -161,16 +167,6 @@ def info(peak_id: str, output_format: str, rate_limit: float) -> None:
     type=click.Choice(["text", "json"], case_sensitive=False),
     default="text",
     help="Output format (text or json)",
-)
-@click.option(
-    "--stats",
-    is_flag=True,
-    help="Show temporal and seasonal statistics",
-)
-@click.option(
-    "--list-ascents",
-    is_flag=True,
-    help="Include list of all ascents",
 )
 @click.option(
     "--after",
@@ -188,17 +184,6 @@ def info(peak_id: str, output_format: str, rate_limit: float) -> None:
     help="Filter ascents within period from today (e.g., '3m', '1y', '10d')",
 )
 @click.option(
-    "--reference-date",
-    type=str,
-    help="Reference date for seasonal analysis (YYYY-MM-DD, default: today)",
-)
-@click.option(
-    "--seasonal-window",
-    type=int,
-    default=14,
-    help="Days before/after reference date for seasonal window (default: 14)",
-)
-@click.option(
     "--with-gpx",
     is_flag=True,
     help="Only show ascents with GPX tracks",
@@ -209,47 +194,44 @@ def info(peak_id: str, output_format: str, rate_limit: float) -> None:
     help="Only show ascents with trip reports",
 )
 @click.option(
+    "--limit",
+    type=int,
+    default=100,
+    help="Maximum number of ascents to display (default: 100)",
+)
+@click.option(
     "--rate-limit",
     type=float,
     default=2.0,
     help="Seconds between requests (default: 2.0)",
 )
-def peak_ascents(
+def ascents(
     peak_id: str,
     output_format: str,
-    stats: bool,
-    list_ascents: bool,
     after: str | None,
     before: str | None,
     within: str | None,
-    reference_date: str | None,
-    seasonal_window: int,
     with_gpx: bool,
     with_tr: bool,
+    limit: int,
     rate_limit: float,
 ) -> None:
     """
-    Analyze ascent statistics for a specific peak.
+    List ascents for a specific peak with optional filtering.
 
     PEAK_ID: The PeakBagger peak ID (e.g., "1798" for Mount Pilchuck)
 
     Examples:
 
-      peakbagger peak-ascents 1798
+      peakbagger peak ascents 1798
 
-      peakbagger peak-ascents 1798 --stats
+      peakbagger peak ascents 1798 --within 1y
 
-      peakbagger peak-ascents 1798 --stats --list-ascents
+      peakbagger peak ascents 1798 --with-gpx
 
-      peakbagger peak-ascents 1798 --after 2020-01-01
+      peakbagger peak ascents 1798 --after 2020-01-01 --limit 50
 
-      peakbagger peak-ascents 1798 --within 1y --stats
-
-      peakbagger peak-ascents 1798 --with-gpx
-
-      peakbagger peak-ascents 1798 --with-tr --list-ascents
-
-      peakbagger peak-ascents 1798 --format json
+      peakbagger peak ascents 1798 --format json
     """
     from datetime import datetime
 
@@ -273,16 +255,16 @@ def peak_ascents(
         html = client.get(url, params=params)
 
         # Parse ascents
-        ascents = scraper.parse_peak_ascents(html)
+        ascent_list = scraper.parse_peak_ascents(html)
 
-        if not ascents:
+        if not ascent_list:
             click.echo(f"No ascents found for peak ID {peak_id}", err=True)
             return
 
-        click.echo(f"Found {len(ascents)} ascents\n")
+        click.echo(f"Found {len(ascent_list)} ascents\n")
 
         # Apply date filters
-        filtered_ascents = ascents
+        filtered_ascents = ascent_list
         if within:
             try:
                 period = analyzer.parse_within_period(within)
@@ -309,6 +291,145 @@ def peak_ascents(
             filtered_ascents = [a for a in filtered_ascents if a.has_trip_report]
             click.echo(f"Filtered to {len(filtered_ascents)} ascents with trip reports\n")
 
+        # Display ascent list (not statistics)
+        # Create a simple statistics object just for formatting the list
+        statistics = analyzer.calculate_statistics(filtered_ascents)
+
+        # Display only the list, not stats
+        formatter.format_ascent_statistics(
+            statistics,
+            ascents=filtered_ascents[:limit],  # Apply limit
+            output_format=output_format,
+            show_list=True,  # Always show list for ascents command
+        )
+
+        if len(filtered_ascents) > limit:
+            click.echo(f"\nShowing first {limit} of {len(filtered_ascents)} ascents")
+
+    except Exception as e:
+        click.echo(f"Error: {e}", err=True)
+        raise click.Abort() from e
+    finally:
+        client.close()
+
+
+@peak.command()
+@click.argument("peak_id")
+@click.option(
+    "--format",
+    "output_format",
+    type=click.Choice(["text", "json"], case_sensitive=False),
+    default="text",
+    help="Output format (text or json)",
+)
+@click.option(
+    "--after",
+    type=str,
+    help="Include only ascents on or after this date (YYYY-MM-DD)",
+)
+@click.option(
+    "--before",
+    type=str,
+    help="Include only ascents on or before this date (YYYY-MM-DD)",
+)
+@click.option(
+    "--within",
+    type=str,
+    help="Analyze ascents within period from today (e.g., '3m', '1y', '10d')",
+)
+@click.option(
+    "--reference-date",
+    type=str,
+    help="Reference date for seasonal analysis (YYYY-MM-DD, default: today)",
+)
+@click.option(
+    "--seasonal-window",
+    type=int,
+    default=14,
+    help="Days before/after reference date for seasonal window (default: 14)",
+)
+@click.option(
+    "--rate-limit",
+    type=float,
+    default=2.0,
+    help="Seconds between requests (default: 2.0)",
+)
+def stats(
+    peak_id: str,
+    output_format: str,
+    after: str | None,
+    before: str | None,
+    within: str | None,
+    reference_date: str | None,
+    seasonal_window: int,
+    rate_limit: float,
+) -> None:
+    """
+    Show statistical analysis of ascents for a specific peak.
+
+    PEAK_ID: The PeakBagger peak ID (e.g., "1798" for Mount Pilchuck)
+
+    Examples:
+
+      peakbagger peak stats 1798
+
+      peakbagger peak stats 1798 --within 5y
+
+      peakbagger peak stats 1798 --reference-date 2024-07-15
+
+      peakbagger peak stats 1798 --after 2020-01-01
+
+      peakbagger peak stats 1798 --format json
+    """
+    from datetime import datetime
+
+    from peakbagger.statistics import AscentAnalyzer
+
+    # Validate mutually exclusive date filters
+    if within and (after or before):
+        click.echo("Error: --within cannot be combined with --after/--before", err=True)
+        raise click.Abort()
+
+    client: PeakBaggerClient = PeakBaggerClient(rate_limit_seconds=rate_limit)
+    scraper: PeakBaggerScraper = PeakBaggerScraper()
+    formatter: PeakFormatter = PeakFormatter()
+    analyzer: AscentAnalyzer = AscentAnalyzer()
+
+    try:
+        # Fetch ascent list page
+        click.echo(f"Fetching ascents for peak {peak_id}...")
+        url = "/climber/PeakAscents.aspx"
+        params = {"pid": peak_id, "sort": "ascentdate", "u": "ft", "y": "9999"}
+        html = client.get(url, params=params)
+
+        # Parse ascents
+        ascent_list = scraper.parse_peak_ascents(html)
+
+        if not ascent_list:
+            click.echo(f"No ascents found for peak ID {peak_id}", err=True)
+            return
+
+        click.echo(f"Found {len(ascent_list)} ascents\n")
+
+        # Apply date filters
+        filtered_ascents = ascent_list
+        if within:
+            try:
+                period = analyzer.parse_within_period(within)
+                after_date = datetime.now() - period
+                filtered_ascents = analyzer.filter_by_date_range(filtered_ascents, after=after_date)
+                click.echo(f"Analyzing {len(filtered_ascents)} ascents within {within}\n")
+            except ValueError as e:
+                click.echo(f"Error: {e}", err=True)
+                raise click.Abort() from e
+        elif after or before:
+            after_date = datetime.strptime(after, "%Y-%m-%d") if after else None
+            before_date = datetime.strptime(before, "%Y-%m-%d") if before else None
+            filtered_ascents = analyzer.filter_by_date_range(
+                filtered_ascents, after=after_date, before=before_date
+            )
+            click.echo(f"Analyzing {len(filtered_ascents)} ascents\n")
+
         # Parse reference date for seasonal analysis
         ref_date = None
         if reference_date:
@@ -325,12 +446,12 @@ def peak_ascents(
             seasonal_window_days=seasonal_window,
         )
 
-        # Display results
+        # Display only statistics, not the list
         formatter.format_ascent_statistics(
             statistics,
-            ascents=filtered_ascents if list_ascents else None,
+            ascents=None,  # Don't show list for stats command
             output_format=output_format,
-            show_list=list_ascents,
+            show_list=False,
         )
 
     except Exception as e:
