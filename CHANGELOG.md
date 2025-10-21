@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/dreamiurg/peakbagger-cli/compare/v1.1.0...v1.2.0) (2025-10-21)
+
+
+### Features
+
+* require tests to pass before creating release ([#4](https://github.com/dreamiurg/peakbagger-cli/issues/4)) ([3aa984d](https://github.com/dreamiurg/peakbagger-cli/commit/3aa984df1aa53c5dd9c76fd7ce8f304d53513ddd))
+
 # [1.1.0](https://github.com/dreamiurg/peakbagger-cli/compare/v1.0.0...v1.1.0) (2025-10-21)
 
 
