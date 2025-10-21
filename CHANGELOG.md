@@ -1,3 +1,10 @@
+## [0.6.2](https://github.com/dreamiurg/peakbagger-cli/compare/v0.6.1...v0.6.2) (2025-10-21)
+
+
+### Bug Fixes
+
+* ensure consistent non-underlined blue URL formatting ([11a3c09](https://github.com/dreamiurg/peakbagger-cli/commit/11a3c0940da8b37533cfb3326686227e97abdf6a))
+
 ## [0.6.1](https://github.com/dreamiurg/peakbagger-cli/compare/v0.6.0...v0.6.1) (2025-10-21)
 
 
