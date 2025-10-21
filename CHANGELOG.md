@@ -1,3 +1,15 @@
+# [1.1.0](https://github.com/dreamiurg/peakbagger-cli/compare/v1.0.0...v1.1.0) (2025-10-21)
+
+
+### Bug Fixes
+
+* configure semantic-release to use deploy key for pushing ([#3](https://github.com/dreamiurg/peakbagger-cli/issues/3)) ([915453b](https://github.com/dreamiurg/peakbagger-cli/commit/915453b75856a7ec52f70a6c00b5a7fa4b19819d))
+
+
+### Features
+
+* add VCR-based smoke tests for CLI commands ([#2](https://github.com/dreamiurg/peakbagger-cli/issues/2)) ([b5ffc62](https://github.com/dreamiurg/peakbagger-cli/commit/b5ffc62f2b3dbcca39f5b6ff5a990b948d7d1127))
+
 # [1.0.0](https://github.com/dreamiurg/peakbagger-cli/compare/v0.6.2...v1.0.0) (2025-10-21)
 
 
