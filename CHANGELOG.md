@@ -1,3 +1,19 @@
+# [1.0.0](https://github.com/dreamiurg/peakbagger-cli/compare/v0.6.2...v1.0.0) (2025-10-21)
+
+
+* feat!: restructure CLI to resource-action pattern ([caa911e](https://github.com/dreamiurg/peakbagger-cli/commit/caa911e0688fb3bd82c1da53b6967608c93eb4e3))
+
+
+### BREAKING CHANGES
+
+* All command names have changed to use resource-action
+pattern. Users must update scripts and workflows to use new command
+structure (e.g., 'peakbagger peak search' instead of 'peakbagger search').
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>
+
 ## [0.6.2](https://github.com/dreamiurg/peakbagger-cli/compare/v0.6.1...v0.6.2) (2025-10-21)
 
 
