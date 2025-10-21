@@ -355,3 +355,81 @@ class PeakFormatter:
 
             if len(ascents) > 100:
                 self.console.print(f"\n[dim]Showing first 100 of {len(ascents)} ascents[/dim]")
+
+    def format_ascent_detail(self, ascent: Ascent, output_format: str) -> None:
+        """
+        Format and display a single ascent's detailed information.
+
+        Args:
+            ascent: Ascent object with detailed data
+            output_format: "text" or "json"
+        """
+        if output_format == "json":
+            # JSON output
+            import json
+
+            data = ascent.to_dict()
+            json_str = json.dumps(data, indent=2)
+            self.console.print(json_str)
+        else:
+            # Text output with Rich table
+            from rich.table import Table
+
+            table = Table(show_header=True, header_style="bold magenta", box=None)
+            table.add_column("Field", style="cyan", width=20)
+            table.add_column("Value", style="white")
+
+            # Basic info
+            table.add_row("Ascent ID", ascent.ascent_id)
+            table.add_row("Climber", ascent.climber_name)
+
+            if ascent.date:
+                table.add_row("Date", ascent.date)
+
+            if ascent.ascent_type:
+                table.add_row("Ascent Type", ascent.ascent_type)
+
+            # Peak info
+            if ascent.peak_name:
+                peak_display = ascent.peak_name
+                if ascent.peak_id:
+                    peak_display += f" ({ascent.peak_id})"
+                table.add_row("Peak", peak_display)
+
+            if ascent.location:
+                table.add_row("Location", ascent.location)
+
+            if ascent.elevation_ft and ascent.elevation_m:
+                elev_display = f"{ascent.elevation_ft:,} ft ({ascent.elevation_m:,} m)"
+                table.add_row("Elevation", elev_display)
+
+            if ascent.route:
+                table.add_row("Route", ascent.route)
+
+            # GPX metrics
+            if ascent.elevation_gain_ft:
+                table.add_row("Elevation Gain", f"{ascent.elevation_gain_ft:,} ft")
+
+            if ascent.distance_mi:
+                table.add_row("Distance", f"{ascent.distance_mi} mi")
+
+            if ascent.duration_hours:
+                hours = int(ascent.duration_hours)
+                minutes = int((ascent.duration_hours - hours) * 60)
+                dur_display = f"{hours}h {minutes}m" if minutes > 0 else f"{hours}h"
+                table.add_row("Duration", dur_display)
+
+            self.console.print(table)
+
+            # Trip report section
+            if ascent.trip_report_text:
+                self.console.print("\n[bold cyan]Trip Report:[/bold cyan]")
+                self.console.print("─" * 60)
+                # Word wrap the trip report
+                from rich.text import Text
+
+                report_text = Text(ascent.trip_report_text)
+                self.console.print(report_text)
+
+                if ascent.trip_report_url:
+                    self.console.print(f"\n[bold]External Link:[/bold] {ascent.trip_report_url}")
