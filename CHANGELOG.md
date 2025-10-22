@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/dreamiurg/peakbagger-cli/compare/v1.3.0...v1.4.0) (2025-10-22)
+
+
+### Features
+
+* add --dump-html option to dump raw HTML to stdout ([#7](https://github.com/dreamiurg/peakbagger-cli/issues/7)) ([e48bb18](https://github.com/dreamiurg/peakbagger-cli/commit/e48bb181713e835580350041f950ff8aee1679c1))
+
 # [1.3.0](https://github.com/dreamiurg/peakbagger-cli/compare/v1.2.1...v1.3.0) (2025-10-22)
 
 
