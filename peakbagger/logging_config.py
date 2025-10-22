@@ -1,8 +1,12 @@
 """Logging configuration for peakbagger-cli using loguru."""
 
 import sys
+from typing import TYPE_CHECKING
 
 from loguru import logger
+
+if TYPE_CHECKING:
+    from loguru import Logger
 
 
 def configure_logging(verbose: bool = False, debug: bool = False) -> None:
@@ -50,6 +54,6 @@ def configure_logging(verbose: bool = False, debug: bool = False) -> None:
 
 
 # Create a logger instance for use throughout the application
-def get_logger():
+def get_logger() -> "Logger":
     """Get the configured logger instance."""
     return logger
