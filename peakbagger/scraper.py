@@ -269,6 +269,9 @@ class PeakBaggerScraper:
         """
         Parse ascent list from PeakAscents.aspx page.
 
+        Dynamically handles varying table structures across different peaks.
+        Different peaks have different column counts (8-14 columns observed).
+
         Args:
             html: HTML content from peak ascents page
 
@@ -281,8 +284,11 @@ class PeakBaggerScraper:
         # Find all tables
         tables: list[Tag] = soup.find_all("table")  # type: ignore[assignment]
 
-        # Look for the data table (has specific header structure)
+        # Look for the data table with dynamic header detection
         data_table: Tag | None = None
+        header_map: dict[str, int] = {}
+        num_columns: int = 0
+
         for table in tables:
             rows: list[Tag] = table.find_all("tr")  # type: ignore[assignment]
             if len(rows) < 10:
@@ -292,18 +298,36 @@ class PeakBaggerScraper:
             if len(rows) > 1:
                 header_row: Tag = rows[1]
                 headers: list[Tag] = header_row.find_all(["th", "td"])  # type: ignore[assignment]
-                if len(headers) == 14:
-                    header_texts: list[str] = [h.get_text(strip=True) for h in headers]
-                    # Check for "Climber" and "Ascent Date" (may have non-breaking spaces)
-                    if (
-                        "Climber" in header_texts
-                        and "Ascent" in header_texts[1]
-                        and "Date" in header_texts[1]
-                    ):
-                        data_table = table
-                        break
 
-        if not data_table:
+                # Table must have reasonable number of columns (not the merged giant table)
+                if len(headers) < 3 or len(headers) > 20:
+                    continue
+
+                header_texts: list[str] = [h.get_text(strip=True) for h in headers]
+
+                # Check for required columns: "Climber" and "Ascent Date"
+                if "Climber" in header_texts and any(
+                    "Ascent" in h and "Date" in h for h in header_texts
+                ):
+                    # Build header map for dynamic column access
+                    for idx, header_text in enumerate(header_texts):
+                        header_map[header_text] = idx
+
+                    data_table = table
+                    num_columns = len(headers)
+                    break
+
+        if not data_table or not header_map:
+            return ascents
+
+        # Get column indices (fallback to -1 if column doesn't exist)
+        climber_idx = header_map.get("Climber", -1)
+        date_idx = next((header_map[h] for h in header_map if "Ascent" in h and "Date" in h), -1)
+        gps_idx = header_map.get("GPS", -1)
+        tr_words_idx = header_map.get("TR-Words", -1)
+        route_idx = header_map.get("Route", -1)
+
+        if climber_idx == -1 or date_idx == -1:
             return ascents
 
         rows = data_table.find_all("tr")
@@ -311,11 +335,13 @@ class PeakBaggerScraper:
         # Process data rows (skip first 2 rows: separator and header)
         for row in rows[2:]:
             cells: list[Tag] = row.find_all(["td", "th"])  # type: ignore[assignment]
-            if len(cells) != 14:
+
+            # Skip rows that don't match the expected column count
+            if len(cells) != num_columns:
                 continue
 
-            # Extract climber name and ID (column 0)
-            climber_cell: Tag = cells[0]
+            # Extract climber name and ID (required column)
+            climber_cell: Tag = cells[climber_idx]
             climber_link: Tag | None = climber_cell.find(
                 "a", href=lambda x: x and "climber.aspx?cid=" in x
             )  # type: ignore[assignment]
@@ -327,8 +353,8 @@ class PeakBaggerScraper:
             climber_id_match = re.search(r"cid=(\d+)", climber_href)
             climber_id: str | None = climber_id_match.group(1) if climber_id_match else None
 
-            # Extract ascent date and ID (column 1)
-            date_cell: Tag = cells[1]
+            # Extract ascent date and ID (required column)
+            date_cell: Tag = cells[date_idx]
             date_link: Tag | None = date_cell.find(
                 "a", href=lambda x: x and "ascent.aspx?aid=" in x
             )  # type: ignore[assignment]
@@ -351,25 +377,31 @@ class PeakBaggerScraper:
                 continue
             ascent_id: str = ascent_id_match.group(1)
 
-            # Check for GPX track (column 3)
-            gps_cell: Tag = cells[3]
-            gps_img: Tag | None = gps_cell.find("img", src=lambda x: x and "GPS.gif" in x)  # type: ignore[assignment]
-            has_gpx: bool = gps_img is not None
+            # Check for GPX track (optional column)
+            has_gpx: bool = False
+            if gps_idx != -1:
+                gps_cell: Tag = cells[gps_idx]
+                gps_img: Tag | None = gps_cell.find("img", src=lambda x: x and "GPS.gif" in x)  # type: ignore[assignment]
+                has_gpx = gps_img is not None
 
-            # Check for trip report (column 4)
-            tr_cell: Tag = cells[4]
-            tr_text: str = tr_cell.get_text(strip=True)
-            has_trip_report: bool = tr_text.startswith("TR-")
+            # Check for trip report (optional column)
+            has_trip_report: bool = False
             trip_report_words: int | None = None
-            if has_trip_report:
-                # Extract word count (format: "TR-123")
-                tr_match = re.search(r"TR-(\d+)", tr_text)
-                if tr_match:
-                    trip_report_words = int(tr_match.group(1))
+            if tr_words_idx != -1:
+                tr_cell: Tag = cells[tr_words_idx]
+                tr_text: str = tr_cell.get_text(strip=True)
+                has_trip_report = tr_text.startswith("TR-")
+                if has_trip_report:
+                    # Extract word count (format: "TR-123")
+                    tr_match = re.search(r"TR-(\d+)", tr_text)
+                    if tr_match:
+                        trip_report_words = int(tr_match.group(1))
 
-            # Extract route name (column 5)
-            route_cell: Tag = cells[5]
-            route: str | None = route_cell.get_text(strip=True) or None
+            # Extract route name (optional column)
+            route: str | None = None
+            if route_idx != -1:
+                route_cell: Tag = cells[route_idx]
+                route = route_cell.get_text(strip=True) or None
 
             ascents.append(
                 Ascent(
