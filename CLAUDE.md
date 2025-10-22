@@ -188,7 +188,7 @@ peakbagger/
 - Use loguru logger, NOT print() for debugging or informational output
 - Log levels:
   - **INFO**: HTTP requests (method, URL, status code, response time)
-  - **DEBUG**: Parsing details, rate limiting waits, operational details
+  - **DEBUG**: Parsing details, rate-limiting waits, operational details
   - **ERROR**: Errors and exceptions
 - By default, no logs are shown (level set to CRITICAL)
 - Users enable logging via `--verbose` (INFO) or `--debug` (DEBUG) flags
@@ -289,7 +289,7 @@ Output changes include:
 - beautifulsoup4 >= 4.9.0
 - lxml >= 4.6.0
 - rich >= 10.0.0
-- loguru >= 0.7.0
+- loguru >= 0.7.3
 
 ### Development (Python)
 - pytest + pytest-cov
