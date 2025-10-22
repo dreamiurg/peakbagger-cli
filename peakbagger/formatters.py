@@ -62,7 +62,7 @@ class PeakFormatter:
 
     def _print_json(self, data: dict[str, Any] | list[dict[str, Any]]) -> None:
         """Print data as formatted JSON."""
-        print(json.dumps(data, indent=2))
+        self.console.print(json.dumps(data, indent=2))
 
     def _print_search_table(self, results: list[SearchResult]) -> None:
         """Print search results as a Rich table."""
