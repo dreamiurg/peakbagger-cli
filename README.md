@@ -86,9 +86,11 @@ peakbagger peak search QUERY [OPTIONS]
 ```
 
 **Arguments:**
+
 - `QUERY`: Search term (e.g., "Mount Rainier", "Denali", "Whitney")
 
 **Options:**
+
 - `--format [text|json]`: Output format (default: text)
 - `--full`: Fetch full details for all search results
 - `--rate-limit FLOAT`: Seconds between requests (default: 2.0)
@@ -111,7 +113,7 @@ peakbagger peak search "Rainier" --rate-limit 3.0
 
 **Sample Output (text):**
 
-```
+```text
                                  Search Results
 ┏━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┓
 ┃ Peak ID ┃ Name      ┃ Location ┃ Range     ┃ Elevation           ┃ URL       ┃
@@ -141,9 +143,11 @@ peakbagger peak show PEAK_ID [OPTIONS]
 ```
 
 **Arguments:**
+
 - `PEAK_ID`: The PeakBagger peak ID (e.g., "2296" for Mount Rainier)
 
 **Options:**
+
 - `--format [text|json]`: Output format (default: text)
 - `--rate-limit FLOAT`: Seconds between requests (default: 2.0)
 
@@ -159,7 +163,7 @@ peakbagger peak show 2296 --format json
 
 **Sample Output (text):**
 
-```
+```text
 Mount Rainier, Washington
 Peak ID: 2296
 
@@ -252,9 +256,11 @@ peakbagger peak ascents PEAK_ID [OPTIONS]
 ```
 
 **Arguments:**
+
 - `PEAK_ID`: The PeakBagger peak ID (e.g., "1798" for Mount Pilchuck)
 
 **Options:**
+
 - `--format [text|json]`: Output format (default: text)
 - `--after DATE`: Filter ascents on or after date (YYYY-MM-DD)
 - `--before DATE`: Filter ascents on or before date (YYYY-MM-DD)
@@ -293,6 +299,7 @@ peakbagger peak ascents 1798 --format json
 ```
 
 **Use Cases:**
+
 - **Trip Planning**: Check recent climbs to gauge popularity and current conditions
 - **Route Research**: See which routes are most popular
 - **GPX Track Finding**: Filter to ascents with GPS tracks for route planning
@@ -307,9 +314,11 @@ peakbagger peak stats PEAK_ID [OPTIONS]
 ```
 
 **Arguments:**
+
 - `PEAK_ID`: The PeakBagger peak ID (e.g., "1798" for Mount Pilchuck)
 
 **Options:**
+
 - `--format [text|json]`: Output format (default: text)
 - `--after DATE`: Include only ascents on or after date (YYYY-MM-DD)
 - `--before DATE`: Include only ascents on or before date (YYYY-MM-DD)
@@ -339,7 +348,7 @@ peakbagger peak stats 1798 --format json
 
 **Sample Output (text):**
 
-```
+```text
 Fetching ascents for peak 1798...
 Found 1305 ascents
 
@@ -378,6 +387,7 @@ Found 1305 ascents
 ```
 
 **Use Cases:**
+
 - **Seasonal Analysis**: Find the best time of year to climb based on historical patterns
 - **Popularity Trends**: Understand climbing activity over different time periods
 - **Data Analysis**: Export to JSON for custom analysis and visualization
@@ -391,9 +401,11 @@ peakbagger ascent show ASCENT_ID [OPTIONS]
 ```
 
 **Arguments:**
+
 - `ASCENT_ID`: The PeakBagger ascent ID (e.g., "12963")
 
 **Options:**
+
 - `--format [text|json]`: Output format (default: text)
 - `--rate-limit FLOAT`: Seconds between requests (default: 2.0)
 
@@ -409,7 +421,7 @@ peakbagger ascent show 12963 --format json
 
 **Sample Output (text):**
 
-```
+```text
 Fetching ascent 12963...
 ┌─────────────────┬────────────────────────────────────┐
 │ Field           │ Value                              │
@@ -458,6 +470,7 @@ My dad took a group of kids to hike Pilchuck...
 ```
 
 **Use Cases:**
+
 - **Trip Report Research**: Read detailed trip reports for route beta and conditions
 - **Historical Ascents**: Learn about classic climbs and early ascents
 - **Route Information**: Get details about specific routes and approaches
@@ -510,7 +523,8 @@ for peak in peaks:
     print(f"{peak['name']}: {peak['pid']}")
 ```
 
-**More examples:** See the [`examples/`](examples/) directory for complete scripts including batch processing, CSV export, and filtering by elevation.
+**More examples:** See the [`examples/`](examples/) directory for complete scripts including
+batch processing, CSV export, and filtering by elevation.
 
 ## Configuration
 
@@ -536,6 +550,7 @@ peakbagger -q peak show 2296
 By default, the CLI shows minimal output. Use logging flags to see what's happening under the hood:
 
 **Verbose Mode (`--verbose` / `-v`)**: Shows HTTP requests with timing
+
 ```bash
 peakbagger --verbose peak show 2296
 # Output:
@@ -543,6 +558,7 @@ peakbagger --verbose peak show 2296
 ```
 
 **Debug Mode (`--debug`)**: Shows detailed parsing and rate limiting with file locations
+
 ```bash
 peakbagger --debug peak show 2296
 # Output:
@@ -554,6 +570,7 @@ peakbagger --debug peak show 2296
 ```
 
 **Redirecting Logs**: Logs go to stderr, so you can redirect them separately:
+
 ```bash
 # Save output to file, show logs on screen
 peakbagger -v peak show 2296 --format json > peak.json
@@ -579,7 +596,7 @@ peakbagger peak show 2296 --rate-limit 1.0
 
 ## Project Structure
 
-```
+```text
 peakbagger-cli/
 ├── peakbagger/
 │   ├── __init__.py        # Package metadata
@@ -645,7 +662,8 @@ uv run peakbagger --version
 
 ### Data Sources
 
-This tool scrapes all data from [PeakBagger.com](https://www.peakbagger.com), which aggregates peak information from USGS, LIDAR data, and user contributions.
+This tool scrapes all data from [PeakBagger.com](https://www.peakbagger.com), which
+aggregates peak information from USGS, LIDAR data, and user contributions.
 
 ## Limitations
 
@@ -672,6 +690,7 @@ PeakBagger.com provides this data as a free service to the climbing community. U
 ### Cloudflare blocks
 
 Cloudflare errors require these actions:
+
 - Increase the rate limit: `--rate-limit 3.0`
 - Wait a few minutes before retrying
 - Check PeakBagger.com access in your browser
@@ -692,7 +711,8 @@ python3 --version  # Should be 3.12 or higher
 
 ## Contributing
 
-Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, code style guidelines, and submission instructions.
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup,
+code style guidelines, and submission instructions.
 
 ## Support
 

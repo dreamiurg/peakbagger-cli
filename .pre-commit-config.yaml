@@ -67,6 +67,7 @@ repos:
     hooks:
       - id: markdownlint
         args: [--fix]
+        exclude: ^CHANGELOG\.md$
 
   # YAML linting
   - repo: https://github.com/adrienverge/yamllint
