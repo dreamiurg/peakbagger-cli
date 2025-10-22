@@ -21,11 +21,17 @@ if TYPE_CHECKING:
     is_flag=True,
     help="Suppress informational messages",
 )
+@click.option(
+    "--dump-html",
+    is_flag=True,
+    help="Dump raw HTML to stdout instead of parsing",
+)
 @click.pass_context
-def main(ctx: click.Context, quiet: bool) -> None:
+def main(ctx: click.Context, quiet: bool, dump_html: bool) -> None:
     """PeakBagger CLI - Search and retrieve mountain peak data from PeakBagger.com"""
     ctx.ensure_object(dict)
     ctx.obj["quiet"] = quiet
+    ctx.obj["dump_html"] = dump_html
 
 
 @main.group()
@@ -60,7 +66,10 @@ def ascent() -> None:
     default=2.0,
     help="Seconds between requests (default: 2.0)",
 )
-def search(query: str, output_format: str, full: bool, rate_limit: float) -> None:
+@click.pass_context
+def search(
+    ctx: click.Context, query: str, output_format: str, full: bool, rate_limit: float
+) -> None:
     """
     Search for peaks by name.
 
@@ -82,6 +91,11 @@ def search(query: str, output_format: str, full: bool, rate_limit: float) -> Non
         # Fetch search results
         click.echo(f"Searching for '{query}'...")
         html = client.get("/search.aspx", params={"ss": query, "tid": "M"})
+
+        # If dump-html flag is set, print HTML and exit
+        if ctx.obj.get("dump_html"):
+            click.echo(html)
+            return
 
         # Parse results
         results = scraper.parse_search_results(html)
@@ -127,7 +141,8 @@ def search(query: str, output_format: str, full: bool, rate_limit: float) -> Non
     default=2.0,
     help="Seconds between requests (default: 2.0)",
 )
-def show(peak_id: str, output_format: str, rate_limit: float) -> None:
+@click.pass_context
+def show(ctx: click.Context, peak_id: str, output_format: str, rate_limit: float) -> None:
     """
     Get detailed information about a specific peak.
 
@@ -147,6 +162,11 @@ def show(peak_id: str, output_format: str, rate_limit: float) -> None:
         # Fetch peak detail page
         click.echo(f"Fetching peak {peak_id}...")
         html = client.get("/peak.aspx", params={"pid": peak_id})
+
+        # If dump-html flag is set, print HTML and exit
+        if ctx.obj.get("dump_html"):
+            click.echo(html)
+            return
 
         # Parse peak data
         peak_obj = scraper.parse_peak_detail(html, peak_id)
@@ -211,7 +231,9 @@ def show(peak_id: str, output_format: str, rate_limit: float) -> None:
     default=2.0,
     help="Seconds between requests (default: 2.0)",
 )
+@click.pass_context
 def ascents(
+    ctx: click.Context,
     peak_id: str,
     output_format: str,
     after: str | None,
@@ -259,6 +281,11 @@ def ascents(
         url = "/climber/PeakAscents.aspx"
         params = {"pid": peak_id, "sort": "ascentdate", "u": "ft", "y": "9999"}
         html = client.get(url, params=params)
+
+        # If dump-html flag is set, print HTML and exit
+        if ctx.obj.get("dump_html"):
+            click.echo(html)
+            return
 
         # Parse ascents
         ascent_list = scraper.parse_peak_ascents(html)
@@ -360,7 +387,9 @@ def ascents(
     default=2.0,
     help="Seconds between requests (default: 2.0)",
 )
+@click.pass_context
 def stats(
+    ctx: click.Context,
     peak_id: str,
     output_format: str,
     after: str | None,
@@ -407,6 +436,11 @@ def stats(
         url = "/climber/PeakAscents.aspx"
         params = {"pid": peak_id, "sort": "ascentdate", "u": "ft", "y": "9999"}
         html = client.get(url, params=params)
+
+        # If dump-html flag is set, print HTML and exit
+        if ctx.obj.get("dump_html"):
+            click.echo(html)
+            return
 
         # Parse ascents
         ascent_list = scraper.parse_peak_ascents(html)
@@ -482,7 +516,8 @@ def stats(
     default=2.0,
     help="Seconds between requests (default: 2.0)",
 )
-def show_ascent(ascent_id: str, output_format: str, rate_limit: float) -> None:
+@click.pass_context
+def show_ascent(ctx: click.Context, ascent_id: str, output_format: str, rate_limit: float) -> None:
     """
     Get detailed information about a specific ascent.
 
@@ -502,6 +537,11 @@ def show_ascent(ascent_id: str, output_format: str, rate_limit: float) -> None:
         # Fetch ascent detail page
         click.echo(f"Fetching ascent {ascent_id}...")
         html = client.get("/climber/ascent.aspx", params={"aid": ascent_id})
+
+        # If dump-html flag is set, print HTML and exit
+        if ctx.obj.get("dump_html"):
+            click.echo(html)
+            return
 
         # Parse ascent data
         ascent_obj = scraper.parse_ascent_detail(html, ascent_id)
