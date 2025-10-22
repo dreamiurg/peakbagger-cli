@@ -3,6 +3,7 @@
 from typing import TYPE_CHECKING
 
 import click
+from rich.console import Console
 
 from peakbagger import __version__
 from peakbagger.client import PeakBaggerClient
@@ -11,6 +12,42 @@ from peakbagger.scraper import PeakBaggerScraper
 
 if TYPE_CHECKING:
     from peakbagger.models import Peak
+
+# Module-level console for status messages (stderr to keep stdout clean for data)
+_console = Console(stderr=True)
+
+
+def _status(ctx: click.Context, message: str, style: str | None = None) -> None:
+    """
+    Print a status message to stderr using Rich.
+
+    Respects --quiet and --dump-html flags to keep output clean.
+
+    Args:
+        ctx: Click context containing options
+        message: Status message to display
+        style: Optional Rich style (e.g., "bold yellow", "red")
+    """
+    # Suppress status messages if --quiet or --dump-html is set
+    if ctx.obj.get("quiet") or ctx.obj.get("dump_html"):
+        return
+
+    if style:
+        _console.print(message, style=style)
+    else:
+        _console.print(message)
+
+
+def _error(message: str) -> None:
+    """
+    Print an error message to stderr using Rich.
+
+    Always shown regardless of --quiet or --dump-html flags.
+
+    Args:
+        message: Error message to display
+    """
+    _console.print(f"[bold red]Error:[/bold red] {message}")
 
 
 @click.group()
@@ -89,7 +126,7 @@ def search(
 
     try:
         # Fetch search results
-        click.echo(f"Searching for '{query}'...")
+        _status(ctx, f"Searching for '{query}'...")
         html = client.get("/search.aspx", params={"ss": query, "tid": "M"})
 
         # If dump-html flag is set, print HTML and exit
@@ -101,12 +138,12 @@ def search(
         results = scraper.parse_search_results(html)
 
         if not results:
-            click.echo(f"No results found for '{query}'")
+            _status(ctx, f"No results found for '{query}'")
             return
 
         # If --full flag, fetch details for each peak
         if full:
-            click.echo(f"Fetching details for {len(results)} peak(s)...\n")
+            _status(ctx, f"Fetching details for {len(results)} peak(s)...\n")
             peaks: list[Peak] = []
             for result in results:
                 detail_html = client.get(f"/{result.url}")
@@ -120,7 +157,7 @@ def search(
             formatter.format_search_results(results, output_format)
 
     except Exception as e:
-        click.echo(f"Error: {e}", err=True)
+        _error(str(e))
         raise click.Abort() from e
     finally:
         client.close()
@@ -160,7 +197,7 @@ def show(ctx: click.Context, peak_id: str, output_format: str, rate_limit: float
 
     try:
         # Fetch peak detail page
-        click.echo(f"Fetching peak {peak_id}...")
+        _status(ctx, f"Fetching peak {peak_id}...")
         html = client.get("/peak.aspx", params={"pid": peak_id})
 
         # If dump-html flag is set, print HTML and exit
@@ -172,14 +209,14 @@ def show(ctx: click.Context, peak_id: str, output_format: str, rate_limit: float
         peak_obj = scraper.parse_peak_detail(html, peak_id)
 
         if not peak_obj:
-            click.echo(f"Failed to parse peak data for ID {peak_id}", err=True)
+            _error(f"Failed to parse peak data for ID {peak_id}")
             raise click.Abort()
 
         # Display results
         formatter.format_peak_detail(peak_obj, output_format)
 
     except Exception as e:
-        click.echo(f"Error: {e}", err=True)
+        _error(str(e))
         raise click.Abort() from e
     finally:
         client.close()
@@ -267,7 +304,7 @@ def ascents(
 
     # Validate mutually exclusive date filters
     if within and (after or before):
-        click.echo("Error: --within cannot be combined with --after/--before", err=True)
+        _error("--within cannot be combined with --after/--before")
         raise click.Abort()
 
     client: PeakBaggerClient = PeakBaggerClient(rate_limit_seconds=rate_limit)
@@ -277,7 +314,7 @@ def ascents(
 
     try:
         # Fetch ascent list page
-        click.echo(f"Fetching ascents for peak {peak_id}...")
+        _status(ctx, f"Fetching ascents for peak {peak_id}...")
         url = "/climber/PeakAscents.aspx"
         params = {"pid": peak_id, "sort": "ascentdate", "u": "ft", "y": "9999"}
         html = client.get(url, params=params)
@@ -291,10 +328,10 @@ def ascents(
         ascent_list = scraper.parse_peak_ascents(html)
 
         if not ascent_list:
-            click.echo(f"No ascents found for peak ID {peak_id}", err=True)
+            _error(f"No ascents found for peak ID {peak_id}")
             return
 
-        click.echo(f"Found {len(ascent_list)} ascents\n")
+        _status(ctx, f"Found {len(ascent_list)} ascents\n")
 
         # Apply date filters
         filtered_ascents = ascent_list
@@ -303,9 +340,9 @@ def ascents(
                 period = analyzer.parse_within_period(within)
                 after_date = datetime.now() - period
                 filtered_ascents = analyzer.filter_by_date_range(filtered_ascents, after=after_date)
-                click.echo(f"Filtered to {len(filtered_ascents)} ascents within {within}\n")
+                _status(ctx, f"Filtered to {len(filtered_ascents)} ascents within {within}\n")
             except ValueError as e:
-                click.echo(f"Error: {e}", err=True)
+                _error(str(e))
                 raise click.Abort() from e
         elif after or before:
             after_date = datetime.strptime(after, "%Y-%m-%d") if after else None
@@ -313,16 +350,16 @@ def ascents(
             filtered_ascents = analyzer.filter_by_date_range(
                 filtered_ascents, after=after_date, before=before_date
             )
-            click.echo(f"Filtered to {len(filtered_ascents)} ascents\n")
+            _status(ctx, f"Filtered to {len(filtered_ascents)} ascents\n")
 
         # Apply metadata filters
         if with_gpx:
             filtered_ascents = [a for a in filtered_ascents if a.has_gpx]
-            click.echo(f"Filtered to {len(filtered_ascents)} ascents with GPX tracks\n")
+            _status(ctx, f"Filtered to {len(filtered_ascents)} ascents with GPX tracks\n")
 
         if with_tr:
             filtered_ascents = [a for a in filtered_ascents if a.has_trip_report]
-            click.echo(f"Filtered to {len(filtered_ascents)} ascents with trip reports\n")
+            _status(ctx, f"Filtered to {len(filtered_ascents)} ascents with trip reports\n")
 
         # Display ascent list (not statistics)
         # Create a simple statistics object just for formatting the list
@@ -337,10 +374,10 @@ def ascents(
         )
 
         if len(filtered_ascents) > limit:
-            click.echo(f"\nShowing first {limit} of {len(filtered_ascents)} ascents")
+            _status(ctx, f"\nShowing first {limit} of {len(filtered_ascents)} ascents")
 
     except Exception as e:
-        click.echo(f"Error: {e}", err=True)
+        _error(str(e))
         raise click.Abort() from e
     finally:
         client.close()
@@ -422,7 +459,7 @@ def stats(
 
     # Validate mutually exclusive date filters
     if within and (after or before):
-        click.echo("Error: --within cannot be combined with --after/--before", err=True)
+        _error("--within cannot be combined with --after/--before")
         raise click.Abort()
 
     client: PeakBaggerClient = PeakBaggerClient(rate_limit_seconds=rate_limit)
@@ -432,7 +469,7 @@ def stats(
 
     try:
         # Fetch ascent list page
-        click.echo(f"Fetching ascents for peak {peak_id}...")
+        _status(ctx, f"Fetching ascents for peak {peak_id}...")
         url = "/climber/PeakAscents.aspx"
         params = {"pid": peak_id, "sort": "ascentdate", "u": "ft", "y": "9999"}
         html = client.get(url, params=params)
@@ -446,10 +483,10 @@ def stats(
         ascent_list = scraper.parse_peak_ascents(html)
 
         if not ascent_list:
-            click.echo(f"No ascents found for peak ID {peak_id}", err=True)
+            _error(f"No ascents found for peak ID {peak_id}")
             return
 
-        click.echo(f"Found {len(ascent_list)} ascents\n")
+        _status(ctx, f"Found {len(ascent_list)} ascents\n")
 
         # Apply date filters
         filtered_ascents = ascent_list
@@ -458,9 +495,9 @@ def stats(
                 period = analyzer.parse_within_period(within)
                 after_date = datetime.now() - period
                 filtered_ascents = analyzer.filter_by_date_range(filtered_ascents, after=after_date)
-                click.echo(f"Analyzing {len(filtered_ascents)} ascents within {within}\n")
+                _status(ctx, f"Analyzing {len(filtered_ascents)} ascents within {within}\n")
             except ValueError as e:
-                click.echo(f"Error: {e}", err=True)
+                _error(str(e))
                 raise click.Abort() from e
         elif after or before:
             after_date = datetime.strptime(after, "%Y-%m-%d") if after else None
@@ -468,7 +505,7 @@ def stats(
             filtered_ascents = analyzer.filter_by_date_range(
                 filtered_ascents, after=after_date, before=before_date
             )
-            click.echo(f"Analyzing {len(filtered_ascents)} ascents\n")
+            _status(ctx, f"Analyzing {len(filtered_ascents)} ascents\n")
 
         # Parse reference date for seasonal analysis
         ref_date = None
@@ -476,7 +513,7 @@ def stats(
             try:
                 ref_date = datetime.strptime(reference_date, "%Y-%m-%d")
             except ValueError as e:
-                click.echo(f"Error: Invalid reference date format: {reference_date}", err=True)
+                _error(f"Invalid reference date format: {reference_date}")
                 raise click.Abort() from e
 
         # Calculate statistics
@@ -495,7 +532,7 @@ def stats(
         )
 
     except Exception as e:
-        click.echo(f"Error: {e}", err=True)
+        _error(str(e))
         raise click.Abort() from e
     finally:
         client.close()
@@ -535,7 +572,7 @@ def show_ascent(ctx: click.Context, ascent_id: str, output_format: str, rate_lim
 
     try:
         # Fetch ascent detail page
-        click.echo(f"Fetching ascent {ascent_id}...")
+        _status(ctx, f"Fetching ascent {ascent_id}...")
         html = client.get("/climber/ascent.aspx", params={"aid": ascent_id})
 
         # If dump-html flag is set, print HTML and exit
@@ -547,14 +584,14 @@ def show_ascent(ctx: click.Context, ascent_id: str, output_format: str, rate_lim
         ascent_obj = scraper.parse_ascent_detail(html, ascent_id)
 
         if not ascent_obj:
-            click.echo(f"Failed to parse ascent data for ID {ascent_id}", err=True)
+            _error(f"Failed to parse ascent data for ID {ascent_id}")
             raise click.Abort()
 
         # Display results
         formatter.format_ascent_detail(ascent_obj, output_format)
 
     except Exception as e:
-        click.echo(f"Error: {e}", err=True)
+        _error(str(e))
         raise click.Abort() from e
     finally:
         client.close()
