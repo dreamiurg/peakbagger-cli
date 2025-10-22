@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/dreamiurg/peakbagger-cli/compare/v1.2.1...v1.3.0) (2025-10-22)
+
+
+### Features
+
+* add ascent report command ([#5](https://github.com/dreamiurg/peakbagger-cli/issues/5)) ([3e6b2bf](https://github.com/dreamiurg/peakbagger-cli/commit/3e6b2bf29d3f8464b9390e699689b5c219282e3c))
+
 ## [1.2.1](https://github.com/dreamiurg/peakbagger-cli/compare/v1.2.0...v1.2.1) (2025-10-22)
 
 
