@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/dreamiurg/peakbagger-cli/compare/v1.2.0...v1.2.1) (2025-10-22)
+
+
+### Bug Fixes
+
+* handle varying table structures in peak ascents parser ([#6](https://github.com/dreamiurg/peakbagger-cli/issues/6)) ([c0639f3](https://github.com/dreamiurg/peakbagger-cli/commit/c0639f337617fec9644d9ac14008b84384c0e75e))
+
 # [1.2.0](https://github.com/dreamiurg/peakbagger-cli/compare/v1.1.0...v1.2.0) (2025-10-21)
 
 
