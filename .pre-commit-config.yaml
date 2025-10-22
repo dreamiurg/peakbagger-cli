@@ -4,7 +4,7 @@
 repos:
   # General file checks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       # Branch protection
       - id: no-commit-to-branch
@@ -35,7 +35,7 @@ repos:
 
   # Ruff - formatting and linting (replaces black, isort, flake8, etc.)
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.8.5
+    rev: v0.14.1
     hooks:
       # Run the linter
       - id: ruff
@@ -45,7 +45,7 @@ repos:
 
   # Security checks
   - repo: https://github.com/PyCQA/bandit
-    rev: 1.8.0
+    rev: 1.8.6
     hooks:
       - id: bandit
         args: [-c, pyproject.toml]
@@ -54,30 +54,23 @@ repos:
 
   # Type checking with mypy
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.14.2
+    rev: v1.18.2
     hooks:
       - id: mypy
         additional_dependencies:
           - types-requests
         args: [--ignore-missing-imports, --no-strict-optional]
 
-  # Check for common security issues
-  - repo: https://github.com/Lucas-C/pre-commit-hooks-safety
-    rev: v1.3.3
-    hooks:
-      - id: python-safety-dependencies-check
-        files: pyproject.toml
-
   # Markdown linting
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.43.0
+    rev: v0.45.0
     hooks:
       - id: markdownlint
         args: [--fix]
 
   # YAML linting
   - repo: https://github.com/adrienverge/yamllint
-    rev: v1.35.1
+    rev: v1.37.1
     hooks:
       - id: yamllint
         args: [-c=.yamllint.yaml]

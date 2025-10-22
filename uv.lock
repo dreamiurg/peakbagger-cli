@@ -563,6 +563,7 @@ dev = [
 [package.dev-dependencies]
 dev = [
     { name = "mypy" },
+    { name = "pre-commit" },
     { name = "pytest-cov" },
     { name = "pytest-vcr" },
     { name = "types-beautifulsoup4" },
@@ -588,6 +589,7 @@ provides-extras = ["dev"]
 [package.metadata.requires-dev]
 dev = [
     { name = "mypy", specifier = ">=1.18.2" },
+    { name = "pre-commit", specifier = ">=4.3.0" },
     { name = "pytest-cov", specifier = ">=7.0.0" },
     { name = "pytest-vcr", specifier = ">=1.0.2" },
     { name = "types-beautifulsoup4", specifier = ">=4.12.0.20250516" },
