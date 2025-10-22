@@ -44,6 +44,8 @@ def configure_logging(verbose: bool = False, debug: bool = False) -> None:
         level=level,
         format=log_format,
         colorize=True,
+        backtrace=debug,
+        diagnose=debug,
     )
 
 

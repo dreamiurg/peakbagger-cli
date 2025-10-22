@@ -59,7 +59,7 @@ repos:
       - id: mypy
         additional_dependencies:
           - types-requests
-        args: [--ignore-missing-imports, --no-strict-optional]
+        args: [--ignore-missing-imports, --python-version=3.12]
 
   # Markdown linting
   - repo: https://github.com/igorshubovych/markdownlint-cli

@@ -6,9 +6,11 @@ import re
 from typing import TYPE_CHECKING, Any
 
 from bs4 import BeautifulSoup
-from loguru import logger
 
+from peakbagger.logging_config import get_logger
 from peakbagger.models import Ascent, Peak, SearchResult
+
+logger = get_logger()
 
 if TYPE_CHECKING:
     from bs4.element import Tag
@@ -78,13 +80,19 @@ class PeakBaggerScraper:
             # Extract elevation in feet (5th column)
             elevation_ft_str: str = cells[4].get_text(strip=True)
             elevation_ft: int | None = None
-            if elevation_ft_str and elevation_ft_str.isdigit():
-                elevation_ft = int(elevation_ft_str)
+            ft_match = re.search(r"([\d,]+)\s*ft", elevation_ft_str) or re.search(
+                r"^([\d,]+)", elevation_ft_str
+            )
+            if ft_match:
+                elevation_ft = int(ft_match.group(1).replace(",", ""))
 
-            # Convert to meters (approximate: 1 ft = 0.3048 m)
+            # Extract or calculate elevation in meters
             elevation_m: int | None = None
-            if elevation_ft:
-                elevation_m = int(elevation_ft * 0.3048)
+            m_match = re.search(r"/\s*([\d,]+)\s*m", elevation_ft_str)
+            if m_match:
+                elevation_m = int(m_match.group(1).replace(",", ""))
+            elif elevation_ft is not None:
+                elevation_m = round(elevation_ft * 0.3048)
 
             results.append(
                 SearchResult(
@@ -204,8 +212,11 @@ class PeakBaggerScraper:
             logger.debug(f"Successfully parsed peak detail for {name}")
             return peak
 
-        except Exception as e:
-            logger.error(f"Error parsing peak detail: {e}")
+        except (AttributeError, ValueError, TypeError):
+            logger.exception("Error parsing peak detail")
+            return None
+        except Exception:
+            logger.exception("Unexpected error parsing peak detail")
             return None
 
     @staticmethod
@@ -660,6 +671,9 @@ class PeakBaggerScraper:
             logger.debug(f"Successfully parsed ascent detail for {ascent.climber_name}")
             return ascent
 
-        except Exception as e:
-            logger.error(f"Error parsing ascent detail: {e}")
+        except (AttributeError, ValueError, TypeError):
+            logger.exception("Error parsing ascent detail")
+            return None
+        except Exception:
+            logger.exception("Unexpected error parsing ascent detail")
             return None
