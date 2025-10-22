@@ -98,9 +98,28 @@ class Ascent(BaseModel):
     trip_report_words: int | None = Field(None, description="Number of words in trip report")
     route: str | None = Field(None, description="Route name")
 
+    # New fields for detailed ascent reports
+    ascent_type: str | None = Field(
+        None, description="Ascent type (e.g., 'Successful Summit Attained')"
+    )
+    peak_name: str | None = Field(None, description="Peak name")
+    peak_id: str | None = Field(None, description="Peak ID")
+    location: str | None = Field(None, description="Location (e.g., 'USA-Washington')")
+    elevation_ft: int | None = Field(None, description="Peak elevation in feet")
+    elevation_m: int | None = Field(None, description="Peak elevation in meters")
+
+    # GPX-derived metrics (when available)
+    elevation_gain_ft: int | None = Field(None, description="Elevation gain from GPX in feet")
+    distance_mi: float | None = Field(None, description="Distance from GPX in miles")
+    duration_hours: float | None = Field(None, description="Duration from GPX in hours")
+
+    # Trip report content
+    trip_report_text: str | None = Field(None, description="Full text of trip report")
+    trip_report_url: str | None = Field(None, description="External URL if linked in trip report")
+
     def to_dict(self) -> dict[str, Any]:
         """Convert ascent to dictionary for JSON serialization."""
-        return {
+        result: dict[str, Any] = {
             "ascent_id": self.ascent_id,
             "climber": {
                 "name": self.climber_name,
@@ -108,13 +127,50 @@ class Ascent(BaseModel):
             },
             "date": self.date,
             "has_gpx": self.has_gpx,
-            "trip_report": {
-                "has_report": self.has_trip_report,
-                "word_count": self.trip_report_words,
-            },
             "route": self.route,
             "url": f"https://www.peakbagger.com/climber/ascent.aspx?aid={self.ascent_id}",
         }
+
+        # Add trip report info
+        result["trip_report"] = {
+            "has_report": self.has_trip_report,
+            "word_count": self.trip_report_words,
+        }
+
+        # Add detailed fields if present
+        if self.ascent_type:
+            result["ascent_type"] = self.ascent_type
+
+        if self.peak_name or self.peak_id:
+            result["peak"] = {}
+            if self.peak_name:
+                result["peak"]["name"] = self.peak_name
+            if self.peak_id:
+                result["peak"]["id"] = self.peak_id
+            if self.location:
+                result["peak"]["location"] = self.location
+            if self.elevation_ft is not None:
+                result["peak"]["elevation_ft"] = self.elevation_ft
+            if self.elevation_m is not None:
+                result["peak"]["elevation_m"] = self.elevation_m
+
+        # Add GPX metrics if any are present
+        if self.elevation_gain_ft or self.distance_mi or self.duration_hours:
+            result["gpx_metrics"] = {}
+            if self.elevation_gain_ft is not None:
+                result["gpx_metrics"]["elevation_gain_ft"] = self.elevation_gain_ft
+            if self.distance_mi is not None:
+                result["gpx_metrics"]["distance_mi"] = self.distance_mi
+            if self.duration_hours is not None:
+                result["gpx_metrics"]["duration_hours"] = self.duration_hours
+
+        # Add full trip report text if present
+        if self.trip_report_text:
+            result["trip_report"]["text"] = self.trip_report_text
+        if self.trip_report_url:
+            result["trip_report"]["external_url"] = self.trip_report_url
+
+        return result
 
 
 class AscentStatistics(BaseModel):

@@ -382,6 +382,86 @@ Found 1305 ascents
 - **Popularity Trends**: Understand climbing activity over different time periods
 - **Data Analysis**: Export to JSON for custom analysis and visualization
 
+### Get Ascent Details
+
+Get detailed information about a specific ascent, including trip reports:
+
+```bash
+peakbagger ascent show ASCENT_ID [OPTIONS]
+```
+
+**Arguments:**
+- `ASCENT_ID`: The PeakBagger ascent ID (e.g., "12963")
+
+**Options:**
+- `--format [text|json]`: Output format (default: text)
+- `--rate-limit FLOAT`: Seconds between requests (default: 2.0)
+
+**Examples:**
+
+```bash
+# Get detailed ascent information
+peakbagger ascent show 12963
+
+# JSON output
+peakbagger ascent show 12963 --format json
+```
+
+**Sample Output (text):**
+
+```
+Fetching ascent 12963...
+┌─────────────────┬────────────────────────────────────┐
+│ Field           │ Value                              │
+├─────────────────┼────────────────────────────────────┤
+│ Ascent ID       │ 12963                              │
+│ Climber         │ Bob Bolton                         │
+│ Date            │ 1951                               │
+│ Ascent Type     │ Successful Summit Attained         │
+│ Peak            │ Mount Pilchuck (1798)              │
+│ Location        │ USA-Washington                     │
+│ Elevation       │ 5,341 ft (1,627 m)                 │
+└─────────────────┴────────────────────────────────────┘
+
+Trip Report:
+────────────────────────────────────────────────────────
+My dad took a group of kids to hike Pilchuck...
+```
+
+**Sample Output (JSON):**
+
+```json
+{
+  "ascent_id": "12963",
+  "climber": {
+    "name": "Bob Bolton",
+    "id": "555"
+  },
+  "date": "1951",
+  "has_gpx": false,
+  "route": null,
+  "url": "https://www.peakbagger.com/climber/ascent.aspx?aid=12963",
+  "trip_report": {
+    "has_report": true,
+    "word_count": null,
+    "text": "My dad took a group of kids to hike Pilchuck..."
+  },
+  "ascent_type": "Successful Summit Attained",
+  "peak": {
+    "name": "Mount Pilchuck",
+    "id": "1798",
+    "location": "USA-Washington",
+    "elevation_ft": 5341,
+    "elevation_m": 1627
+  }
+}
+```
+
+**Use Cases:**
+- **Trip Report Research**: Read detailed trip reports for route beta and conditions
+- **Historical Ascents**: Learn about classic climbs and early ascents
+- **Route Information**: Get details about specific routes and approaches
+
 ## Automation Examples
 
 ### Pipe to jq for filtering

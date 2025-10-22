@@ -269,6 +269,9 @@ class PeakBaggerScraper:
         """
         Parse ascent list from PeakAscents.aspx page.
 
+        Dynamically handles varying table structures across different peaks.
+        Different peaks have different column counts (8-14 columns observed).
+
         Args:
             html: HTML content from peak ascents page
 
@@ -281,8 +284,11 @@ class PeakBaggerScraper:
         # Find all tables
         tables: list[Tag] = soup.find_all("table")  # type: ignore[assignment]
 
-        # Look for the data table (has specific header structure)
+        # Look for the data table with dynamic header detection
         data_table: Tag | None = None
+        header_map: dict[str, int] = {}
+        num_columns: int = 0
+
         for table in tables:
             rows: list[Tag] = table.find_all("tr")  # type: ignore[assignment]
             if len(rows) < 10:
@@ -292,18 +298,36 @@ class PeakBaggerScraper:
             if len(rows) > 1:
                 header_row: Tag = rows[1]
                 headers: list[Tag] = header_row.find_all(["th", "td"])  # type: ignore[assignment]
-                if len(headers) == 14:
-                    header_texts: list[str] = [h.get_text(strip=True) for h in headers]
-                    # Check for "Climber" and "Ascent Date" (may have non-breaking spaces)
-                    if (
-                        "Climber" in header_texts
-                        and "Ascent" in header_texts[1]
-                        and "Date" in header_texts[1]
-                    ):
-                        data_table = table
-                        break
 
-        if not data_table:
+                # Table must have reasonable number of columns (not the merged giant table)
+                if len(headers) < 3 or len(headers) > 20:
+                    continue
+
+                header_texts: list[str] = [h.get_text(strip=True) for h in headers]
+
+                # Check for required columns: "Climber" and "Ascent Date"
+                if "Climber" in header_texts and any(
+                    "Ascent" in h and "Date" in h for h in header_texts
+                ):
+                    # Build header map for dynamic column access
+                    for idx, header_text in enumerate(header_texts):
+                        header_map[header_text] = idx
+
+                    data_table = table
+                    num_columns = len(headers)
+                    break
+
+        if not data_table or not header_map:
+            return ascents
+
+        # Get column indices (fallback to -1 if column doesn't exist)
+        climber_idx = header_map.get("Climber", -1)
+        date_idx = next((header_map[h] for h in header_map if "Ascent" in h and "Date" in h), -1)
+        gps_idx = header_map.get("GPS", -1)
+        tr_words_idx = header_map.get("TR-Words", -1)
+        route_idx = header_map.get("Route", -1)
+
+        if climber_idx == -1 or date_idx == -1:
             return ascents
 
         rows = data_table.find_all("tr")
@@ -311,11 +335,13 @@ class PeakBaggerScraper:
         # Process data rows (skip first 2 rows: separator and header)
         for row in rows[2:]:
             cells: list[Tag] = row.find_all(["td", "th"])  # type: ignore[assignment]
-            if len(cells) != 14:
+
+            # Skip rows that don't match the expected column count
+            if len(cells) != num_columns:
                 continue
 
-            # Extract climber name and ID (column 0)
-            climber_cell: Tag = cells[0]
+            # Extract climber name and ID (required column)
+            climber_cell: Tag = cells[climber_idx]
             climber_link: Tag | None = climber_cell.find(
                 "a", href=lambda x: x and "climber.aspx?cid=" in x
             )  # type: ignore[assignment]
@@ -327,8 +353,8 @@ class PeakBaggerScraper:
             climber_id_match = re.search(r"cid=(\d+)", climber_href)
             climber_id: str | None = climber_id_match.group(1) if climber_id_match else None
 
-            # Extract ascent date and ID (column 1)
-            date_cell: Tag = cells[1]
+            # Extract ascent date and ID (required column)
+            date_cell: Tag = cells[date_idx]
             date_link: Tag | None = date_cell.find(
                 "a", href=lambda x: x and "ascent.aspx?aid=" in x
             )  # type: ignore[assignment]
@@ -351,25 +377,31 @@ class PeakBaggerScraper:
                 continue
             ascent_id: str = ascent_id_match.group(1)
 
-            # Check for GPX track (column 3)
-            gps_cell: Tag = cells[3]
-            gps_img: Tag | None = gps_cell.find("img", src=lambda x: x and "GPS.gif" in x)  # type: ignore[assignment]
-            has_gpx: bool = gps_img is not None
+            # Check for GPX track (optional column)
+            has_gpx: bool = False
+            if gps_idx != -1:
+                gps_cell: Tag = cells[gps_idx]
+                gps_img: Tag | None = gps_cell.find("img", src=lambda x: x and "GPS.gif" in x)  # type: ignore[assignment]
+                has_gpx = gps_img is not None
 
-            # Check for trip report (column 4)
-            tr_cell: Tag = cells[4]
-            tr_text: str = tr_cell.get_text(strip=True)
-            has_trip_report: bool = tr_text.startswith("TR-")
+            # Check for trip report (optional column)
+            has_trip_report: bool = False
             trip_report_words: int | None = None
-            if has_trip_report:
-                # Extract word count (format: "TR-123")
-                tr_match = re.search(r"TR-(\d+)", tr_text)
-                if tr_match:
-                    trip_report_words = int(tr_match.group(1))
+            if tr_words_idx != -1:
+                tr_cell: Tag = cells[tr_words_idx]
+                tr_text: str = tr_cell.get_text(strip=True)
+                has_trip_report = tr_text.startswith("TR-")
+                if has_trip_report:
+                    # Extract word count (format: "TR-123")
+                    tr_match = re.search(r"TR-(\d+)", tr_text)
+                    if tr_match:
+                        trip_report_words = int(tr_match.group(1))
 
-            # Extract route name (column 5)
-            route_cell: Tag = cells[5]
-            route: str | None = route_cell.get_text(strip=True) or None
+            # Extract route name (optional column)
+            route: str | None = None
+            if route_idx != -1:
+                route_cell: Tag = cells[route_idx]
+                route = route_cell.get_text(strip=True) or None
 
             ascents.append(
                 Ascent(
@@ -385,3 +417,224 @@ class PeakBaggerScraper:
             )
 
         return ascents
+
+    @staticmethod
+    def parse_ascent_detail(html: str, ascent_id: str) -> Ascent | None:
+        """
+        Parse detailed ascent information from ascent.aspx page.
+
+        Args:
+            html: HTML content from ascent detail page
+            ascent_id: Ascent ID
+
+        Returns:
+            Ascent object with extracted data, or None if parsing fails
+        """
+        soup: BeautifulSoup = BeautifulSoup(html, "lxml")
+
+        try:
+            # Extract title: "Ascent of [Peak Name] on [Date]" or "Ascent of [Peak Name] in [Year]"
+            h1: Tag | None = soup.find("h1")  # type: ignore[assignment]
+            if not h1:
+                return None
+
+            title_text: str = h1.get_text(strip=True)
+            # Parse "Ascent of Peak Name on/in Date"
+            peak_name: str | None = None
+            if " on " in title_text:
+                parts = title_text.split(" on ", 1)
+                peak_name = parts[0].replace("Ascent of ", "").strip()
+            elif " in " in title_text:
+                parts = title_text.split(" in ", 1)
+                peak_name = parts[0].replace("Ascent of ", "").strip()
+
+            # Extract climber from H2: "Climber: [Name]"
+            h2: Tag | None = soup.find("h2")  # type: ignore[assignment]
+            climber_name: str | None = None
+            climber_id: str | None = None
+            if h2:
+                climber_link: Tag | None = h2.find(
+                    "a", href=lambda x: x and "climber.aspx?cid=" in x
+                )  # type: ignore[assignment]
+                if climber_link:
+                    climber_name = climber_link.get_text(strip=True)
+                    climber_href: str = climber_link["href"]  # type: ignore[assignment]
+                    cid_match = re.search(r"cid=(\d+)", climber_href)
+                    if cid_match:
+                        climber_id = cid_match.group(1)
+
+            if not climber_name:
+                return None
+
+            # Find the left gray table (width="49%", align="left")
+            table: Tag | None = soup.find(
+                "table", class_="gray", attrs={"width": "49%", "align": "left"}
+            )  # type: ignore[assignment]
+            if not table:
+                return None
+
+            # Initialize Ascent object with basic info
+            ascent: Ascent = Ascent(
+                ascent_id=ascent_id,
+                climber_name=climber_name,
+                climber_id=climber_id,
+                peak_name=peak_name,
+            )
+
+            # Extract data from table rows
+            rows: list[Tag] = table.find_all("tr")  # type: ignore[assignment]
+            for row in rows:
+                cells: list[Tag] = row.find_all("td")  # type: ignore[assignment]
+                if len(cells) < 1:
+                    continue
+
+                # Check for colspan=2 (trip report section)
+                if len(cells) == 1 and cells[0].get("colspan") == "2":
+                    # Trip report section
+                    h2_tr: Tag | None = cells[0].find("h2", string=re.compile("Trip Report"))  # type: ignore[assignment]
+                    if h2_tr:
+                        # Extract trip report text
+                        # Get all text after the h2
+                        report_parts: list[str] = []
+                        for elem in cells[0].descendants:
+                            if isinstance(elem, str):
+                                text = elem.strip()
+                                if text and text != "URL Link:":
+                                    report_parts.append(text)
+
+                        # Join and clean up
+                        report_text = " ".join(report_parts)
+                        # Remove "Ascent Trip Report" header
+                        report_text = re.sub(r"^Ascent Trip Report\s*", "", report_text)
+                        # Remove URL Link label and peakbagger.com text
+                        report_text = re.sub(r"URL Link:\s*peakbagger\.com\s*", "", report_text)
+                        report_text = re.sub(r"^peakbagger\.com\s*", "", report_text)
+
+                        if report_text:
+                            ascent.trip_report_text = report_text.strip()
+
+                        # Extract external URL if present
+                        url_link: Tag | None = cells[0].find("a", href=re.compile(r"^https?://"))  # type: ignore[assignment]
+                        if url_link and url_link.get("href"):
+                            href = url_link["href"]  # type: ignore[assignment]
+                            # Only store if not peakbagger.com
+                            if "peakbagger.com" not in href:
+                                ascent.trip_report_url = href
+                    continue
+
+                if len(cells) < 2:
+                    continue
+
+                # Get label from first cell
+                # Some labels have <b> tags, others are just text
+                label_cell = cells[0]
+                label_b: Tag | None = label_cell.find("b")  # type: ignore[assignment]
+                if label_b:
+                    label: str = label_b.get_text(strip=True).rstrip(":")
+                else:
+                    label = label_cell.get_text(strip=True).rstrip(":")
+
+                value_cell = cells[1]
+
+                # Parse based on label
+                if label == "Date":
+                    date_text = value_cell.get_text(strip=True)
+                    # Try to parse different date formats
+                    # Format: "Sunday, January 23, 1966" -> extract date
+                    # Format: "1951" -> just year
+                    # Format: "2024-10-21" -> ISO format
+                    if date_text and date_text != "Unknown":
+                        # Try to parse full date from "Month Day, Year" format
+                        month_day_year = re.search(
+                            r"([A-Z][a-z]+)\s+(\d{1,2}),\s+(\d{4})", date_text
+                        )
+                        if month_day_year:
+                            from datetime import datetime
+
+                            month_name = month_day_year.group(1)
+                            day = month_day_year.group(2)
+                            year = month_day_year.group(3)
+                            try:
+                                parsed_date = datetime.strptime(
+                                    f"{month_name} {day} {year}", "%B %d %Y"
+                                )
+                                ascent.date = parsed_date.strftime("%Y-%m-%d")
+                            except ValueError:
+                                # Fall back to ISO format if already in that format
+                                iso_match = re.search(r"(\d{4}(?:-\d{2})?(?:-\d{2})?)", date_text)
+                                if iso_match:
+                                    ascent.date = iso_match.group(1)
+                        else:
+                            # Try ISO format or just year
+                            iso_match = re.search(r"(\d{4}(?:-\d{2})?(?:-\d{2})?)", date_text)
+                            if iso_match:
+                                ascent.date = iso_match.group(1)
+
+                elif label == "Ascent Type":
+                    # Extract text after the image
+                    type_text = value_cell.get_text(strip=True)
+                    ascent.ascent_type = type_text
+
+                elif label == "Peak":
+                    # Extract peak link and ID
+                    peak_link: Tag | None = value_cell.find(
+                        "a", href=lambda x: x and "peak.aspx?pid=" in x
+                    )  # type: ignore[assignment]
+                    if peak_link:
+                        ascent.peak_name = peak_link.get_text(strip=True)
+                        peak_href: str = peak_link["href"]  # type: ignore[assignment]
+                        pid_match = re.search(r"pid=(-?\d+)", peak_href)
+                        if pid_match:
+                            ascent.peak_id = pid_match.group(1)
+
+                elif "Location" in label:
+                    ascent.location = value_cell.get_text(strip=True)
+
+                elif "Elevation" in label:
+                    # Parse "5341 ft / 1627 m"
+                    elev_text = value_cell.get_text(strip=True)
+                    elev_match = re.search(r"([\d,]+)\s*ft\s*/\s*([\d,]+)\s*m", elev_text)
+                    if elev_match:
+                        ascent.elevation_ft = int(elev_match.group(1).replace(",", ""))
+                        ascent.elevation_m = int(elev_match.group(2).replace(",", ""))
+
+                elif label == "Route" or "Route" in label:
+                    route_text = value_cell.get_text(strip=True)
+                    if route_text:
+                        ascent.route = route_text
+
+                elif "Elevation Gain" in label or "Gain" in label:
+                    # Parse GPX-derived elevation gain
+                    gain_text = value_cell.get_text(strip=True)
+                    gain_match = re.search(r"([\d,]+)\s*ft", gain_text)
+                    if gain_match:
+                        ascent.elevation_gain_ft = int(gain_match.group(1).replace(",", ""))
+
+                elif "Distance" in label:
+                    # Parse GPX-derived distance
+                    dist_text = value_cell.get_text(strip=True)
+                    dist_match = re.search(r"([\d.]+)\s*mi", dist_text)
+                    if dist_match:
+                        ascent.distance_mi = float(dist_match.group(1))
+
+                elif "Duration" in label or "Time" in label:
+                    # Parse GPX-derived duration
+                    dur_text = value_cell.get_text(strip=True)
+                    # Try to parse hours (could be "4.5 hours" or "4:30")
+                    hour_match = re.search(r"([\d.]+)\s*(?:hours?|hrs?)", dur_text, re.IGNORECASE)
+                    if hour_match:
+                        ascent.duration_hours = float(hour_match.group(1))
+                    else:
+                        # Try H:MM format
+                        time_match = re.search(r"(\d+):(\d+)", dur_text)
+                        if time_match:
+                            hours = int(time_match.group(1))
+                            minutes = int(time_match.group(2))
+                            ascent.duration_hours = hours + (minutes / 60.0)
+
+            return ascent
+
+        except Exception as e:
+            # Log error but don't crash
+            print(f"Error parsing ascent detail: {e}")
+            return None

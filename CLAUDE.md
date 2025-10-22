@@ -36,6 +36,7 @@ uv run peakbagger peak search "Mount Rainier"
 uv run peakbagger peak show 2296
 uv run peakbagger peak ascents 2296
 uv run peakbagger peak stats 2296
+uv run peakbagger ascent show 12963
 
 # Format and lint
 uv run ruff format peakbagger tests
