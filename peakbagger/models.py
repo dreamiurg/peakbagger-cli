@@ -99,7 +99,9 @@ class Ascent(BaseModel):
     route: str | None = Field(None, description="Route name")
 
     # New fields for detailed ascent reports
-    ascent_type: str | None = Field(None, description="Ascent type (e.g., 'Successful Summit Attained')")
+    ascent_type: str | None = Field(
+        None, description="Ascent type (e.g., 'Successful Summit Attained')"
+    )
     peak_name: str | None = Field(None, description="Peak name")
     peak_id: str | None = Field(None, description="Peak ID")
     location: str | None = Field(None, description="Location (e.g., 'USA-Washington')")

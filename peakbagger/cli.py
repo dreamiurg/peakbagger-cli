@@ -467,7 +467,7 @@ def stats(
         client.close()
 
 
-@ascent.command()
+@ascent.command("show")
 @click.argument("ascent_id")
 @click.option(
     "--format",
@@ -482,7 +482,7 @@ def stats(
     default=2.0,
     help="Seconds between requests (default: 2.0)",
 )
-def show(ascent_id: str, output_format: str, rate_limit: float) -> None:
+def show_ascent(ascent_id: str, output_format: str, rate_limit: float) -> None:
     """
     Get detailed information about a specific ascent.
 
