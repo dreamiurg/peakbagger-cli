@@ -98,9 +98,6 @@ class PeakFormatter:
             table.add_row(result.pid, result.name, location, range_name, elevation, url)
 
         self.console.print(table)
-        self.console.print(
-            f"\n[dim]Found {len(results)} peak(s). Use 'peakbagger info <PID>' for details.[/dim]"
-        )
 
     def _print_peak_detail(self, peak: Peak) -> None:
         """Print detailed peak information as formatted text."""
@@ -353,9 +350,6 @@ class PeakFormatter:
                 )
 
             self.console.print(ascent_table)
-
-            if len(ascents) > 100:
-                self.console.print(f"\n[dim]Showing first 100 of {len(ascents)} ascents[/dim]")
 
     def format_ascent_detail(self, ascent: Ascent, output_format: str) -> None:
         """
