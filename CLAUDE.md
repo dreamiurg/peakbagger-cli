@@ -38,6 +38,10 @@ uv run peakbagger peak ascents 2296
 uv run peakbagger peak stats 2296
 uv run peakbagger ascent show 12963
 
+# Run with logging (useful for debugging)
+uv run peakbagger --verbose peak search "Mount Rainier"  # Show HTTP requests
+uv run peakbagger --debug peak show 2296  # Show detailed operations
+
 # Format and lint
 uv run ruff format peakbagger tests
 uv run ruff check --fix peakbagger tests
@@ -137,17 +141,19 @@ Closes #42"
 - **Error handling**: Use proper exception chaining (`raise ... from e`)
 - **Rich output**: Use Rich for user-facing terminal output, not print()
 - **JSON output**: Must be valid, parseable JSON (no Rich formatting in JSON mode)
+- **Logging**: Use loguru logger for all logging (never use print() for debugging)
 
 ## Project Structure
 
 ```
 peakbagger/
-├── __init__.py       # Version string (__version__)
-├── cli.py            # Click commands (main entry point)
-├── client.py         # HTTP client with rate limiting
-├── scraper.py        # HTML parsing with BeautifulSoup
-├── models.py         # Data models (Peak, SearchResult)
-└── formatters.py     # Output formatting (Rich tables, JSON)
+├── __init__.py        # Version string (__version__)
+├── cli.py             # Click commands (main entry point)
+├── client.py          # HTTP client with rate limiting
+├── scraper.py         # HTML parsing with BeautifulSoup
+├── models.py          # Data models (Peak, SearchResult)
+├── formatters.py      # Output formatting (Rich tables, JSON)
+└── logging_config.py  # Logging configuration with loguru
 ```
 
 ## Important Project-Specific Rules
@@ -177,6 +183,17 @@ peakbagger/
 - Use increased rate limits during development (`--rate-limit 5.0`)
 - Test with well-known peaks (Mount Rainier: 2296, Denali: 271)
 - Don't hammer the server - save sample HTML for testing
+
+### 6. Logging Guidelines
+- Use loguru logger, NOT print() for debugging or informational output
+- Log levels:
+  - **INFO**: HTTP requests (method, URL, status code, response time)
+  - **DEBUG**: Parsing details, rate limiting waits, operational details
+  - **ERROR**: Errors and exceptions
+- By default, no logs are shown (level set to CRITICAL)
+- Users enable logging via `--verbose` (INFO) or `--debug` (DEBUG) flags
+- All logs go to stderr (allows easy redirection)
+- Format: `HH:MM:SS | LEVEL | message` with colors
 
 ## Release Process
 
@@ -270,6 +287,7 @@ Output changes include:
 - beautifulsoup4 >= 4.9.0
 - lxml >= 4.6.0
 - rich >= 10.0.0
+- loguru >= 0.7.0
 
 ### Development (Python)
 - pytest + pytest-cov

@@ -8,6 +8,7 @@ from rich.console import Console
 from peakbagger import __version__
 from peakbagger.client import PeakBaggerClient
 from peakbagger.formatters import PeakFormatter
+from peakbagger.logging_config import configure_logging
 from peakbagger.scraper import PeakBaggerScraper
 
 if TYPE_CHECKING:
@@ -63,12 +64,28 @@ def _error(message: str) -> None:
     is_flag=True,
     help="Dump raw HTML to stdout instead of parsing",
 )
+@click.option(
+    "--verbose",
+    "-v",
+    is_flag=True,
+    help="Enable verbose logging (INFO level - shows HTTP requests)",
+)
+@click.option(
+    "--debug",
+    is_flag=True,
+    help="Enable debug logging (DEBUG level - shows detailed operations)",
+)
 @click.pass_context
-def main(ctx: click.Context, quiet: bool, dump_html: bool) -> None:
+def main(ctx: click.Context, quiet: bool, dump_html: bool, verbose: bool, debug: bool) -> None:
     """PeakBagger CLI - Search and retrieve mountain peak data from PeakBagger.com"""
     ctx.ensure_object(dict)
     ctx.obj["quiet"] = quiet
     ctx.obj["dump_html"] = dump_html
+    ctx.obj["verbose"] = verbose
+    ctx.obj["debug"] = debug
+
+    # Configure logging based on flags
+    configure_logging(verbose=verbose, debug=debug)
 
 
 @main.group()

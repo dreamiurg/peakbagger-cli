@@ -514,6 +514,56 @@ for peak in peaks:
 
 ## Configuration
 
+### Global Options
+
+The CLI supports global flags that apply to all commands:
+
+```bash
+# Show verbose logging (HTTP requests)
+peakbagger --verbose peak search "Mount Rainier"
+peakbagger -v peak show 2296
+
+# Show debug logging (detailed operations)
+peakbagger --debug peak search "Mount Rainier"
+
+# Suppress informational messages
+peakbagger --quiet peak search "Mount Rainier"
+peakbagger -q peak show 2296
+```
+
+### Logging
+
+By default, the CLI shows minimal output. Use logging flags to see what's happening under the hood:
+
+**Verbose Mode (`--verbose` / `-v`)**: Shows HTTP requests with timing
+```bash
+peakbagger --verbose peak show 2296
+# Output:
+# 18:55:25 | INFO     | GET https://www.peakbagger.com/peak.aspx?pid=2296 - 200 - 847ms
+```
+
+**Debug Mode (`--debug`)**: Shows detailed parsing and rate limiting
+```bash
+peakbagger --debug peak show 2296
+# Output:
+# 18:55:25 | DEBUG    | Parsing peak detail for peak ID 2296
+# 18:55:25 | DEBUG    | Extracted peak name: Mount Rainier, state: Washington
+# 18:55:25 | DEBUG    | Extracted elevation: 14406 ft / 4391 m
+# 18:55:25 | DEBUG    | Rate limiting: waiting 2.00s before next request
+```
+
+**Redirecting Logs**: Logs go to stderr, so you can redirect them separately:
+```bash
+# Save output to file, show logs on screen
+peakbagger -v peak show 2296 --format json > peak.json
+
+# Save output to file, discard logs
+peakbagger -v peak show 2296 --format json > peak.json 2>/dev/null
+
+# Save both output and logs separately
+peakbagger -v peak show 2296 --format json > peak.json 2> logs.txt
+```
+
 ### Rate Limiting
 
 The CLI waits 2 seconds between requests by default to respect PeakBagger.com's servers. Adjust this as needed:
@@ -531,17 +581,18 @@ peakbagger peak show 2296 --rate-limit 1.0
 ```
 peakbagger-cli/
 ├── peakbagger/
-│   ├── __init__.py       # Package metadata
-│   ├── cli.py            # Click CLI commands
-│   ├── client.py         # HTTP client with rate limiting
-│   ├── scraper.py        # HTML parsing logic
-│   ├── models.py         # Data models
-│   └── formatters.py     # Output formatting (Rich/JSON)
-├── tests/                # Test suite (coming soon)
-├── pyproject.toml        # Project configuration
-├── README.md             # This file
-├── CONTRIBUTING.md       # Contribution guide
-└── LICENSE               # MIT License
+│   ├── __init__.py        # Package metadata
+│   ├── cli.py             # Click CLI commands
+│   ├── client.py          # HTTP client with rate limiting
+│   ├── scraper.py         # HTML parsing logic
+│   ├── models.py          # Data models
+│   ├── formatters.py      # Output formatting (Rich/JSON)
+│   └── logging_config.py  # Logging configuration
+├── tests/                 # Test suite (coming soon)
+├── pyproject.toml         # Project configuration
+├── README.md              # This file
+├── CONTRIBUTING.md        # Contribution guide
+└── LICENSE                # MIT License
 ```
 
 ## Development
@@ -582,6 +633,7 @@ uv run peakbagger --version
 - **BeautifulSoup4**: HTML parsing
 - **lxml**: Fast XML/HTML parser
 - **Rich**: Beautiful terminal output
+- **loguru**: Simple and powerful logging
 
 ### How It Works
 
