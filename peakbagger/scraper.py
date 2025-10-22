@@ -141,7 +141,9 @@ class PeakBaggerScraper:
                 if elev_match:
                     peak.elevation_ft = int(elev_match.group(1).replace(",", ""))
                     peak.elevation_m = int(elev_match.group(2).replace(",", ""))
-                    logger.debug(f"Extracted elevation: {peak.elevation_ft} ft / {peak.elevation_m} m")
+                    logger.debug(
+                        f"Extracted elevation: {peak.elevation_ft} ft / {peak.elevation_m} m"
+                    )
 
             # Extract prominence (appears in table near H2)
             text: str = soup.get_text()
@@ -329,7 +331,9 @@ class PeakBaggerScraper:
 
                     data_table = table
                     num_columns = len(headers)
-                    logger.debug(f"Found ascents data table with {num_columns} columns: {list(header_map.keys())}")
+                    logger.debug(
+                        f"Found ascents data table with {num_columns} columns: {list(header_map.keys())}"
+                    )
                     break
 
         if not data_table or not header_map:

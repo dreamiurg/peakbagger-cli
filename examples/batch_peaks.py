@@ -12,9 +12,10 @@ import json
 import subprocess
 import sys
 from pathlib import Path
+from typing import Any
 
 
-def fetch_peak_details(peak_id: str) -> dict | None:
+def fetch_peak_details(peak_id: str) -> dict[str, Any] | None:
     """Fetch peak details using peakbagger CLI."""
     try:
         result = subprocess.run(
@@ -23,7 +24,7 @@ def fetch_peak_details(peak_id: str) -> dict | None:
             text=True,
             check=True,
         )
-        return json.loads(result.stdout)
+        return json.loads(result.stdout)  # type: ignore[no-any-return]
     except subprocess.CalledProcessError as e:
         print(f"Error fetching peak {peak_id}: {e}", file=sys.stderr)
         return None

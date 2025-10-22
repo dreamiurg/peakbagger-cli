@@ -177,7 +177,10 @@ def search(
             # Just show search results
             formatter.format_search_results(results, output_format)
             if output_format == "text":
-                _status(ctx, f"Found {len(results)} peak(s). Use 'peakbagger peak show <PID>' for details.")
+                _status(
+                    ctx,
+                    f"Found {len(results)} peak(s). Use 'peakbagger peak show <PID>' for details.",
+                )
 
     except Exception as e:
         _error(str(e))

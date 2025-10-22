@@ -9,8 +9,8 @@ A GitHub Action validates your title format.
 
 ## Summary
 
-
 ## Type
+
 - [ ] feat (minor bump)
 - [ ] fix (patch bump)
 - [ ] feat!/fix! (major bump)
