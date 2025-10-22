@@ -193,7 +193,9 @@ peakbagger/
 - By default, no logs are shown (level set to CRITICAL)
 - Users enable logging via `--verbose` (INFO) or `--debug` (DEBUG) flags
 - All logs go to stderr (allows easy redirection)
-- Format: `HH:MM:SS | LEVEL | message` with colors
+- Format:
+  - **Verbose mode**: `HH:MM:SS | LEVEL | message` (clean, no file info)
+  - **Debug mode**: `HH:MM:SS | LEVEL | file:line - message` (includes source location)
 
 ## Release Process
 

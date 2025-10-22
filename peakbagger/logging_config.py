@@ -10,7 +10,8 @@ def configure_logging(verbose: bool = False, debug: bool = False) -> None:
     Configure logging based on verbosity flags.
 
     By default, all logging is disabled. When verbose is True, INFO level logs
-    are shown. When debug is True, both INFO and DEBUG level logs are shown.
+    are shown. When debug is True, both INFO and DEBUG level logs are shown with
+    file and line information.
 
     Args:
         verbose: Enable INFO level logging (HTTP requests)
@@ -19,20 +20,25 @@ def configure_logging(verbose: bool = False, debug: bool = False) -> None:
     # Remove default handler
     logger.remove()
 
-    # Determine log level
+    # Determine log level and format
     if debug:
         level = "DEBUG"
+        # Debug mode: include file and line number for detailed debugging
+        log_format = "<green>{time:HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{file}:{line}</cyan> - <level>{message}</level>"
     elif verbose:
         level = "INFO"
+        # Verbose mode: clean format without file/line info
+        log_format = "<green>{time:HH:mm:ss}</green> | <level>{level: <8}</level> | <level>{message}</level>"
     else:
         # Disable logging by setting level very high
         level = "CRITICAL"
+        log_format = "<green>{time:HH:mm:ss}</green> | <level>{level: <8}</level> | <level>{message}</level>"
 
-    # Add stderr handler with appropriate level
+    # Add stderr handler with appropriate level and format
     logger.add(
         sys.stderr,
         level=level,
-        format="<green>{time:HH:mm:ss}</green> | <level>{level: <8}</level> | <level>{message}</level>",
+        format=log_format,
         colorize=True,
     )
 

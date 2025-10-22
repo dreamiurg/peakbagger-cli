@@ -542,14 +542,15 @@ peakbagger --verbose peak show 2296
 # 18:55:25 | INFO     | GET https://www.peakbagger.com/peak.aspx?pid=2296 - 200 - 847ms
 ```
 
-**Debug Mode (`--debug`)**: Shows detailed parsing and rate limiting
+**Debug Mode (`--debug`)**: Shows detailed parsing and rate limiting with file locations
 ```bash
 peakbagger --debug peak show 2296
 # Output:
-# 18:55:25 | DEBUG    | Parsing peak detail for peak ID 2296
-# 18:55:25 | DEBUG    | Extracted peak name: Mount Rainier, state: Washington
-# 18:55:25 | DEBUG    | Extracted elevation: 14406 ft / 4391 m
-# 18:55:25 | DEBUG    | Rate limiting: waiting 2.00s before next request
+# 18:55:25 | INFO     | client.py:77 - GET https://www.peakbagger.com/peak.aspx?pid=2296 - 200 - 847ms
+# 18:55:25 | DEBUG    | scraper.py:114 - Parsing peak detail for peak ID 2296
+# 18:55:25 | DEBUG    | scraper.py:130 - Extracted peak name: Mount Rainier, state: Washington
+# 18:55:25 | DEBUG    | scraper.py:144 - Extracted elevation: 14406 ft / 4391 m
+# 18:55:25 | DEBUG    | client.py:45 - Rate limiting: waiting 2.00s before next request
 ```
 
 **Redirecting Logs**: Logs go to stderr, so you can redirect them separately:
