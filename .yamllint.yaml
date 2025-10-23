@@ -2,7 +2,7 @@
 extends: default
 
 ignore: |
-  tests/cassettes/
+  tests/cassettes/**
 
 rules:
   line-length:

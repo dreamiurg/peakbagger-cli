@@ -361,10 +361,13 @@ def ascents(
 
         # Apply date filters
         filtered_ascents = ascent_list
+        # Declare date filter variables upfront for mypy type flow
+        after_date: datetime | None = None
+        before_date: datetime | None = None
         if within:
             try:
                 period = analyzer.parse_within_period(within)
-                after_date: datetime | None = datetime.now() - period
+                after_date = datetime.now() - period
                 filtered_ascents = analyzer.filter_by_date_range(filtered_ascents, after=after_date)
                 _status(ctx, f"Filtered to {len(filtered_ascents)} ascents within {within}\n")
             except ValueError as e:
@@ -516,10 +519,13 @@ def stats(
 
         # Apply date filters
         filtered_ascents = ascent_list
+        # Declare date filter variables upfront for mypy type flow
+        after_date: datetime | None = None
+        before_date: datetime | None = None
         if within:
             try:
                 period = analyzer.parse_within_period(within)
-                after_date: datetime | None = datetime.now() - period
+                after_date = datetime.now() - period
                 filtered_ascents = analyzer.filter_by_date_range(filtered_ascents, after=after_date)
                 _status(ctx, f"Analyzing {len(filtered_ascents)} ascents within {within}\n")
             except ValueError as e:
