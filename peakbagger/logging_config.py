@@ -24,33 +24,28 @@ def configure_logging(verbose: bool = False, debug: bool = False) -> None:
     # Remove default handler
     logger.remove()
 
-    # Determine log level and format
+    # Only add handler if logging is enabled
     if debug:
-        level = "DEBUG"
         # Debug mode: include file and line number for detailed debugging
-        log_format = "<green>{time:HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{file}:{line}</cyan> - <level>{message}</level>"
+        logger.add(
+            sys.stderr,
+            level="DEBUG",
+            format="<green>{time:HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{file}:{line}</cyan> - <level>{message}</level>",
+            colorize=True,
+            backtrace=True,
+            diagnose=True,
+        )
     elif verbose:
-        level = "INFO"
         # Verbose mode: clean format without file/line info
-        log_format = (
-            "<green>{time:HH:mm:ss}</green> | <level>{level: <8}</level> | <level>{message}</level>"
+        logger.add(
+            sys.stderr,
+            level="INFO",
+            format="<green>{time:HH:mm:ss}</green> | <level>{level: <8}</level> | <level>{message}</level>",
+            colorize=True,
+            backtrace=False,
+            diagnose=False,
         )
-    else:
-        # Disable logging by setting level very high
-        level = "CRITICAL"
-        log_format = (
-            "<green>{time:HH:mm:ss}</green> | <level>{level: <8}</level> | <level>{message}</level>"
-        )
-
-    # Add stderr handler with appropriate level and format
-    logger.add(
-        sys.stderr,
-        level=level,
-        format=log_format,
-        colorize=True,
-        backtrace=debug,
-        diagnose=debug,
-    )
+    # If neither verbose nor debug, no handler is added (logging disabled)
 
 
 # Create a logger instance for use throughout the application
