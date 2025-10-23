@@ -27,6 +27,7 @@ dependencies = [
     "lxml>=4.6.0",
     "rich>=10.0.0",
     "pydantic>=2.12.3",
+    "loguru>=0.7.3",
 ]
 
 [project.optional-dependencies]
@@ -99,6 +100,7 @@ ignore_missing_imports = true
 [dependency-groups]
 dev = [
     "mypy>=1.18.2",
+    "pre-commit>=4.3.0",
     "pytest-cov>=7.0.0",
     "pytest-vcr>=1.0.2",
     "types-beautifulsoup4>=4.12.0.20250516",

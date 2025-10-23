@@ -39,7 +39,7 @@ pre-commit install
 
 ## Project Structure
 
-```
+```text
 peakbagger-cli/
 ├── peakbagger/           # Main package
 │   ├── __init__.py       # Package version and metadata
@@ -76,6 +76,7 @@ uv run pre-commit run --all-files
 ```
 
 **Hooks verify:**
+
 - **Ruff**: Formatting and linting (replaces Black, isort, flake8)
 - **Bandit**: Security vulnerability checks
 - **mypy**: Type checking
@@ -135,14 +136,15 @@ uv run peakbagger search "test" --rate-limit 5.0
 When updating scraper logic:
 
 1. Save sample HTML for testing:
-```python
-response = client.get('/peak.aspx?pid=2296')
-with open('test_peak.html', 'w') as f:
-    f.write(response)
-```
 
-2. Test parsing locally without network requests
-3. Update tests with new HTML structure
+   ```python
+   response = client.get('/peak.aspx?pid=2296')
+   with open('test_peak.html', 'w') as f:
+       f.write(response)
+   ```
+
+1. Test parsing locally without network requests
+1. Update tests with new HTML structure
 
 ## Release Process (Maintainers Only)
 
@@ -150,7 +152,7 @@ with open('test_peak.html', 'w') as f:
 
 Follow the [Conventional Commits](https://www.conventionalcommits.org/) specification:
 
-```
+```text
 <type>: <description>
 
 [optional body]
@@ -159,12 +161,14 @@ Follow the [Conventional Commits](https://www.conventionalcommits.org/) specific
 ```
 
 **Types that trigger releases:**
+
 - `fix:` - Patches a bug (PATCH version bump: 0.1.0 → 0.1.1)
 - `feat:` - Adds a new feature (MINOR version bump: 0.1.0 → 0.2.0)
 - `perf:` - Performance improvement (PATCH version bump)
 - `BREAKING CHANGE:` in footer - Breaking change (MAJOR version bump: 0.1.0 → 1.0.0)
 
 **Types that don't trigger releases:**
+
 - `docs:`, `style:`, `refactor:`, `test:`, `chore:`, `ci:`, `build:`
 
 **Examples:**
@@ -225,15 +229,18 @@ uv run semantic-release version --bump-version 0.3.0
 
 ### Troubleshooting Releases
 
-**"No release will be made"**
+#### "No release will be made"
+
 - No commits since last release follow conventional format
 - Add a conventional commit or use `--patch/--minor/--major` flag
 
-**"Token value is missing"**
+#### "Token value is missing"
+
 - This warning is safe to ignore for manual releases
 - Only needed for GitHub Actions automation
 
-**Wrong version calculated**
+#### Wrong version calculated
+
 - Review commits: `git log v0.1.0..HEAD --oneline`
 - Check commit types match conventional format
 - Use `--noop` flag to preview before committing

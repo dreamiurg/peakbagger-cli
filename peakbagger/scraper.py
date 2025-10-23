@@ -1,11 +1,16 @@
 """HTML parsing and data extraction for PeakBagger.com."""
 
+from __future__ import annotations
+
 import re
 from typing import TYPE_CHECKING, Any
 
 from bs4 import BeautifulSoup
 
+from peakbagger.logging_config import get_logger
 from peakbagger.models import Ascent, Peak, SearchResult
+
+logger = get_logger()
 
 if TYPE_CHECKING:
     from bs4.element import Tag
@@ -25,6 +30,7 @@ class PeakBaggerScraper:
         Returns:
             List of SearchResult objects
         """
+        logger.debug("Parsing search results from HTML")
         soup: BeautifulSoup = BeautifulSoup(html, "lxml")
         results: list[SearchResult] = []
 
@@ -32,15 +38,18 @@ class PeakBaggerScraper:
         # Format: <h2>Peak Search Results</h2><table class="gray">...
         search_header: Tag | None = soup.find("h2", string="Peak Search Results")  # type: ignore[assignment]
         if not search_header:
+            logger.debug("No search results header found")
             return results
 
         # Find the next table after the header
         table: Tag | None = search_header.find_next("table", class_="gray")  # type: ignore[assignment]
         if not table:
+            logger.debug("No search results table found")
             return results
 
         # Skip header row, process data rows
         rows: list[Tag] = table.find_all("tr")[1:]  # type: ignore[assignment]
+        logger.debug(f"Found {len(rows)} result rows to process")
 
         for row in rows:
             cells: list[Tag] = row.find_all("td")  # type: ignore[assignment]
@@ -71,13 +80,19 @@ class PeakBaggerScraper:
             # Extract elevation in feet (5th column)
             elevation_ft_str: str = cells[4].get_text(strip=True)
             elevation_ft: int | None = None
-            if elevation_ft_str and elevation_ft_str.isdigit():
-                elevation_ft = int(elevation_ft_str)
+            ft_match = re.search(r"([\d,]+)\s*ft", elevation_ft_str) or re.search(
+                r"^([\d,]+)", elevation_ft_str
+            )
+            if ft_match:
+                elevation_ft = int(ft_match.group(1).replace(",", ""))
 
-            # Convert to meters (approximate: 1 ft = 0.3048 m)
+            # Extract or calculate elevation in meters
             elevation_m: int | None = None
-            if elevation_ft:
-                elevation_m = int(elevation_ft * 0.3048)
+            m_match = re.search(r"/\s*([\d,]+)\s*m", elevation_ft_str)
+            if m_match:
+                elevation_m = int(m_match.group(1).replace(",", ""))
+            elif elevation_ft is not None:
+                elevation_m = round(elevation_ft * 0.3048)
 
             results.append(
                 SearchResult(
@@ -91,6 +106,7 @@ class PeakBaggerScraper:
                 )
             )
 
+        logger.debug(f"Successfully parsed {len(results)} search results")
         return results
 
     @staticmethod
@@ -105,12 +121,14 @@ class PeakBaggerScraper:
         Returns:
             Peak object with extracted data, or None if parsing fails
         """
+        logger.debug(f"Parsing peak detail for peak ID {pid}")
         soup: BeautifulSoup = BeautifulSoup(html, "lxml")
 
         try:
             # Extract peak name and state from H1
             h1: Tag | None = soup.find("h1")  # type: ignore[assignment]
             if not h1:
+                logger.debug("No H1 tag found in peak detail page")
                 return None
 
             title_text: str = h1.get_text(strip=True)
@@ -118,6 +136,8 @@ class PeakBaggerScraper:
             name_parts: list[str] = title_text.rsplit(", ", 1)
             name: str = name_parts[0]
             state: str | None = name_parts[1] if len(name_parts) > 1 else None
+
+            logger.debug(f"Extracted peak name: {name}, state: {state}")
 
             # Initialize peak object
             peak: Peak = Peak(pid=pid, name=name, state=state)
@@ -131,6 +151,9 @@ class PeakBaggerScraper:
                 if elev_match:
                     peak.elevation_ft = int(elev_match.group(1).replace(",", ""))
                     peak.elevation_m = int(elev_match.group(2).replace(",", ""))
+                    logger.debug(
+                        f"Extracted elevation: {peak.elevation_ft} ft / {peak.elevation_m} m"
+                    )
 
             # Extract prominence (appears in table near H2)
             text: str = soup.get_text()
@@ -179,17 +202,21 @@ class PeakBaggerScraper:
             )
             if ascent_count_match:
                 peak.ascent_count = int(ascent_count_match.group(1))
+                logger.debug(f"Extracted ascent count: {peak.ascent_count}")
 
             # Format: "(Total: 3960)"
             viewable_count_match = re.search(r"\(Total:\s*(\d+)\)", html)
             if viewable_count_match:
                 peak.viewable_ascent_count = int(viewable_count_match.group(1))
 
+            logger.debug(f"Successfully parsed peak detail for {name}")
             return peak
 
-        except Exception as e:
-            # Log error but don't crash
-            print(f"Error parsing peak detail: {e}")
+        except (AttributeError, ValueError, TypeError):
+            logger.exception("Error parsing peak detail")
+            return None
+        except Exception:
+            logger.exception("Unexpected error parsing peak detail")
             return None
 
     @staticmethod
@@ -278,11 +305,13 @@ class PeakBaggerScraper:
         Returns:
             List of Ascent objects
         """
+        logger.debug("Parsing peak ascents from HTML")
         soup: BeautifulSoup = BeautifulSoup(html, "lxml")
         ascents: list[Ascent] = []
 
         # Find all tables
         tables: list[Tag] = soup.find_all("table")  # type: ignore[assignment]
+        logger.debug(f"Found {len(tables)} tables in HTML")
 
         # Look for the data table with dynamic header detection
         data_table: Tag | None = None
@@ -315,9 +344,13 @@ class PeakBaggerScraper:
 
                     data_table = table
                     num_columns = len(headers)
+                    logger.debug(
+                        f"Found ascents data table with {num_columns} columns: {list(header_map.keys())}"
+                    )
                     break
 
         if not data_table or not header_map:
+            logger.debug("No valid ascents table found")
             return ascents
 
         # Get column indices (fallback to -1 if column doesn't exist)
@@ -416,6 +449,7 @@ class PeakBaggerScraper:
                 )
             )
 
+        logger.debug(f"Successfully parsed {len(ascents)} ascents")
         return ascents
 
     @staticmethod
@@ -430,12 +464,14 @@ class PeakBaggerScraper:
         Returns:
             Ascent object with extracted data, or None if parsing fails
         """
+        logger.debug(f"Parsing ascent detail for ascent ID {ascent_id}")
         soup: BeautifulSoup = BeautifulSoup(html, "lxml")
 
         try:
             # Extract title: "Ascent of [Peak Name] on [Date]" or "Ascent of [Peak Name] in [Year]"
             h1: Tag | None = soup.find("h1")  # type: ignore[assignment]
             if not h1:
+                logger.debug("No H1 tag found in ascent detail page")
                 return None
 
             title_text: str = h1.get_text(strip=True)
@@ -632,9 +668,12 @@ class PeakBaggerScraper:
                             minutes = int(time_match.group(2))
                             ascent.duration_hours = hours + (minutes / 60.0)
 
+            logger.debug(f"Successfully parsed ascent detail for {ascent.climber_name}")
             return ascent
 
-        except Exception as e:
-            # Log error but don't crash
-            print(f"Error parsing ascent detail: {e}")
+        except (AttributeError, ValueError, TypeError):
+            logger.exception("Error parsing ascent detail")
+            return None
+        except Exception:
+            logger.exception("Unexpected error parsing ascent detail")
             return None

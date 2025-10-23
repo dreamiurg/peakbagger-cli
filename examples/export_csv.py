@@ -12,10 +12,10 @@ import csv
 import json
 import subprocess
 import sys
-from pathlib import Path
+from typing import Any
 
 
-def search_peaks(query: str) -> list[dict]:
+def search_peaks(query: str) -> list[dict[str, Any]]:
     """Search for peaks and return results."""
     try:
         result = subprocess.run(
@@ -24,13 +24,13 @@ def search_peaks(query: str) -> list[dict]:
             text=True,
             check=True,
         )
-        return json.loads(result.stdout)
+        return json.loads(result.stdout)  # type: ignore[no-any-return]
     except (subprocess.CalledProcessError, json.JSONDecodeError) as e:
         print(f"Error searching for '{query}': {e}", file=sys.stderr)
         return []
 
 
-def fetch_peak_details(peak_id: str) -> dict | None:
+def fetch_peak_details(peak_id: str) -> dict[str, Any] | None:
     """Fetch detailed peak information."""
     try:
         result = subprocess.run(
@@ -39,7 +39,7 @@ def fetch_peak_details(peak_id: str) -> dict | None:
             text=True,
             check=True,
         )
-        return json.loads(result.stdout)
+        return json.loads(result.stdout)  # type: ignore[no-any-return]
     except (subprocess.CalledProcessError, json.JSONDecodeError) as e:
         print(f"Error fetching peak {peak_id}: {e}", file=sys.stderr)
         return None

@@ -4,6 +4,7 @@ import time
 from typing import Any, cast
 
 import cloudscraper
+from loguru import logger
 
 from peakbagger import __version__
 
@@ -40,7 +41,9 @@ class PeakBaggerClient:
         if self._last_request_time is not None:
             elapsed = time.time() - self._last_request_time
             if elapsed < self.rate_limit:
-                time.sleep(self.rate_limit - elapsed)
+                wait_time = self.rate_limit - elapsed
+                logger.debug(f"Rate limiting: waiting {wait_time:.2f}s before next request")
+                time.sleep(wait_time)
 
     def get(self, url: str, params: dict[str, str] | None = None) -> str:
         """
@@ -64,11 +67,18 @@ class PeakBaggerClient:
             url = f"{self.BASE_URL}/{url.lstrip('/')}"
 
         try:
+            start_time = time.time()
             response = self.session.get(url, params=params)
             response.raise_for_status()
+            elapsed_ms = (time.time() - start_time) * 1000
             self._last_request_time = time.time()
+
+            # Log HTTP request details at INFO level
+            logger.info(f"GET {url} - {response.status_code} - {elapsed_ms:.0f}ms")
+
             return cast("str", response.text)
         except Exception as e:
+            logger.error(f"Failed to fetch {url}: {e!s}")
             raise Exception(f"Failed to fetch {url}: {e!s}") from e
 
     def close(self) -> None:

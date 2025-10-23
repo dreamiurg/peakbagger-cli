@@ -5,7 +5,9 @@
 
 ## Overview
 
-Add a new `ascent show` command to retrieve detailed information about a specific ascent from PeakBagger.com. The command fetches ascent metadata, trip report text, and GPX-derived metrics when available.
+Add a new `ascent show` command to retrieve detailed information about a specific ascent
+from PeakBagger.com. The command fetches ascent metadata, trip report text, and
+GPX-derived metrics when available.
 
 ## Command Structure
 
@@ -14,13 +16,16 @@ peakbagger ascent show <ascent_id> [--format text|json] [--rate-limit 2.0]
 ```
 
 ### Arguments
+
 - `ascent_id` (required): PeakBagger ascent ID (e.g., "12963")
 
 ### Options
+
 - `--format`: Output format (text or json, default: text)
 - `--rate-limit`: Seconds between requests (default: 2.0)
 
 ### Examples
+
 ```bash
 # Text output (default)
 peakbagger ascent show 12963
@@ -37,6 +42,7 @@ peakbagger ascent show 12963 --rate-limit 5.0
 Extend the existing `Ascent` model in `models.py` with optional fields for detailed ascent reports:
 
 ### New Fields
+
 ```python
 # Ascent metadata
 ascent_type: str | None = None       # "Successful Summit Attained", "Attempt", etc.
@@ -57,6 +63,7 @@ trip_report_url: str | None = None   # External URL if linked
 ```
 
 ### Design Rationale
+
 - **Single model**: Reuses existing `Ascent` for both list and detail views
 - **Optional fields**: Fields remain None when parsing ascent lists, populated for detail pages
 - **Backward compatible**: Existing code continues to work unchanged
@@ -67,6 +74,7 @@ trip_report_url: str | None = None   # External URL if linked
 Add `parse_ascent_detail(html: str, ascent_id: str) -> Ascent | None` to `PeakBaggerScraper` class.
 
 ### Page Structure
+
 Based on analysis of real PeakBagger ascent pages:
 
 1. **H1 title**: "Ascent of [Peak Name] on [Date]"
@@ -79,6 +87,7 @@ Based on analysis of real PeakBagger ascent pages:
    - May include "URL Link:" with external reference
 
 ### Parsing Strategy
+
 1. Find gray table (class="gray", width="49%", align="left")
 2. Iterate through table rows, extract label/value pairs
 3. Use regex for structured data (elevations: "5341 ft / 1627 m")
@@ -87,6 +96,7 @@ Based on analysis of real PeakBagger ascent pages:
 6. Return None if critical fields missing (ascent_id, climber, peak)
 
 ### Error Handling
+
 - Follow existing pattern from `parse_peak_detail()`
 - Catch exceptions, log without crashing
 - Return None for unparseable pages
@@ -96,9 +106,10 @@ Based on analysis of real PeakBagger ascent pages:
 Add `format_ascent_detail(ascent: Ascent, output_format: str)` to `PeakFormatter` class.
 
 ### Text Output
+
 Rich table with two columns (Field | Value):
 
-```
+```text
 ┌─────────────────┬────────────────────────────────────┐
 │ Field           │ Value                              │
 ├─────────────────┼────────────────────────────────────┤
@@ -123,6 +134,7 @@ External Link: https://... (if present)
 ```
 
 ### JSON Output
+
 Extend `Ascent.to_dict()`:
 
 ```json
@@ -158,6 +170,7 @@ Extend `Ascent.to_dict()`:
 ```
 
 ### Formatting Details
+
 - **Numbers**: Comma-separated thousands (e.g., "5,341 ft")
 - **Missing fields**: Skip rows/fields that are None
 - **Trip report**: Word wrap at terminal width, preserve paragraphs
@@ -166,6 +179,7 @@ Extend `Ascent.to_dict()`:
 ## CLI Implementation
 
 ### New Command Group
+
 Create `ascent` command group in `cli.py`:
 
 ```python
@@ -184,6 +198,7 @@ def show(ascent_id: str, output_format: str, rate_limit: float) -> None:
 ```
 
 ### Command Flow
+
 1. Create `PeakBaggerClient` with rate limiting
 2. Fetch ascent page: `client.get("/climber/ascent.aspx", params={"aid": ascent_id})`
 3. Parse with `scraper.parse_ascent_detail(html, ascent_id)`
@@ -191,6 +206,7 @@ def show(ascent_id: str, output_format: str, rate_limit: float) -> None:
 5. Handle errors, close client
 
 ### Error Handling
+
 - Invalid ascent ID (404 or parsing fails)
 - Network errors (connection issues)
 - Parsing failures (malformed HTML)
@@ -201,6 +217,7 @@ def show(ascent_id: str, output_format: str, rate_limit: float) -> None:
 Use VCR-based tests with real PeakBagger data.
 
 ### Test Cases
+
 1. **Full ascent with trip report** (aid=12963)
    - Has trip report (169 words)
    - Year-only date format ("1951")
@@ -216,12 +233,14 @@ Use VCR-based tests with real PeakBagger data.
    - Tests GPX metric extraction
 
 ### Test Coverage
+
 - Parser extracts all available fields correctly
 - Formatter produces valid text and JSON output
 - CLI command works end-to-end with VCR cassettes
 - Graceful handling of missing/malformed data
 
 ### Approach
+
 - Record real API responses with VCR during development
 - Use cassettes for repeatable tests
 - No mocked data - all from actual PeakBagger pages
@@ -229,17 +248,21 @@ Use VCR-based tests with real PeakBagger data.
 ## Implementation Notes
 
 ### Rate Limiting
+
 - Respect 2-second default rate limit
 - Allow override with `--rate-limit` option
 - Use existing `PeakBaggerClient` rate limiting
 
 ### Cloudflare
+
 - Use existing `cloudscraper` client
 - Clear User-Agent identifying the tool
 - Follow existing patterns from peak commands
 
 ### Documentation Updates
+
 After implementation:
+
 - Update README.md with command examples
 - Update CLAUDE.md with new command in development section
 - Add sample output to documentation
@@ -247,6 +270,7 @@ After implementation:
 ## Dependencies
 
 No new dependencies required. Uses existing:
+
 - click (CLI framework)
 - cloudscraper (HTTP client)
 - beautifulsoup4 + lxml (HTML parsing)

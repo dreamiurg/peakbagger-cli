@@ -23,6 +23,7 @@ uv run pytest tests/test_cli.py
 **Philosophy**: Lightweight smoke tests with real HTTP cassettes.
 
 These tests verify that:
+
 1. CLI commands execute successfully
 2. HTML parsing works against real PeakBagger.com structure
 3. Both text and JSON output formats work
@@ -56,7 +57,8 @@ rm -rf tests/cassettes/*.yaml
 uv run pytest tests/test_cli.py -v
 ```
 
-**Note**: Re-recording requires network access and respects the rate limiting (2 seconds between requests), so it will take ~20-30 seconds.
+**Note**: Re-recording requires network access and respects the rate limiting (2 seconds
+between requests), so it will take ~20-30 seconds.
 
 ### When to Re-record
 
@@ -87,14 +89,17 @@ def test_my_new_command(cli_runner):
 
 ## Troubleshooting
 
-**Tests fail with "No cassette found"**
+### Tests fail with "No cassette found"
+
 - Delete cassettes and re-run tests to record fresh ones
 
-**Tests fail with JSONDecodeError**
+### Tests fail with JSONDecodeError
+
 - CLI may be outputting informational messages before JSON
 - Check if output has text before/after JSON and extract accordingly
 
-**Tests fail with parsing errors**
+### Tests fail with parsing errors
+
 - PeakBagger.com likely changed their HTML
 - Re-record cassettes
 - If still failing, update the scraper parsing logic
