@@ -8,7 +8,7 @@ repos:
     hooks:
       # Branch protection
       - id: no-commit-to-branch
-        args: [--branch, master, --branch, main]
+        args: [--branch, main]
 
       # Formatting and whitespace
       - id: trailing-whitespace
