@@ -364,7 +364,7 @@ def ascents(
         if within:
             try:
                 period = analyzer.parse_within_period(within)
-                after_date = datetime.now() - period
+                after_date: datetime | None = datetime.now() - period
                 filtered_ascents = analyzer.filter_by_date_range(filtered_ascents, after=after_date)
                 _status(ctx, f"Filtered to {len(filtered_ascents)} ascents within {within}\n")
             except ValueError as e:
@@ -519,7 +519,7 @@ def stats(
         if within:
             try:
                 period = analyzer.parse_within_period(within)
-                after_date = datetime.now() - period
+                after_date: datetime | None = datetime.now() - period
                 filtered_ascents = analyzer.filter_by_date_range(filtered_ascents, after=after_date)
                 _status(ctx, f"Analyzing {len(filtered_ascents)} ascents within {within}\n")
             except ValueError as e:
