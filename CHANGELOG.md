@@ -1,3 +1,16 @@
+# [1.5.0](https://github.com/dreamiurg/peakbagger-cli/compare/v1.4.0...v1.5.0) (2025-10-24)
+
+
+### Bug Fixes
+
+* disable text wrapping in all Rich tables and fix JSON output ([#12](https://github.com/dreamiurg/peakbagger-cli/issues/12)) ([3377472](https://github.com/dreamiurg/peakbagger-cli/commit/33774724b423e7293c62de9362598112667b1396))
+
+
+### Features
+
+* additional --verbose and --debug logging options ([#8](https://github.com/dreamiurg/peakbagger-cli/issues/8)) ([1faa61c](https://github.com/dreamiurg/peakbagger-cli/commit/1faa61c823783fe32c9a44efece5fe2e69a3cc86))
+* remove status messages and make --debug require --verbose ([#11](https://github.com/dreamiurg/peakbagger-cli/issues/11)) ([336ed7a](https://github.com/dreamiurg/peakbagger-cli/commit/336ed7acbab07bf72537851d806fdb17bef01824))
+
 # [1.4.0](https://github.com/dreamiurg/peakbagger-cli/compare/v1.3.0...v1.4.0) (2025-10-22)
 
 
