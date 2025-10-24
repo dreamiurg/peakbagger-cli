@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/dreamiurg/peakbagger-cli/compare/v1.5.0...v1.6.0) (2025-10-24)
+
+
+### Features
+
+* remove table borders and prevent text truncation ([#13](https://github.com/dreamiurg/peakbagger-cli/issues/13)) ([981f647](https://github.com/dreamiurg/peakbagger-cli/commit/981f64765a27b1c752c0fbc961d398b993b72d93))
+
 # [1.5.0](https://github.com/dreamiurg/peakbagger-cli/compare/v1.4.0...v1.5.0) (2025-10-24)
 
 
