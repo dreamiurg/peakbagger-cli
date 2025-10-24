@@ -18,6 +18,32 @@ class PeakFormatter:
         # Tables will extend beyond terminal width if needed
         self.console: Console = Console(width=500)
 
+    def _parse_date_for_sort(self, ascent: Ascent) -> Any:
+        """Return date for sorting. None/invalid dates sort to the end.
+
+        Args:
+            ascent: Ascent object to extract date from
+
+        Returns:
+            datetime object for sorting, or datetime.min for invalid/missing dates
+        """
+        from datetime import datetime
+
+        if not ascent.date:
+            return datetime.min
+        try:
+            date_parts = ascent.date.split("-")
+            if len(date_parts) == 3:
+                return datetime.strptime(ascent.date, "%Y-%m-%d")
+            elif len(date_parts) == 2:
+                return datetime.strptime(ascent.date, "%Y-%m")
+            elif len(date_parts) == 1:
+                return datetime.strptime(ascent.date, "%Y")
+            else:
+                return datetime.min
+        except ValueError:
+            return datetime.min
+
     def format_search_results(
         self, results: list[SearchResult], output_format: str = "text"
     ) -> None:
@@ -224,26 +250,7 @@ class PeakFormatter:
             data = stats.to_dict()
             if show_list and ascents:
                 # Sort and apply limit to JSON output as well
-                from datetime import datetime
-
-                def parse_date_for_sort(ascent: Ascent) -> datetime:
-                    """Return date for sorting. None/invalid dates sort to the end."""
-                    if not ascent.date:
-                        return datetime.min
-                    try:
-                        date_parts = ascent.date.split("-")
-                        if len(date_parts) == 3:
-                            return datetime.strptime(ascent.date, "%Y-%m-%d")
-                        elif len(date_parts) == 2:
-                            return datetime.strptime(ascent.date, "%Y-%m")
-                        elif len(date_parts) == 1:
-                            return datetime.strptime(ascent.date, "%Y")
-                        else:
-                            return datetime.min
-                    except ValueError:
-                        return datetime.min
-
-                sorted_ascents = sorted(ascents, key=parse_date_for_sort, reverse=True)
+                sorted_ascents = sorted(ascents, key=self._parse_date_for_sort, reverse=True)
                 display_limit = limit if limit is not None else 100
                 data["ascents"] = [a.to_dict() for a in sorted_ascents[:display_limit]]
             self._print_json(data)
@@ -317,27 +324,7 @@ class PeakFormatter:
             )
 
             # Sort ascents by date (newest first), with None dates at the end
-            from datetime import datetime
-
-            def parse_date_for_sort(ascent: Ascent) -> datetime:
-                """Return date for sorting. None/invalid dates sort to the end."""
-                if not ascent.date:
-                    return datetime.min  # None dates go to end (when sorted with reverse=True)
-                try:
-                    # Parse different date formats
-                    date_parts = ascent.date.split("-")
-                    if len(date_parts) == 3:
-                        return datetime.strptime(ascent.date, "%Y-%m-%d")
-                    elif len(date_parts) == 2:
-                        return datetime.strptime(ascent.date, "%Y-%m")
-                    elif len(date_parts) == 1:
-                        return datetime.strptime(ascent.date, "%Y")
-                    else:
-                        return datetime.min  # Invalid format goes to end
-                except ValueError:
-                    return datetime.min  # Parse error goes to end
-
-            sorted_ascents = sorted(ascents, key=parse_date_for_sort, reverse=True)
+            sorted_ascents = sorted(ascents, key=self._parse_date_for_sort, reverse=True)
 
             # Apply limit after sorting (default to 100 if not specified)
             display_limit = limit if limit is not None else 100
