@@ -30,7 +30,7 @@ ENV/
 .venv
 .venv/
 
-# uv
+# uv lockfile (not needed for PyPI packages - only for applications)
 uv.lock
 
 # IDEs and editors
