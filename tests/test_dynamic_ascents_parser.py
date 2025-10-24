@@ -178,3 +178,50 @@ def test_ascents_mount_si_9779_json(cli_runner):
     assert isinstance(data, dict)
     assert "ascents" in data
     assert len(data["ascents"]) > 0
+
+
+# Peak 2087: Mount Si - 12 columns with nested tables in route icons
+# This peak tests the fix for nested table parsing (recursive=False)
+# Headers: Climber, Ascent Date, Type, GPS, TR-Words, Route, Gain-Ft, Mi, Route Icons, Gear Icons, Qlty, Link
+@pytest.mark.vcr()
+def test_ascents_mount_si_2087_nested_tables(cli_runner):
+    """Test ascents for Mount Si (12-column table with nested tables in route icons)."""
+    result = cli_runner.invoke(main, ["peak", "ascents", "2087", "--limit", "20"])
+
+    assert result.exit_code == 0
+    assert "ascents" in result.output.lower()
+    # Mount Si 2087 should have many ascents logged
+    assert "no ascents found" not in result.output.lower()
+
+
+@pytest.mark.vcr()
+def test_ascents_mount_si_2087_nested_tables_json(cli_runner):
+    """Test ascents JSON for Mount Si with nested tables (validates proper cell counting)."""
+    result = cli_runner.invoke(
+        main, ["peak", "ascents", "2087", "--limit", "20", "--format", "json"]
+    )
+
+    assert result.exit_code == 0
+    import json
+
+    output_lines = result.output.strip().split("\n")
+    json_start = next(i for i, line in enumerate(output_lines) if line.startswith("{"))
+    json_end = json_start
+    brace_count = 0
+    for i in range(json_start, len(output_lines)):
+        line = output_lines[i]
+        brace_count += line.count("{") - line.count("}")
+        json_end = i
+        if brace_count == 0:
+            break
+    json_output = "\n".join(output_lines[json_start : json_end + 1])
+    data = json.loads(json_output)
+
+    assert isinstance(data, dict)
+    assert "ascents" in data
+    assert len(data["ascents"]) > 0
+    # Verify that ascents with nested tables are properly parsed
+    first = data["ascents"][0]
+    assert "ascent_id" in first
+    assert "climber" in first
+    assert "date" in first
