@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Test on ${{ matrix.os }} - Python ${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ["3.12", "3.13", "3.14"]
+        include:
+          # Smoke tests on macOS and Windows with latest Python
+          - os: macos-latest
+            python-version: "3.14"
+          - os: windows-latest
+            python-version: "3.14"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Install dependencies
+        run: uv sync --extra dev
+
+      - name: Run ruff check
+        run: uv run ruff check peakbagger tests
+
+      - name: Run ruff format check
+        run: uv run ruff format --check peakbagger tests
+
+      - name: Run mypy
+        run: uv run mypy peakbagger --pretty
+        continue-on-error: true
+
+      - name: Run tests with coverage
+        run: uv run pytest --cov=peakbagger --cov-report=xml --cov-report=term
+
+      - name: Upload coverage to Codecov
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.14'
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.xml
+          fail_ci_if_error: false
