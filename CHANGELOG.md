@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/dreamiurg/peakbagger-cli/compare/v1.6.3...v1.7.0) (2025-10-24)
+
+
+### Features
+
+* add field parity and URLs to ascent show text output ([#18](https://github.com/dreamiurg/peakbagger-cli/issues/18)) ([5718c82](https://github.com/dreamiurg/peakbagger-cli/commit/5718c82eaeae17e83599cae22c29335f4daf8df2))
+
 ## [1.6.3](https://github.com/dreamiurg/peakbagger-cli/compare/v1.6.2...v1.6.3) (2025-10-24)
 
 
