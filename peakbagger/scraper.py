@@ -367,7 +367,8 @@ class PeakBaggerScraper:
 
         # Process data rows (skip first 2 rows: separator and header)
         for row in rows[2:]:
-            cells: list[Tag] = row.find_all(["td", "th"])  # type: ignore[assignment]
+            # Use recursive=False to avoid counting cells in nested tables (e.g., route icons)
+            cells: list[Tag] = row.find_all(["td", "th"], recursive=False)  # type: ignore[assignment]
 
             # Skip rows that don't match the expected column count
             if len(cells) != num_columns:
