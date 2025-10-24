@@ -1,5 +1,11 @@
 # peakbagger-cli
 
+[![CI](https://github.com/dreamiurg/peakbagger-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/dreamiurg/peakbagger-cli/actions/workflows/ci.yml)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/dreamiurg/peakbagger-cli/badge)](https://securityscorecards.dev/viewer/?uri=github.com/dreamiurg/peakbagger-cli)
+[![codecov](https://codecov.io/gh/dreamiurg/peakbagger-cli/branch/main/graph/badge.svg)](https://codecov.io/gh/dreamiurg/peakbagger-cli)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/dreamiurg/peakbagger-cli/blob/main/LICENSE)
+[![Types: Typed](https://img.shields.io/badge/types-typed-brightgreen.svg)](https://github.com/dreamiurg/peakbagger-cli/blob/main/peakbagger)
+
 A modern command-line interface for searching and retrieving mountain peak data from [PeakBagger.com](https://www.peakbagger.com).
 
 Python 3.12+, Click, and Rich deliver a beautiful terminal experience.
