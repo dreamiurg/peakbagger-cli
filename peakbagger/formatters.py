@@ -208,6 +208,7 @@ class PeakFormatter:
         ascents: list[Ascent] | None = None,
         output_format: str = "text",
         show_list: bool = False,
+        limit: int | None = None,
     ) -> None:
         """
         Format and print ascent statistics.
@@ -217,21 +218,51 @@ class PeakFormatter:
             ascents: Optional list of ascents to display
             output_format: Either 'text' or 'json'
             show_list: Whether to include list of ascents
+            limit: Maximum number of ascents to display (applied after sorting)
         """
         if output_format == "json":
             data = stats.to_dict()
             if show_list and ascents:
-                data["ascents"] = [a.to_dict() for a in ascents]
+                # Sort and apply limit to JSON output as well
+                from datetime import datetime
+
+                def parse_date_for_sort(ascent: Ascent) -> datetime:
+                    """Return date for sorting. None/invalid dates sort to the end."""
+                    if not ascent.date:
+                        return datetime.min
+                    try:
+                        date_parts = ascent.date.split("-")
+                        if len(date_parts) == 3:
+                            return datetime.strptime(ascent.date, "%Y-%m-%d")
+                        elif len(date_parts) == 2:
+                            return datetime.strptime(ascent.date, "%Y-%m")
+                        elif len(date_parts) == 1:
+                            return datetime.strptime(ascent.date, "%Y")
+                        else:
+                            return datetime.min
+                    except ValueError:
+                        return datetime.min
+
+                sorted_ascents = sorted(ascents, key=parse_date_for_sort, reverse=True)
+                display_limit = limit if limit is not None else 100
+                data["ascents"] = [a.to_dict() for a in sorted_ascents[:display_limit]]
             self._print_json(data)
         else:
-            self._print_ascent_statistics(stats, ascents if show_list else None)
+            self._print_ascent_statistics(stats, ascents if show_list else None, limit)
 
     def _print_ascent_statistics(
         self,
         stats: AscentStatistics,
         ascents: list[Ascent] | None = None,
+        limit: int | None = None,
     ) -> None:
-        """Print ascent statistics as formatted text."""
+        """Print ascent statistics as formatted text.
+
+        Args:
+            stats: AscentStatistics object
+            ascents: Optional list of ascents to display
+            limit: Maximum number of ascents to display (applied after sorting)
+        """
         # Overall Statistics
         self.console.print("\n[bold cyan]=== Overall Statistics ===[/bold cyan]\n")
         overall_table: Table = Table(show_header=False, box=None, padding=(0, 2))
@@ -308,6 +339,10 @@ class PeakFormatter:
 
             sorted_ascents = sorted(ascents, key=parse_date_for_sort, reverse=True)
 
+            # Apply limit after sorting (default to 100 if not specified)
+            display_limit = limit if limit is not None else 100
+            displayed_ascents = sorted_ascents[:display_limit]
+
             # Create table for ascents
             ascent_table: Table = Table(show_header=True, header_style="bold cyan", box=None)
             ascent_table.add_column("#", style="dim", no_wrap=True)
@@ -337,7 +372,7 @@ class PeakFormatter:
                 )
                 return emoji_pattern.sub("", text).strip()
 
-            for i, ascent in enumerate(sorted_ascents[:100], 1):  # Limit to first 100
+            for i, ascent in enumerate(displayed_ascents, 1):
                 date_str = ascent.date if ascent.date else "Unknown"
                 gpx_indicator = "✓" if ascent.has_gpx else "-"
                 tr_indicator = str(ascent.trip_report_words) if ascent.has_trip_report else "-"
