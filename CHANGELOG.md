@@ -1,3 +1,10 @@
+## [1.6.3](https://github.com/dreamiurg/peakbagger-cli/compare/v1.6.2...v1.6.3) (2025-10-24)
+
+
+### Bug Fixes
+
+* parse ascent rows with nested tables in route icons ([#17](https://github.com/dreamiurg/peakbagger-cli/issues/17)) ([ec99fd1](https://github.com/dreamiurg/peakbagger-cli/commit/ec99fd13790727fbe154e29f2e9ddeb3b161ab16))
+
 ## [1.6.2](https://github.com/dreamiurg/peakbagger-cli/compare/v1.6.1...v1.6.2) (2025-10-24)
 
 
