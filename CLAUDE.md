@@ -197,12 +197,14 @@ peakbagger/
 ### 6. Logging Guidelines
 
 - Use loguru logger, NOT print() for debugging or informational output
+- No status messages - CLI output is silent by default (except errors and data output)
 - Log levels:
   - **INFO**: HTTP requests (method, URL, status code, response time)
   - **DEBUG**: Parsing details, rate-limiting waits, operational details
   - **ERROR**: Errors and exceptions
 - By default, no logs are shown (level set to CRITICAL)
-- Users enable logging via `--verbose` (INFO) or `--debug` (DEBUG) flags
+- Users enable logging via `--verbose` (INFO) flag
+- `--debug` flag requires `--verbose` and adds DEBUG level logs
 - All logs go to stderr (allows easy redirection)
 - Format:
   - **Verbose mode**: `HH:MM:SS | LEVEL | message` (clean, no file info)
