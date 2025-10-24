@@ -326,7 +326,7 @@ class PeakBaggerScraper:
             # Check if second row has expected headers
             if len(rows) > 1:
                 header_row: Tag = rows[1]
-                headers: list[Tag] = header_row.find_all(["th", "td"])  # type: ignore[assignment]
+                headers: list[Tag] = header_row.find_all(["th", "td"], recursive=False)  # type: ignore[assignment]
 
                 # Table must have reasonable number of columns (not the merged giant table)
                 if len(headers) < 3 or len(headers) > 20:
@@ -521,7 +521,7 @@ class PeakBaggerScraper:
             # Extract data from table rows
             rows: list[Tag] = table.find_all("tr")  # type: ignore[assignment]
             for row in rows:
-                cells: list[Tag] = row.find_all("td")  # type: ignore[assignment]
+                cells: list[Tag] = row.find_all("td", recursive=False)  # type: ignore[assignment]
                 if len(cells) < 1:
                     continue
 

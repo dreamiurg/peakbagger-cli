@@ -1,6 +1,7 @@
 """Output formatters for peak data (Rich tables and JSON)."""
 
 import json
+from datetime import datetime
 from typing import Any
 
 from rich.console import Console
@@ -18,7 +19,7 @@ class PeakFormatter:
         # Tables will extend beyond terminal width if needed
         self.console: Console = Console(width=500)
 
-    def _parse_date_for_sort(self, ascent: Ascent) -> Any:
+    def _parse_date_for_sort(self, ascent: Ascent) -> datetime:
         """Return date for sorting. None/invalid dates sort to the end.
 
         Args:
@@ -27,7 +28,6 @@ class PeakFormatter:
         Returns:
             datetime object for sorting, or datetime.min for invalid/missing dates
         """
-        from datetime import datetime
 
         if not ascent.date:
             return datetime.min
