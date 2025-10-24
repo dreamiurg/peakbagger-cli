@@ -398,9 +398,21 @@ class PeakFormatter:
             table.add_column("Field", style="cyan", width=20, no_wrap=True)
             table.add_column("Value", style="white", no_wrap=True)
 
-            # Basic info
-            table.add_row("Ascent ID", ascent.ascent_id)
-            table.add_row("Climber", ascent.climber_name)
+            # Basic info - Ascent ID with URL
+            ascent_url = f"https://www.peakbagger.com/climber/ascent.aspx?aid={ascent.ascent_id}"
+            ascent_id_display = (
+                f"{ascent.ascent_id} [blue not underline]{ascent_url}[/blue not underline]"
+            )
+            table.add_row("Ascent ID", ascent_id_display)
+
+            # Climber info with ID and URL
+            climber_display = ascent.climber_name
+            if ascent.climber_id:
+                climber_url = (
+                    f"https://www.peakbagger.com/climber/climber.aspx?cid={ascent.climber_id}"
+                )
+                climber_display += f" [dim]({ascent.climber_id})[/dim] [blue not underline]{climber_url}[/blue not underline]"
+            table.add_row("Climber", climber_display)
 
             if ascent.date:
                 table.add_row("Date", ascent.date)
@@ -412,7 +424,8 @@ class PeakFormatter:
             if ascent.peak_name:
                 peak_display = ascent.peak_name
                 if ascent.peak_id:
-                    peak_display += f" ({ascent.peak_id})"
+                    peak_url = f"https://www.peakbagger.com/peak.aspx?pid={ascent.peak_id}"
+                    peak_display += f" [dim]({ascent.peak_id})[/dim] [blue not underline]{peak_url}[/blue not underline]"
                 table.add_row("Peak", peak_display)
 
             if ascent.location:
@@ -424,6 +437,9 @@ class PeakFormatter:
 
             if ascent.route:
                 table.add_row("Route", ascent.route)
+
+            # Has GPX indicator (always show, even if false)
+            table.add_row("Has GPX", "Yes" if ascent.has_gpx else "No")
 
             # GPX metrics
             if ascent.elevation_gain_ft:
@@ -437,6 +453,12 @@ class PeakFormatter:
                 minutes = int((ascent.duration_hours - hours) * 60)
                 dur_display = f"{hours}h {minutes}m" if minutes > 0 else f"{hours}h"
                 table.add_row("Duration", dur_display)
+
+            # Trip report info
+            has_tr_text = "Yes" if ascent.has_trip_report else "No"
+            if ascent.trip_report_words:
+                has_tr_text += f" ({ascent.trip_report_words:,} words)"
+            table.add_row("Has Trip Report", has_tr_text)
 
             self.console.print(table)
 
