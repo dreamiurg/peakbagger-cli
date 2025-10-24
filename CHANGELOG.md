@@ -1,3 +1,10 @@
+## [1.6.2](https://github.com/dreamiurg/peakbagger-cli/compare/v1.6.1...v1.6.2) (2025-10-24)
+
+
+### Bug Fixes
+
+* updated uv.lock ([#15](https://github.com/dreamiurg/peakbagger-cli/issues/15)) ([d94a16c](https://github.com/dreamiurg/peakbagger-cli/commit/d94a16c2912ed0f4c58cd280b442cb7b10a384fc))
+
 ## [1.6.1](https://github.com/dreamiurg/peakbagger-cli/compare/v1.6.0...v1.6.1) (2025-10-24)
 
 
