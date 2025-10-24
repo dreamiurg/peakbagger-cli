@@ -1,3 +1,10 @@
+## [1.6.1](https://github.com/dreamiurg/peakbagger-cli/compare/v1.6.0...v1.6.1) (2025-10-24)
+
+
+### Bug Fixes
+
+* sort ascents by date before applying limit ([#14](https://github.com/dreamiurg/peakbagger-cli/issues/14)) ([9b6c76c](https://github.com/dreamiurg/peakbagger-cli/commit/9b6c76c3ea3b7c8d3b6bd794bf1bf7c30cda4f84))
+
 # [1.6.0](https://github.com/dreamiurg/peakbagger-cli/compare/v1.5.0...v1.6.0) (2025-10-24)
 
 
