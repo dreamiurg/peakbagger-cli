@@ -349,10 +349,6 @@ peakbagger peak stats 1798 --format json
 **Sample Output (text):**
 
 ```text
-Fetching ascents for peak 1798...
-Found 1305 ascents
-
-
 === Overall Statistics ===
 
   Total ascents                1305
@@ -422,7 +418,6 @@ peakbagger ascent show 12963 --format json
 **Sample Output (text):**
 
 ```text
-Fetching ascent 12963...
 ┌─────────────────┬────────────────────────────────────┐
 │ Field           │ Value                              │
 ├─────────────────┼────────────────────────────────────┤

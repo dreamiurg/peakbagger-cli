@@ -26,7 +26,7 @@ Rich for terminal output.
 bash scripts/setup-git-hooks.sh
 
 # This will:
-# - Install pre-commit hooks (prevents commits to master/main)
+# - Install pre-commit hooks (prevents commits to main)
 # - Configure commit message template with conventional commit format
 ```
 
@@ -61,7 +61,7 @@ uv build
 npx semantic-release --dry-run
 
 # Create release (done automatically via GitHub Actions)
-# Just merge PR to main/master with conventional commit title
+# Just merge PR to main with conventional commit title
 ```
 
 ## Commit Message Format
@@ -197,12 +197,14 @@ peakbagger/
 ### 6. Logging Guidelines
 
 - Use loguru logger, NOT print() for debugging or informational output
+- No status messages - CLI output is silent by default (except errors and data output)
 - Log levels:
   - **INFO**: HTTP requests (method, URL, status code, response time)
   - **DEBUG**: Parsing details, rate-limiting waits, operational details
   - **ERROR**: Errors and exceptions
 - By default, no logs are shown (level set to CRITICAL)
-- Users enable logging via `--verbose` (INFO) or `--debug` (DEBUG) flags
+- Users enable logging via `--verbose` (INFO) flag
+- `--debug` flag requires `--verbose` and adds DEBUG level logs
 - All logs go to stderr (allows easy redirection)
 - Format:
   - **Verbose mode**: `HH:MM:SS | LEVEL | message` (clean, no file info)
@@ -216,7 +218,7 @@ This project uses **semantic-release** (Node.js version) for automated version m
 
 Releases are **fully automated** via GitHub Actions:
 
-1. Push commits to `main` or `master` branch
+1. Push commits to `main` branch
 2. GitHub Actions runs semantic-release
 3. Version is bumped, CHANGELOG.md is updated
 4. Git tag and GitHub release are created automatically
@@ -245,7 +247,7 @@ npx semantic-release --dry-run
 - Currently in `0.x.x` (pre-1.0 indicates beta/unstable)
 - Breaking changes in 0.x still bump MINOR (0.1.0 → 0.2.0)
 - After 1.0.0, breaking changes bump MAJOR
-- Releases are created automatically on push to main/master
+- Releases are created automatically on push to main
 
 ## Common Mistakes to Avoid
 
