@@ -120,24 +120,13 @@ peakbagger peak search "Rainier" --rate-limit 3.0
 **Sample Output (text):**
 
 ```text
-                                 Search Results
-┏━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┓
-┃ Peak ID ┃ Name      ┃ Location ┃ Range     ┃ Elevation           ┃ URL       ┃
-┡━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━┩
-│ 2296    │ Mount     │ USA-WA   │ Cascade   │ 14,406 ft / 4,390 m │ https://w │
-│         │ Rainier   │          │ Range     │                     │ ww.peakba │
-│         │           │          │           │                     │ gger.com/ │
-│         │           │          │           │                     │ peak.aspx │
-│         │           │          │           │                     │ ?pid=2296 │
-│ 24166   │ Mount     │ USA-WA   │ Cascade   │ 14,200 ft / 4,328 m │ https://w │
-│         │ Rainier - │          │ Range     │                     │ ww.peakba │
-│         │ Southeast │          │           │                     │ gger.com/ │
-│         │ Crater    │          │           │                     │ peak.aspx │
-│         │ Rim       │          │           │                     │ ?pid=2416 │
-│         │           │          │           │                     │ 6         │
-└─────────┴───────────┴──────────┴───────────┴─────────────────────┴───────────┘
-
-Found 2 peaks. Use 'peakbagger peak show <PID>' for details.
+Search Results
+ Peak ID  Name                                  Location  Range          Elevation            URL
+ 2296     Mount Rainier                         USA-WA    Cascade Range  14,406 ft / 4,391 m  https://www.peakbagger.com/peak.aspx?pid=2296
+ 24166    Mount Rainier - Southeast Crater Rim  USA-WA    Cascade Range  14,200 ft / 4,328 m  https://www.peakbagger.com/peak.aspx?pid=24166
+ 163756   Mount Rainier - Columbia Crest        USA-WA    Cascade Range  14,396 ft / 4,388 m  https://www.peakbagger.com/peak.aspx?pid=163756
+ 93794    Rainier Lookout Site                  USA-WA    Cascade Range  500 ft / 152 m       https://www.peakbagger.com/peak.aspx?pid=93794
+ -88211   Rainier View                          USA-WA    -              400 ft / 122 m       https://www.peakbagger.com/peak.aspx?pid=-88211
 ```
 
 ### Peak Show Command
@@ -179,6 +168,7 @@ Peak ID: 2296
   Coordinates             46.851731, -121.760395
   County                  Pierce
   Country                 United States
+  Ascents Logged          4,388 (3,960 viewable)
   URL                     https://www.peakbagger.com/peak.aspx?pid=2296
 
 Routes (3)
@@ -190,17 +180,17 @@ Routes (3)
      Trailhead: Paradise (5,420 ft), Gain: 9,286 ft, Distance: 5.65 mi
 
 Peak Lists (39 total)
-  • Mountaineers 6-Peak Pin - New Version (Rank #1)
-    https://www.peakbagger.com/list.aspx?lid=5030
-  • Mountaineers 5-Peak Pin (Rank #1)
-    https://www.peakbagger.com/list.aspx?lid=5031
-  • Contiguous 48 U.S. State High Points (Rank #3)
-    https://www.peakbagger.com/list.aspx?lid=12005
-  • U.S. State High Points (Rank #4)
-    https://www.peakbagger.com/list.aspx?lid=12003
-  • Washington Bulger List (Rank #1)
-    https://www.peakbagger.com/list.aspx?lid=5003
-  ... and 34 more
+  1. Mountaineers 6-Peak Pin - New Version (Rank #1) - https://www.peakbagger.com/list.aspx?lid=5030
+  2. Mountaineers 5-Peak Pin (Rank #1) - https://www.peakbagger.com/list.aspx?lid=5031
+  3. Mountaineers 6-Peak Pin [Historic] (Rank #1) - https://www.peakbagger.com/list.aspx?lid=50301
+  4. Contiguous 48 U.S. State High Points (Rank #3) - https://www.peakbagger.com/list.aspx?lid=12005
+  5. U.S. State High Points (Rank #4) - https://www.peakbagger.com/list.aspx?lid=12003
+  6. Mazamas Sixteen Northwest Peaks Award (Rank #1) - https://www.peakbagger.com/list.aspx?lid=5063
+  7. United States State/Territory High Points (Rank #4) - https://www.peakbagger.com/list.aspx?lid=120031
+  8. Triple Crown CoHPs (Rank #1) - https://www.peakbagger.com/list.aspx?lid=823
+  9. USA Lower 48 Range3 High Points (Rank #3) - https://www.peakbagger.com/list.aspx?lid=16110
+  10. Chemeketan Eighteen Northwest Peaks Award (Rank #1) - https://www.peakbagger.com/list.aspx?lid=5012
+  ... and 29 more
 ```
 
 **Sample Output (JSON):**
@@ -357,35 +347,35 @@ peakbagger peak stats 1798 --format json
 ```text
 === Overall Statistics ===
 
-  Total ascents                1305
-  With GPX tracks              26 (2.0%)
-  With trip reports            98 (7.5%)
+  Total ascents                1687
+  With GPX tracks              64 (3.8%)
+  With trip reports            222 (13.2%)
 
 === Temporal Breakdown ===
 
-  Last 3 months                28
-  Last year                    72
-  Last 5 years                 260
+  Last 3 months                48
+  Last year                    106
+  Last 5 years                 397
 
 === Seasonal Pattern ===
 
-  October     : 88
-  November    : 2
+  October     : 110
+  November    : 19
 
 === Monthly Distribution ===
 
-  January     : 81
-  February    : 16
-  March       : 15
-  April       : 25
-  May         : 91
-  June        : 142
-  July        : 234
-  August      : 173
-  September   : 153
-  October     : 105
-  November    : 62
-  December    : 19
+  January     : 110
+  February    : 23
+  March       : 27
+  April       : 48
+  May         : 136
+  June        : 204
+  July        : 320
+  August      : 248
+  September   : 205
+  October     : 155
+  November    : 87
+  December    : 31
 ```
 
 **Use Cases:**
@@ -424,21 +414,20 @@ peakbagger ascent show 12963 --format json
 **Sample Output (text):**
 
 ```text
-┌─────────────────┬────────────────────────────────────┐
-│ Field           │ Value                              │
-├─────────────────┼────────────────────────────────────┤
-│ Ascent ID       │ 12963                              │
-│ Climber         │ Bob Bolton                         │
-│ Date            │ 1951                               │
-│ Ascent Type     │ Successful Summit Attained         │
-│ Peak            │ Mount Pilchuck (1798)              │
-│ Location        │ USA-Washington                     │
-│ Elevation       │ 5,341 ft (1,627 m)                 │
-└─────────────────┴────────────────────────────────────┘
+Field                 Value
+ Ascent ID             12963 https://www.peakbagger.com/climber/ascent.aspx?aid=12963
+ Climber               Bob Bolton (555) https://www.peakbagger.com/climber/climber.aspx?cid=555
+ Date                  1951
+ Ascent Type           Successful Summit Attained
+ Peak                  Mount Pilchuck (1798) https://www.peakbagger.com/peak.aspx?pid=1798
+ Location              USA-Washington
+ Elevation             5,341 ft (1,627 m)
+ Has GPX               No
+ Has Trip Report       No
 
 Trip Report:
 ────────────────────────────────────────────────────────
-My dad took a group of kids to hike Pilchuck...
+My dad took a group of kids to hike Pilchuck including my oldest sister Elsie. Not sure about my next older sister Erlene. I must have begged to go along because I can't believe they would have taken me if I hadn't begged. But I did well for a 4-year-old on the ascent, and always remembered that of the 12 hikers I was 4 years old and 4th to the summit. The descent, on the other hand, was somewhat of a disaster as my quads gave out pretty quickly and I had to ride my dad's shoulders much of the way. This was when I learned I had a problem with my quads that I've struggled with all my life. It affected my running days during the 1990s and 2000s, and every year conditioning my quads has been an important part of "spring training", if you will. Note that my dad and I returned to Pilchuck 50 years later when he was 86, see that TR here .
 ```
 
 **Sample Output (JSON):**
