@@ -1,5 +1,8 @@
 """Tests for dynamic ascents parser that handles varying table structures."""
 
+import json
+from typing import Any
+
 import pytest
 from click.testing import CliRunner
 
@@ -10,6 +13,30 @@ from peakbagger.cli import main
 def cli_runner():
     """Create a Click CLI test runner with wide terminal for proper table display."""
     return CliRunner(env={"COLUMNS": "200"})
+
+
+def extract_json_from_output(output: str) -> dict[str, Any]:
+    """Extract and parse JSON from CLI output.
+
+    Args:
+        output: CLI command output that may contain JSON
+
+    Returns:
+        Parsed JSON data as dictionary
+    """
+    output_lines = output.strip().split("\n")
+    json_start = next(i for i, line in enumerate(output_lines) if line.startswith("{"))
+    json_end = json_start
+    brace_count = 0
+    for i in range(json_start, len(output_lines)):
+        line = output_lines[i]
+        brace_count += line.count("{") - line.count("}")
+        json_end = i
+        if brace_count == 0:
+            break
+    json_output = "\n".join(output_lines[json_start : json_end + 1])
+    data: dict[str, Any] = json.loads(json_output)
+    return data
 
 
 # Peak 2117: Pratt Mountain - 10 columns
@@ -34,20 +61,7 @@ def test_ascents_pratt_mountain_2117_json(cli_runner):
 
     assert result.exit_code == 0
     # Extract JSON
-    import json
-
-    output_lines = result.output.strip().split("\n")
-    json_start = next(i for i, line in enumerate(output_lines) if line.startswith("{"))
-    json_end = json_start
-    brace_count = 0
-    for i in range(json_start, len(output_lines)):
-        line = output_lines[i]
-        brace_count += line.count("{") - line.count("}")
-        json_end = i
-        if brace_count == 0:
-            break
-    json_output = "\n".join(output_lines[json_start : json_end + 1])
-    data = json.loads(json_output)
+    data = extract_json_from_output(result.output)
 
     assert isinstance(data, dict)
     assert "ascents" in data
@@ -79,20 +93,7 @@ def test_ascents_mount_rainier_2296_json(cli_runner):
     )
 
     assert result.exit_code == 0
-    import json
-
-    output_lines = result.output.strip().split("\n")
-    json_start = next(i for i, line in enumerate(output_lines) if line.startswith("{"))
-    json_end = json_start
-    brace_count = 0
-    for i in range(json_start, len(output_lines)):
-        line = output_lines[i]
-        brace_count += line.count("{") - line.count("}")
-        json_end = i
-        if brace_count == 0:
-            break
-    json_output = "\n".join(output_lines[json_start : json_end + 1])
-    data = json.loads(json_output)
+    data = extract_json_from_output(result.output)
 
     assert isinstance(data, dict)
     assert "ascents" in data
@@ -119,20 +120,7 @@ def test_ascents_denali_271_json(cli_runner):
     )
 
     assert result.exit_code == 0
-    import json
-
-    output_lines = result.output.strip().split("\n")
-    json_start = next(i for i, line in enumerate(output_lines) if line.startswith("{"))
-    json_end = json_start
-    brace_count = 0
-    for i in range(json_start, len(output_lines)):
-        line = output_lines[i]
-        brace_count += line.count("{") - line.count("}")
-        json_end = i
-        if brace_count == 0:
-            break
-    json_output = "\n".join(output_lines[json_start : json_end + 1])
-    data = json.loads(json_output)
+    data = extract_json_from_output(result.output)
 
     assert isinstance(data, dict)
     assert "ascents" in data
@@ -160,20 +148,7 @@ def test_ascents_mount_si_9779_json(cli_runner):
     )
 
     assert result.exit_code == 0
-    import json
-
-    output_lines = result.output.strip().split("\n")
-    json_start = next(i for i, line in enumerate(output_lines) if line.startswith("{"))
-    json_end = json_start
-    brace_count = 0
-    for i in range(json_start, len(output_lines)):
-        line = output_lines[i]
-        brace_count += line.count("{") - line.count("}")
-        json_end = i
-        if brace_count == 0:
-            break
-    json_output = "\n".join(output_lines[json_start : json_end + 1])
-    data = json.loads(json_output)
+    data = extract_json_from_output(result.output)
 
     assert isinstance(data, dict)
     assert "ascents" in data
@@ -202,20 +177,7 @@ def test_ascents_mount_si_2087_nested_tables_json(cli_runner):
     )
 
     assert result.exit_code == 0
-    import json
-
-    output_lines = result.output.strip().split("\n")
-    json_start = next(i for i, line in enumerate(output_lines) if line.startswith("{"))
-    json_end = json_start
-    brace_count = 0
-    for i in range(json_start, len(output_lines)):
-        line = output_lines[i]
-        brace_count += line.count("{") - line.count("}")
-        json_end = i
-        if brace_count == 0:
-            break
-    json_output = "\n".join(output_lines[json_start : json_end + 1])
-    data = json.loads(json_output)
+    data = extract_json_from_output(result.output)
 
     assert isinstance(data, dict)
     assert "ascents" in data
