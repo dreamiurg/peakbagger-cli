@@ -61,8 +61,12 @@ class PeakFormatter:
                     self.console.print("\n" + "─" * 80 + "\n")
 
     def _print_json(self, data: dict[str, Any] | list[dict[str, Any]]) -> None:
-        """Print data as formatted JSON."""
-        self.console.print(json.dumps(data, indent=2))
+        """Print data as formatted JSON.
+
+        Uses plain print() instead of console.print() to avoid Rich processing
+        escape sequences in the JSON, which would make it invalid.
+        """
+        print(json.dumps(data, indent=2, ensure_ascii=False))
 
     def _print_search_table(self, results: list[SearchResult]) -> None:
         """Print search results as a Rich table."""
@@ -72,11 +76,11 @@ class PeakFormatter:
 
         table: Table = Table(title="Search Results", show_header=True, header_style="bold cyan")
         table.add_column("Peak ID", style="dim", no_wrap=True)
-        table.add_column("Name", style="green")
+        table.add_column("Name", style="green", no_wrap=True)
         table.add_column("Location", style="cyan", no_wrap=True)
-        table.add_column("Range", style="magenta")
+        table.add_column("Range", style="magenta", no_wrap=True)
         table.add_column("Elevation", style="yellow", no_wrap=True)
-        table.add_column("URL", style="blue not underline", overflow="fold")
+        table.add_column("URL", style="blue not underline", no_wrap=True)
 
         for result in results:
             # Format location
@@ -110,8 +114,8 @@ class PeakFormatter:
 
         # Create details table
         table: Table = Table(show_header=False, box=None, padding=(0, 2))
-        table.add_column("Field", style="yellow", width=20)
-        table.add_column("Value", style="white")
+        table.add_column("Field", style="yellow", width=20, no_wrap=True)
+        table.add_column("Value", style="white", no_wrap=True)
 
         # Add elevation
         if peak.elevation_ft:
@@ -227,8 +231,8 @@ class PeakFormatter:
         # Overall Statistics
         self.console.print("\n[bold cyan]=== Overall Statistics ===[/bold cyan]\n")
         overall_table: Table = Table(show_header=False, box=None, padding=(0, 2))
-        overall_table.add_column("Metric", style="yellow", width=25)
-        overall_table.add_column("Value", style="white")
+        overall_table.add_column("Metric", style="yellow", width=25, no_wrap=True)
+        overall_table.add_column("Value", style="white", no_wrap=True)
 
         overall_table.add_row("Total ascents", str(stats.total_ascents))
 
@@ -245,8 +249,8 @@ class PeakFormatter:
         # Temporal Breakdown
         self.console.print("\n[bold cyan]=== Temporal Breakdown ===[/bold cyan]\n")
         temporal_table: Table = Table(show_header=False, box=None, padding=(0, 2))
-        temporal_table.add_column("Period", style="yellow", width=25)
-        temporal_table.add_column("Ascents", style="white")
+        temporal_table.add_column("Period", style="yellow", width=25, no_wrap=True)
+        temporal_table.add_column("Ascents", style="white", no_wrap=True)
 
         temporal_table.add_row("Last 3 months", str(stats.last_3_months))
         temporal_table.add_row("Last year", str(stats.last_year))
@@ -304,11 +308,11 @@ class PeakFormatter:
             ascent_table: Table = Table(show_header=True, header_style="bold cyan", box=None)
             ascent_table.add_column("#", style="dim", no_wrap=True)
             ascent_table.add_column("Date", style="yellow", no_wrap=True)
-            ascent_table.add_column("Climber", style="green")
+            ascent_table.add_column("Climber", style="green", no_wrap=True)
             ascent_table.add_column("GPX", style="green", justify="center", no_wrap=True)
             ascent_table.add_column("TR", style="yellow", justify="center", no_wrap=True)
-            ascent_table.add_column("Route", style="cyan")
-            ascent_table.add_column("URL", style="blue not underline", overflow="fold")
+            ascent_table.add_column("Route", style="cyan", no_wrap=True)
+            ascent_table.add_column("URL", style="blue not underline", no_wrap=True)
 
             # Helper to strip emojis from text
             def strip_emojis(text: str) -> str:
@@ -365,8 +369,8 @@ class PeakFormatter:
         else:
             # Text output with Rich table
             table = Table(show_header=True, header_style="bold magenta", box=None)
-            table.add_column("Field", style="cyan", width=20)
-            table.add_column("Value", style="white")
+            table.add_column("Field", style="cyan", width=20, no_wrap=True)
+            table.add_column("Value", style="white", no_wrap=True)
 
             # Basic info
             table.add_row("Ascent ID", ascent.ascent_id)

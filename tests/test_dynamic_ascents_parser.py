@@ -8,8 +8,8 @@ from peakbagger.cli import main
 
 @pytest.fixture
 def cli_runner():
-    """Create a Click CLI test runner."""
-    return CliRunner()
+    """Create a Click CLI test runner with wide terminal for proper table display."""
+    return CliRunner(env={"COLUMNS": "200"})
 
 
 # Peak 2117: Pratt Mountain - 10 columns
