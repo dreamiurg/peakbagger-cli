@@ -1,0 +1,60 @@
+version: 2
+updates:
+  # Python dependencies via pip
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "python"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    groups:
+      # Group dev dependencies together
+      dev-dependencies:
+        patterns:
+          - "pytest*"
+          - "ruff"
+          - "mypy"
+          - "pre-commit"
+          - "types-*"
+        update-types:
+          - "minor"
+          - "patch"
+
+  # Node.js dependencies for semantic-release
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 3
+    labels:
+      - "dependencies"
+      - "nodejs"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    groups:
+      semantic-release:
+        patterns:
+          - "@semantic-release/*"
+          - "semantic-release"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 3
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
