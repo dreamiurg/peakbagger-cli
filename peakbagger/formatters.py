@@ -14,7 +14,9 @@ class PeakFormatter:
     """Formatter for peak data output."""
 
     def __init__(self) -> None:
-        self.console: Console = Console()
+        # Use a very wide console to prevent any text truncation
+        # Tables will extend beyond terminal width if needed
+        self.console: Console = Console(width=500)
 
     def format_search_results(
         self, results: list[SearchResult], output_format: str = "text"
@@ -74,7 +76,9 @@ class PeakFormatter:
             self.console.print("[yellow]No results found.[/yellow]")
             return
 
-        table: Table = Table(title="Search Results", show_header=True, header_style="bold cyan")
+        table: Table = Table(
+            title="Search Results", show_header=True, header_style="bold cyan", box=None
+        )
         table.add_column("Peak ID", style="dim", no_wrap=True)
         table.add_column("Name", style="green", no_wrap=True)
         table.add_column("Location", style="cyan", no_wrap=True)
