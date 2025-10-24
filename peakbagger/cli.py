@@ -359,11 +359,13 @@ def ascents(
         statistics = analyzer.calculate_statistics(filtered_ascents)
 
         # Display only the list, not stats
+        # Pass limit to formatter to apply after sorting
         formatter.format_ascent_statistics(
             statistics,
-            ascents=filtered_ascents[:limit],  # Apply limit
+            ascents=filtered_ascents,  # Don't apply limit here
             output_format=output_format,
             show_list=True,  # Always show list for ascents command
+            limit=limit,  # Apply limit after sorting in formatter
         )
 
     except Exception as e:
