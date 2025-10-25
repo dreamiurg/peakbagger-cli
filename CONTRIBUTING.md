@@ -715,6 +715,17 @@ git commit -m "feat: redesign CLI interface
 BREAKING CHANGE: The --full flag has been replaced with --detailed"
 ```
 
+### Release Workflow Setup (For Maintainers)
+
+The automated release workflow uses a **GitHub App** for authentication to bypass branch protection rules securely.
+
+**Setup is already complete**, but if you need to configure this for a fork or new repository, see
+[`.github/GITHUB_APP_SETUP.md`](.github/GITHUB_APP_SETUP.md) for detailed instructions on:
+
+- Creating and configuring the GitHub App
+- Setting up repository secrets
+- Configuring repository rulesets
+
 ### Manual Release (Fallback Only)
 
 Manual releases are rarely needed but available for testing or troubleshooting:
