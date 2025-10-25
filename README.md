@@ -6,20 +6,19 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/dreamiurg/peakbagger-cli/blob/main/LICENSE)
 [![Types: Typed](https://img.shields.io/badge/types-typed-brightgreen.svg)](https://github.com/dreamiurg/peakbagger-cli/blob/main/peakbagger)
 
-A modern command-line interface for searching and retrieving mountain peak data from [PeakBagger.com](https://www.peakbagger.com).
-
-Python 3.12+, Click, and Rich deliver a beautiful terminal experience.
+A command-line interface for searching and retrieving mountain peak data from [PeakBagger.com](https://www.peakbagger.com).
 
 ## Features
 
 - 🔍 **Search peaks** by name with instant results
 - 📊 **Detailed peak info** including elevation, prominence, isolation, and location
 - 📈 **Ascent statistics** - analyze climbing activity, seasonal patterns, and trip reports
-- 🎨 **Beautiful output** with Rich-formatted tables and colors
+- 🎨 **Beautiful output** with formatted tables and colors
 - 🤖 **JSON output** for automation and scripting
-- ⚡ **Fast and modern** using `uv` for dependency management and Pydantic models
 - 🛡️ **Respectful scraping** with configurable rate limiting
 - 🌐 **Cloudflare bypass** for reliable access
+
+> **For contributors**: See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, code guidelines, and release process.
 
 ## Installation
 
@@ -584,76 +583,10 @@ peakbagger peak search "Rainier" --rate-limit 3.0
 peakbagger peak show 2296 --rate-limit 1.0
 ```
 
-## Project Structure
+## Data Source
 
-```text
-peakbagger-cli/
-├── peakbagger/
-│   ├── __init__.py        # Package metadata
-│   ├── cli.py             # Click CLI commands
-│   ├── client.py          # HTTP client with rate limiting
-│   ├── scraper.py         # HTML parsing logic
-│   ├── models.py          # Data models
-│   ├── formatters.py      # Output formatting (Rich/JSON)
-│   └── logging_config.py  # Logging configuration
-├── tests/                 # Test suite (coming soon)
-├── pyproject.toml         # Project configuration
-├── README.md              # This file
-├── CONTRIBUTING.md        # Contribution guide
-└── LICENSE                # MIT License
-```
-
-## Development
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed development guidelines.
-
-### Quick Setup
-
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/peakbagger-cli.git
-cd peakbagger-cli
-
-# Set up development environment with uv
-uv sync
-
-# Run the CLI
-uv run peakbagger --help
-```
-
-### Running Commands
-
-```bash
-# Run CLI commands during development
-uv run peakbagger peak search "Rainier"
-uv run peakbagger peak show 2296
-
-# Check version
-uv run peakbagger --version
-```
-
-## Technical Details
-
-### Dependencies
-
-- **Click**: CLI framework
-- **cloudscraper**: Cloudflare bypass for HTTP requests
-- **BeautifulSoup4**: HTML parsing
-- **lxml**: Fast XML/HTML parser
-- **Rich**: Beautiful terminal output
-- **loguru**: Simple and powerful logging
-
-### How It Works
-
-1. **Search**: Queries PeakBagger.com's search endpoint with your query
-2. **Parse**: Extracts peak information from HTML using BeautifulSoup
-3. **Format**: Displays results as Rich tables (text) or JSON
-4. **Rate Limit**: Waits between requests to respect the server
-
-### Data Sources
-
-This tool scrapes all data from [PeakBagger.com](https://www.peakbagger.com), which
-aggregates peak information from USGS, LIDAR data, and user contributions.
+All data is scraped from [PeakBagger.com](https://www.peakbagger.com).
+The site aggregates peak information from USGS, LIDAR data, and user contributions.
 
 ## Limitations
 
@@ -698,11 +631,6 @@ Verify Python 3.12+ installation:
 ```bash
 python3 --version  # Should be 3.12 or higher
 ```
-
-## Contributing
-
-Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup,
-code style guidelines, and submission instructions.
 
 ## Support
 
