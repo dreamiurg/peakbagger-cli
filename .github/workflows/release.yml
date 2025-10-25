@@ -7,17 +7,26 @@ on:
 
 permissions:
   contents: write  # Required for semantic-release to create releases and push commits
+  id-token: write  # Required for trusted publishing
 
 jobs:
   # Skip test job - CI workflow already runs comprehensive tests on push to main
   release:
     runs-on: ubuntu-latest
     steps:
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ssh-key: ${{ secrets.DEPLOY_KEY }}
+          token: ${{ steps.app-token.outputs.token }}
+          persist-credentials: false
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -37,5 +46,5 @@ jobs:
 
       - name: Release with Python Semantic Release
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: uv run semantic-release version
