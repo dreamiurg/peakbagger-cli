@@ -16,9 +16,6 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 # Set up the development environment
 uv sync
 
-# Install pre-commit hooks
-uv run pre-commit install
-
 # Run the CLI
 uv run peakbagger --help
 ```
@@ -32,9 +29,6 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
 # Install in editable mode with dev dependencies
 pip install -e ".[dev]"
-
-# Install pre-commit hooks
-pre-commit install
 ```
 
 ## Project Structure
@@ -63,26 +57,7 @@ peakbagger-cli/
 
 ## Code Quality
 
-### Pre-commit Hooks
-
-Pre-commit hooks automatically check code before commits:
-
-```bash
-# Install hooks (one time setup)
-uv run pre-commit install
-
-# Run manually on all files
-uv run pre-commit run --all-files
-```
-
-**Hooks verify:**
-
-- **Ruff**: Formatting and linting (replaces Black, isort, flake8)
-- **Bandit**: Security vulnerability checks
-- **mypy**: Type checking
-- File hygiene (trailing whitespace, end of file newlines, etc.)
-
-### Manual Formatting and Linting
+### Formatting and Linting
 
 ```bash
 # Format code
@@ -146,7 +121,18 @@ When updating scraper logic:
 1. Test parsing locally without network requests
 1. Update tests with new HTML structure
 
-## Release Process (Maintainers Only)
+## Release Process
+
+### Automated Releases (Default)
+
+**Releases are fully automated via GitHub Actions.** When commits are merged to the `main` branch:
+
+1. GitHub Actions analyzes commit messages
+2. If a release-triggering commit is found, the version is bumped automatically
+3. CHANGELOG.md is updated
+4. A Git tag and GitHub release are created
+
+**No manual intervention needed** - just merge your PR with a conventional commit message.
 
 ### Commit Message Format
 
@@ -186,23 +172,16 @@ git commit -m "feat: redesign CLI interface
 BREAKING CHANGE: The --full flag has been replaced with --detailed"
 ```
 
-### Creating a Release
+### Manual Release (Fallback Only)
+
+Manual releases are rarely needed but available for testing or troubleshooting:
 
 ```bash
 # Preview what would be released
 uv run semantic-release version --print
 
-# Create the release (updates version, changelog, creates tag)
-uv run semantic-release version
-
-# Build the package
-uv build
-
-# Publish to PyPI
-uv tool run twine upload dist/*
-
-# Create GitHub release
-gh release create v0.2.0 --notes-from-tag
+# Create release locally (testing/development only)
+uv run semantic-release version --no-push --no-vcs-release
 ```
 
 ### Version Bumping Examples
@@ -214,36 +193,6 @@ gh release create v0.2.0 --notes-from-tag
 | `feat:` with breaking change | `feat: new CLI structure`<br>`BREAKING CHANGE: ...` | `1.0.0` |
 | Multiple `fix:` commits | 3x `fix:` commits | `0.1.1` (single bump) |
 | `fix:` + `feat:` | Both types present | `0.2.0` (highest bump wins) |
-
-### Manual Version Override
-
-```bash
-# Force a specific bump type
-uv run semantic-release version --patch
-uv run semantic-release version --minor
-uv run semantic-release version --major
-
-# Set exact version
-uv run semantic-release version --bump-version 0.3.0
-```
-
-### Troubleshooting Releases
-
-#### "No release will be made"
-
-- No commits since last release follow conventional format
-- Add a conventional commit or use `--patch/--minor/--major` flag
-
-#### "Token value is missing"
-
-- This warning is safe to ignore for manual releases
-- Only needed for GitHub Actions automation
-
-#### Wrong version calculated
-
-- Review commits: `git log v0.1.0..HEAD --oneline`
-- Check commit types match conventional format
-- Use `--noop` flag to preview before committing
 
 ## License
 
