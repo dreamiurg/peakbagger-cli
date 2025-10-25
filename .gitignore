@@ -98,5 +98,8 @@ temp/
 *.tmp
 .claude
 
+# Documentation drafts and plans
+docs/plans/
+
 # Git worktrees
 .worktrees/
