@@ -190,7 +190,7 @@ BREAKING CHANGE: The --full flag has been replaced with --detailed"
 
 ```bash
 # Preview what would be released
-uv run semantic-release --noop version
+uv run semantic-release version --print
 
 # Create the release (updates version, changelog, creates tag)
 uv run semantic-release version
