@@ -32,7 +32,7 @@ class PeakBaggerClient:
         # Set a clear user agent
         self.session.headers.update(
             {
-                "User-Agent": f"peakbagger-cli/{__version__} (personal use; https://github.com/yourusername/peakbagger-cli)"
+                "User-Agent": f"peakbagger-cli/{__version__} (Python CLI tool; https://github.com/yourusername/peakbagger-cli)"
             }
         )
 
