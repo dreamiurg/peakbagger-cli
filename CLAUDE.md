@@ -57,8 +57,8 @@ uv run pytest --cov=peakbagger
 # Build package
 uv build
 
-# Preview next release
-npx semantic-release --dry-run
+# Preview next release (dry-run)
+uv run semantic-release version --print
 
 # Create release (done automatically via GitHub Actions)
 # Just merge PR to main with conventional commit title
@@ -212,34 +212,34 @@ peakbagger/
 
 ## Release Process
 
-This project uses **semantic-release** (Node.js version) for automated version management and releases.
+This project uses **python-semantic-release** for automated version management and releases.
 
 ### Automated Releases
 
 Releases are **fully automated** via GitHub Actions:
 
 1. Push commits to `main` branch
-2. GitHub Actions runs semantic-release
-3. Version is bumped, CHANGELOG.md is updated
-4. Git tag and GitHub release are created automatically
+2. GitHub Actions runs python-semantic-release
+3. Version is bumped in pyproject.toml and **init**.py
+4. CHANGELOG.md is updated
+5. Git tag and GitHub release are created automatically
 
-### Configuration Files
+### Configuration
 
-- `.releaserc.json` - Semantic-release configuration
-- `.github/workflows/release.yml` - GitHub Actions workflow
-- `scripts/update-version.py` - Updates version in pyproject.toml and **init**.py
-- `package.json` - Node.js dependencies for semantic-release
+Configuration is in `pyproject.toml` under `[tool.semantic_release]` section.
+
+The workflow is defined in `.github/workflows/release.yml`.
 
 ### Manual Release Testing
 
-To test what would be released (requires Node.js and npm):
+To test what would be released:
 
 ```bash
-# Install dependencies (first time only)
-npm install
+# Print the next version without making changes
+uv run semantic-release version --print
 
-# Test release in dry-run mode (won't actually release)
-npx semantic-release --dry-run
+# Or test release without pushing (will update files locally)
+uv run semantic-release version --no-push --no-vcs-release
 ```
 
 ### Version Strategy
@@ -309,23 +309,16 @@ Output changes include:
 - rich >= 10.0.0
 - loguru >= 0.7.3
 
-### Development (Python)
+### Development
 
 - pytest + pytest-cov
 - ruff
 - pre-commit
 - mypy
+- python-semantic-release
+- commitizen
 
-### Development (Node.js - for semantic-release)
-
-- semantic-release
-- @semantic-release/changelog
-- @semantic-release/git
-- @semantic-release/exec
-- @semantic-release/github
-
-**Always use `uv add` and `uv add --dev`** to manage Python dependencies.
-**Use `npm install`** for Node.js dependencies (semantic-release plugins).
+**Always use `uv add` and `uv add --dev`** to manage dependencies.
 
 ## Questions or Unclear Instructions?
 

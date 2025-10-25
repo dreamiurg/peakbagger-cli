@@ -56,31 +56,7 @@ jobs:
       - name: Install dependencies
         run: uv sync
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: 'lts/*'
-          cache: 'npm'
-
-      - name: Install semantic-release
-        run: |
-          npm install -g semantic-release@24 \
-            @semantic-release/changelog@6 \
-            @semantic-release/git@10 \
-            @semantic-release/exec@6 \
-            @semantic-release/github@11
-
-      - name: Verify version script
-        run: |
-          if [ -f scripts/update-version.py ]; then
-            echo "Version update script found"
-            head -5 scripts/update-version.py
-          else
-            echo "Warning: scripts/update-version.py not found"
-            exit 1
-          fi
-
-      - name: Release
+      - name: Release with Python Semantic Release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: uv run semantic-release version
