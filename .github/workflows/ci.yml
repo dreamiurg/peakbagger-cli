@@ -3,13 +3,14 @@ name: CI
 on:
   push:
     branches: [main]
-    # Skip CI for docs-only changes on push to main
+    # Skip CI for docs-only and metadata changes on push to main
     paths-ignore:
       - '**.md'
       - 'docs/**'
       - 'examples/**'
       - '.github/**'
       - '!.github/workflows/**'
+      - '.gitignore'
   pull_request:
     branches: [main]
     # Always run on PRs (for review), but individual jobs can skip if needed
