@@ -129,6 +129,112 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 
 <!-- version list -->
 
+## v1.8.0 (2025-10-25)
+
+### Bug Fixes
+
+- Improve User-Agent string clarity ([#33](https://github.com/dreamiurg/peakbagger-cli/pull/33),
+  [`5d95b6e`](https://github.com/dreamiurg/peakbagger-cli/commit/5d95b6ecb38eec0365d243bf67c4ff239806c14a))
+
+- Remove invalid changelog placeholder from release commit message
+  ([#34](https://github.com/dreamiurg/peakbagger-cli/pull/34),
+  [`0730d84`](https://github.com/dreamiurg/peakbagger-cli/commit/0730d84e6633d09a58f36a446c95d2991935f160))
+
+- Remove persist-credentials false to allow git push with app token
+  ([#37](https://github.com/dreamiurg/peakbagger-cli/pull/37),
+  [`afba7e9`](https://github.com/dreamiurg/peakbagger-cli/commit/afba7e91fa071eccf14036f4f6ebdbfa7a857b4a))
+
+- Update User-Agent URL to correct repository
+  ([#39](https://github.com/dreamiurg/peakbagger-cli/pull/39),
+  [`6ec81e4`](https://github.com/dreamiurg/peakbagger-cli/commit/6ec81e437814083ff4ea2ca5d7ca0967a7a3af13))
+
+### Chores
+
+- Add py.typed marker for PEP 561 compliance
+  ([#20](https://github.com/dreamiurg/peakbagger-cli/pull/20),
+  [`8fbde73`](https://github.com/dreamiurg/peakbagger-cli/commit/8fbde73624df31544823082a571d155a5d259cca))
+
+- Ignore docs/plans directory ([#31](https://github.com/dreamiurg/peakbagger-cli/pull/31),
+  [`c243df1`](https://github.com/dreamiurg/peakbagger-cli/commit/c243df102b32a58222ac2491cc975ead5135927e))
+
+- Migrate from Node.js semantic-release to Python equivalents
+  ([#27](https://github.com/dreamiurg/peakbagger-cli/pull/27),
+  [`6d7e55b`](https://github.com/dreamiurg/peakbagger-cli/commit/6d7e55b0ab19801fa9de663b4b0174b664dd1cdb))
+
+- **deps-dev**: Bump the semantic-release group with 3 updates
+  ([#26](https://github.com/dreamiurg/peakbagger-cli/pull/26),
+  [`cc7600b`](https://github.com/dreamiurg/peakbagger-cli/commit/cc7600bc6051fc20e64d15bd2ba15e628d35ff21))
+
+### Continuous Integration
+
+- Add badges and GitHub Actions CI workflow
+  ([#20](https://github.com/dreamiurg/peakbagger-cli/pull/20),
+  [`8fbde73`](https://github.com/dreamiurg/peakbagger-cli/commit/8fbde73624df31544823082a571d155a5d259cca))
+
+- Add Dependabot configuration for automated dependency updates
+  ([#22](https://github.com/dreamiurg/peakbagger-cli/pull/22),
+  [`d6aaa56`](https://github.com/dreamiurg/peakbagger-cli/commit/d6aaa56039074710f5450d3f25096e171d145bee))
+
+- Add GitHub Actions workflow with cross-platform testing
+  ([#20](https://github.com/dreamiurg/peakbagger-cli/pull/20),
+  [`8fbde73`](https://github.com/dreamiurg/peakbagger-cli/commit/8fbde73624df31544823082a571d155a5d259cca))
+
+- Improve dependency management and caching
+  ([#22](https://github.com/dreamiurg/peakbagger-cli/pull/22),
+  [`d6aaa56`](https://github.com/dreamiurg/peakbagger-cli/commit/d6aaa56039074710f5450d3f25096e171d145bee))
+
+- Optimize GitHub Actions performance ([#30](https://github.com/dreamiurg/peakbagger-cli/pull/30),
+  [`2ebba16`](https://github.com/dreamiurg/peakbagger-cli/commit/2ebba168bc964e4ccad13afc7e20fdedad1a64da))
+
+- Skip CI when only .gitignore changes ([#32](https://github.com/dreamiurg/peakbagger-cli/pull/32),
+  [`013b9bf`](https://github.com/dreamiurg/peakbagger-cli/commit/013b9bf4743846d4bfe02f589f1caa46af34682a))
+
+- Upgrade uv action to v5 and enable dependency caching
+  ([#22](https://github.com/dreamiurg/peakbagger-cli/pull/22),
+  [`d6aaa56`](https://github.com/dreamiurg/peakbagger-cli/commit/d6aaa56039074710f5450d3f25096e171d145bee))
+
+- **deps**: Bump actions/setup-node from 4 to 6
+  ([#25](https://github.com/dreamiurg/peakbagger-cli/pull/25),
+  [`3d88393`](https://github.com/dreamiurg/peakbagger-cli/commit/3d88393fb2e0f878729c0c1a9e559b74b47a9dd6))
+
+- **deps**: Bump actions/setup-python from 5 to 6
+  ([#24](https://github.com/dreamiurg/peakbagger-cli/pull/24),
+  [`b4baf46`](https://github.com/dreamiurg/peakbagger-cli/commit/b4baf46daae6452e5b3b02c2e5e5656f5427a713))
+
+- **deps**: Bump codecov/codecov-action from 4 to 5
+  ([#23](https://github.com/dreamiurg/peakbagger-cli/pull/23),
+  [`4bd870b`](https://github.com/dreamiurg/peakbagger-cli/commit/4bd870baa2e129ba26fa1586c51f3f6c8eb14b34))
+
+### Documentation
+
+- Add architecture diagrams and developer cookbook
+  ([#29](https://github.com/dreamiurg/peakbagger-cli/pull/29),
+  [`97ccf10`](https://github.com/dreamiurg/peakbagger-cli/commit/97ccf10908945d3cb54c219847858c60212b6621))
+
+- Add badges to README ([#20](https://github.com/dreamiurg/peakbagger-cli/pull/20),
+  [`8fbde73`](https://github.com/dreamiurg/peakbagger-cli/commit/8fbde73624df31544823082a571d155a5d259cca))
+
+- Streamline documentation for clarity and automation
+  ([#28](https://github.com/dreamiurg/peakbagger-cli/pull/28),
+  [`28c6181`](https://github.com/dreamiurg/peakbagger-cli/commit/28c6181c0e8e100c17e4c066b33328544b560379))
+
+- Update README with current CLI output examples
+  ([#21](https://github.com/dreamiurg/peakbagger-cli/pull/21),
+  [`fb6159e`](https://github.com/dreamiurg/peakbagger-cli/commit/fb6159ef3cddab01fda1e26f52d87f136f1f4965))
+
+### Features
+
+- Use GitHub App for semantic-release to bypass branch protection
+  ([#36](https://github.com/dreamiurg/peakbagger-cli/pull/36),
+  [`a2ef638`](https://github.com/dreamiurg/peakbagger-cli/commit/a2ef638db6080935bacff08b9abc331ceae09a34))
+
+### Refactoring
+
+- Address CodeRabbit feedback from PRs #14 and #17
+  ([#19](https://github.com/dreamiurg/peakbagger-cli/pull/19),
+  [`cc9053c`](https://github.com/dreamiurg/peakbagger-cli/commit/cc9053ca3f73b110e06268ff828efd4a2b9e0786))
+
+
 ## v0.3.0 (2025-10-20)
 
 ### Bug Fixes
