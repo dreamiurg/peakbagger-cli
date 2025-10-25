@@ -132,6 +132,7 @@ After merging the workflow PR, the release workflow will:
 - **Token lifetime**: App tokens expire after 1 hour (much safer than PATs)
 - **Scope**: The app only has access to repositories where it's installed
 - **Rotation**: Regenerate private keys periodically for security
+- **Audit**: All app actions are logged in the GitHub audit log
 
 ## References
 
