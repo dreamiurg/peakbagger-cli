@@ -108,7 +108,7 @@ branch = "main"
 upload_to_vcs_release = true
 upload_to_pypi = false
 build_command = "uv build"
-commit_message = "chore(release): {version} [skip ci]\n\n{changelog}"
+commit_message = "chore(release): {version} [skip ci]"
 commit_author = "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
 
 [tool.semantic_release.changelog]
