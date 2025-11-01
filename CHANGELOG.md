@@ -129,6 +129,53 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 
 <!-- version list -->
 
+## v1.9.3 (2025-11-01)
+
+### Bug Fixes
+
+- Combine nested with statements per ruff SIM117
+  ([#54](https://github.com/dreamiurg/peakbagger-cli/pull/54),
+  [`c3df275`](https://github.com/dreamiurg/peakbagger-cli/commit/c3df275243822dd691b0232b605fdc410f15eaf4))
+
+- Resolve CodeQL false positive in user agent test
+  ([#53](https://github.com/dreamiurg/peakbagger-cli/pull/53),
+  [`b91f173`](https://github.com/dreamiurg/peakbagger-cli/commit/b91f17306d2fbe493cd122651b08a3c45633a251))
+
+### Continuous Integration
+
+- Improve OpenSSF Scorecard from 4.8 to ~7.5-8.0/10
+  ([#53](https://github.com/dreamiurg/peakbagger-cli/pull/53),
+  [`b91f173`](https://github.com/dreamiurg/peakbagger-cli/commit/b91f17306d2fbe493cd122651b08a3c45633a251))
+
+- Trigger checks re-run ([#53](https://github.com/dreamiurg/peakbagger-cli/pull/53),
+  [`b91f173`](https://github.com/dreamiurg/peakbagger-cli/commit/b91f17306d2fbe493cd122651b08a3c45633a251))
+
+### Documentation
+
+- Remove personal email and emojis from security policy
+  ([#53](https://github.com/dreamiurg/peakbagger-cli/pull/53),
+  [`b91f173`](https://github.com/dreamiurg/peakbagger-cli/commit/b91f17306d2fbe493cd122651b08a3c45633a251))
+
+- Rewrite security policy to reflect hobby project reality
+  ([#53](https://github.com/dreamiurg/peakbagger-cli/pull/53),
+  [`b91f173`](https://github.com/dreamiurg/peakbagger-cli/commit/b91f17306d2fbe493cd122651b08a3c45633a251))
+
+### Refactoring
+
+- Use importlib.metadata for version management
+  ([#53](https://github.com/dreamiurg/peakbagger-cli/pull/53),
+  [`b91f173`](https://github.com/dreamiurg/peakbagger-cli/commit/b91f17306d2fbe493cd122651b08a3c45633a251))
+
+### Testing
+
+- Add comprehensive error handling tests to reach 91% coverage
+  ([#54](https://github.com/dreamiurg/peakbagger-cli/pull/54),
+  [`c3df275`](https://github.com/dreamiurg/peakbagger-cli/commit/c3df275243822dd691b0232b605fdc410f15eaf4))
+
+- More of them
+  ([`96a3059`](https://github.com/dreamiurg/peakbagger-cli/commit/96a3059019e73bb23c5e0d757eac7ae4131758c5))
+
+
 ## v1.9.2 (2025-11-01)
 
 ### Bug Fixes
