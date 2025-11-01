@@ -11,17 +11,19 @@ on:
     branches:
       - main
 
-# Needed to upload results to code-scanning dashboard
-permissions:
-  contents: read
-  security-events: write
-  id-token: write
-  actions: read
+# Set top-level permissions to read-only as required by OpenSSF scorecard-action
+permissions: read-all
 
 jobs:
   analysis:
     name: Scorecard analysis
     runs-on: ubuntu-latest
+    # Grant write permissions at job level for uploading results
+    permissions:
+      security-events: write
+      id-token: write
+      contents: read
+      actions: read
 
     steps:
       - name: Checkout code
