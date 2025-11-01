@@ -129,6 +129,43 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 
 <!-- version list -->
 
+## v1.9.2 (2025-11-01)
+
+### Bug Fixes
+
+- Set read-only top-level permissions for scorecard workflow
+  ([#51](https://github.com/dreamiurg/peakbagger-cli/pull/51),
+  [`d171db2`](https://github.com/dreamiurg/peakbagger-cli/commit/d171db27a4960d3daf3f1a395a3fc08c4b3e305d))
+
+### Chores
+
+- Update GitHub Actions to latest versions
+  ([#47](https://github.com/dreamiurg/peakbagger-cli/pull/47),
+  [`4c44145`](https://github.com/dreamiurg/peakbagger-cli/commit/4c4414505c57e5493c8bfdcde9257580468c1206))
+
+### Continuous Integration
+
+- Add OpenSSF Scorecard workflow to enable security badge
+  ([#47](https://github.com/dreamiurg/peakbagger-cli/pull/47),
+  [`4c44145`](https://github.com/dreamiurg/peakbagger-cli/commit/4c4414505c57e5493c8bfdcde9257580468c1206))
+
+- Add required-checks sentinel job for branch protection
+  ([#46](https://github.com/dreamiurg/peakbagger-cli/pull/46),
+  [`b109c72`](https://github.com/dreamiurg/peakbagger-cli/commit/b109c72b2e97f475f24bb323a10bb521836c1708))
+
+- Consolidate PR title validation into sentinel check
+  ([#49](https://github.com/dreamiurg/peakbagger-cli/pull/49),
+  [`6f9288e`](https://github.com/dreamiurg/peakbagger-cli/commit/6f9288efff6deec456bb02aaddf1c427a67861b0))
+
+- Fix release workflow by upgrading setuptools before build
+  ([#48](https://github.com/dreamiurg/peakbagger-cli/pull/48),
+  [`7296d1c`](https://github.com/dreamiurg/peakbagger-cli/commit/7296d1cb865f3b1d74c65a949dce6811c3241e5f))
+
+- Only publish to PyPI when semantic-release creates new version
+  ([#50](https://github.com/dreamiurg/peakbagger-cli/pull/50),
+  [`ede54ef`](https://github.com/dreamiurg/peakbagger-cli/commit/ede54ef1ca3e168f285b63a492f2ce332ae90dbb))
+
+
 ## v1.9.1 (2025-11-01)
 
 ### Bug Fixes
