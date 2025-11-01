@@ -20,6 +20,10 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
+# Set read-only permissions by default
+permissions:
+  contents: read
+
 jobs:
   # Separate lint job - runs once instead of on every matrix combination
   lint:
