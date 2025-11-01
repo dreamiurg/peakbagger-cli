@@ -40,7 +40,8 @@ class TestPeakBaggerClientInitialization:
         user_agent = client.session.headers["User-Agent"]
         assert "peakbagger-cli" in user_agent
         assert "Python CLI tool" in user_agent
-        assert "github.com" in user_agent
+        # Check for full GitHub URL to avoid CodeQL URL substring sanitization warning
+        assert "https://github.com/dreamiurg/peakbagger-cli" in user_agent
 
 
 class TestPeakBaggerClientRateLimiting:
