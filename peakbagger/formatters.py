@@ -94,7 +94,6 @@ class PeakFormatter:
         Uses plain print() instead of console.print() to avoid Rich processing
         escape sequences in the JSON, which would make it invalid.
         """
-        # lgtm[py/clear-text-logging-sensitive-data]
         # This is intentional CLI output, not logging. The tool only handles public
         # peak data from PeakBagger.com - no credentials or sensitive information.
         print(json.dumps(data, indent=2, ensure_ascii=False))
@@ -348,11 +347,10 @@ class PeakFormatter:
                 """Remove emoji characters from text."""
                 import re
 
-                # Pattern matches emoji ranges
-                # lgtm[py/overly-large-range]
-                # This regex is for display formatting only (removing emojis from scraped
-                # text). Overlapping ranges are intentional for comprehensive emoji coverage.
-                # Not used for security validation or input sanitization.
+                # Pattern matches emoji ranges. This regex is for display formatting only
+                # (removing emojis from scraped text). Overlapping ranges are intentional
+                # for comprehensive emoji coverage. Not used for security validation or
+                # input sanitization.
                 emoji_pattern = re.compile(
                     "["
                     "\U0001f600-\U0001f64f"  # emoticons
