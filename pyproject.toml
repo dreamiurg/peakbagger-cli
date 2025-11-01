@@ -3,9 +3,9 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "peakbagger-cli"
+name = "peakbagger"
 version = "1.8.0"
-description = "A CLI tool for searching and retrieving mountain peak data from PeakBagger.com"
+description = "Explore mountain peak data from PeakBagger.com directly in your terminal. Search peaks by name, view comprehensive details, browse ascent trip reports, analyze seasonal climbing patterns, and export data as JSON. Built for hikers, climbers, and data enthusiasts."
 readme = "README.md"
 requires-python = ">=3.12"
 license = "MIT"
@@ -106,6 +106,7 @@ version_toml = ["pyproject.toml:project.version"]
 version_variables = ["peakbagger/__init__.py:__version__"]
 branch = "main"
 upload_to_vcs_release = true
+# Keep false - GitHub Actions uses pypa/gh-action-pypi-publish for trusted publishing
 upload_to_pypi = false
 build_command = "uv build"
 commit_message = "chore(release): {version} [skip ci]"
@@ -138,6 +139,7 @@ dev = [
     "pytest-cov>=7.0.0",
     "pytest-vcr>=1.0.2",
     "python-semantic-release>=10.4.1",
+    "twine>=6.2.0",
     "types-beautifulsoup4>=4.12.0.20250516",
     "vcrpy>=7.0.0",
 ]

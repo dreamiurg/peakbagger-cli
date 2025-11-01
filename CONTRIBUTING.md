@@ -726,6 +726,92 @@ The automated release workflow uses a **GitHub App** for authentication to bypas
 - Setting up repository secrets
 - Configuring repository rulesets
 
+### PyPI Publishing (For Maintainers)
+
+The project is configured to automatically publish to PyPI using **Trusted Publishing** (OIDC authentication).
+
+#### One-Time PyPI Setup
+
+**Prerequisites:** You must be a PyPI project owner/maintainer.
+
+1. **Configure PyPI Trusted Publisher**:
+   - Go to <https://pypi.org/manage/account/publishing/>
+   - Click "Add a new pending publisher"
+   - Fill in the following details:
+     - **PyPI Project Name**: `peakbagger`
+     - **Owner**: `dreamiurg` (the GitHub username/organization)
+     - **Repository name**: `peakbagger-cli`
+     - **Workflow name**: `release.yml`
+     - **Environment name**: Leave blank (not using environments)
+   - Click "Add"
+
+2. **Verify Permissions**:
+   - Ensure the GitHub repository has `id-token: write` permission (already configured)
+   - This allows GitHub Actions to authenticate with PyPI via OIDC
+
+#### How PyPI Publishing Works
+
+When commits are merged to `main`:
+
+1. **GitHub Actions runs** the release workflow (`.github/workflows/release.yml`)
+2. **python-semantic-release**:
+   - Analyzes commit messages
+   - Bumps version if needed
+   - Updates `pyproject.toml` and `peakbagger/__init__.py`
+   - Updates `CHANGELOG.md`
+   - Creates Git tag and GitHub release
+   - Builds the package with `uv build` (creates `.whl` and `.tar.gz` in `dist/`)
+3. **pypa/gh-action-pypi-publish**:
+   - Authenticates with PyPI using OIDC token (no secrets needed!)
+   - Uploads package files from `dist/` to PyPI
+   - PyPI makes the new version available immediately
+
+**No manual intervention needed** - releases and PyPI publishing are fully automated.
+
+#### Security Benefits of Trusted Publishing
+
+- ✅ **No API tokens** - Uses OpenID Connect (OIDC) for authentication
+- ✅ **Automatic rotation** - Tokens are short-lived and generated per-workflow
+- ✅ **Scoped access** - Only the specific workflow can publish
+- ✅ **Auditable** - All publishes are tied to GitHub Actions runs
+
+#### Testing PyPI Configuration
+
+To test the build locally without publishing:
+
+```bash
+# Build the package
+uv build
+
+# Check the built files
+ls -lh dist/
+
+# Inspect package contents
+tar -tzf dist/peakbagger-*.tar.gz | head -20
+
+# Verify package metadata
+uv run twine check dist/*
+```
+
+**Note:** Don't manually publish with `twine upload`. Let GitHub Actions handle publishing automatically.
+
+#### Troubleshooting PyPI Publishing
+
+**If publishing fails:**
+
+1. Check GitHub Actions logs at: <https://github.com/dreamiurg/peakbagger-cli/actions>
+2. Look for errors in the "Publish to PyPI" step
+3. Common issues:
+   - **Version already exists on PyPI**: Version wasn't bumped (check commit messages)
+   - **Authentication failed**: Verify PyPI trusted publisher configuration
+   - **Build artifacts missing**: Check that `uv build` completed successfully
+
+**To republish after fixing:**
+
+- Fix the issue in a new commit
+- Push to `main` (or merge a PR)
+- The workflow will run again with the corrected configuration
+
 ### Manual Release (Fallback Only)
 
 Manual releases are rarely needed but available for testing or troubleshooting:
