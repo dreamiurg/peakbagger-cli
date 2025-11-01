@@ -152,7 +152,7 @@ Closes #42"
 
 ```text
 peakbagger/
-├── __init__.py        # Version string (__version__)
+├── __init__.py        # Package initialization (version from metadata)
 ├── cli.py             # Click commands (main entry point)
 ├── client.py          # HTTP client with rate limiting
 ├── scraper.py         # HTML parsing with BeautifulSoup

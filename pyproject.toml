@@ -103,7 +103,6 @@ ignore_missing_imports = true
 
 [tool.semantic_release]
 version_toml = ["pyproject.toml:project.version"]
-version_variables = ["peakbagger/__init__.py:__version__"]
 branch = "main"
 upload_to_vcs_release = true
 # Keep false - GitHub Actions uses pypa/gh-action-pypi-publish for trusted publishing
@@ -125,8 +124,7 @@ keep_trailing_newline = true
 name = "cz_conventional_commits"
 version = "1.7.0"
 version_files = [
-    "pyproject.toml:version",
-    "peakbagger/__init__.py:__version__"
+    "pyproject.toml:version"
 ]
 update_changelog_on_bump = true
 tag_format = "$version"
