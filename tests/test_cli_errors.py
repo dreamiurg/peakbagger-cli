@@ -83,20 +83,22 @@ class TestSearchCommand:
         """Test search when no results are found."""
         runner = CliRunner()
 
-        with patch("peakbagger.cli.PeakBaggerClient") as mock_client_class:
-            with patch("peakbagger.cli.PeakBaggerScraper") as mock_scraper_class:
-                mock_client = Mock()
-                mock_client.get.return_value = "<html>No results</html>"
-                mock_client_class.return_value = mock_client
+        with (
+            patch("peakbagger.cli.PeakBaggerClient") as mock_client_class,
+            patch("peakbagger.cli.PeakBaggerScraper") as mock_scraper_class,
+        ):
+            mock_client = Mock()
+            mock_client.get.return_value = "<html>No results</html>"
+            mock_client_class.return_value = mock_client
 
-                mock_scraper = Mock()
-                mock_scraper.parse_search_results.return_value = []
-                mock_scraper_class.return_value = mock_scraper
+            mock_scraper = Mock()
+            mock_scraper.parse_search_results.return_value = []
+            mock_scraper_class.return_value = mock_scraper
 
-                result = runner.invoke(main, ["peak", "search", "nonexistent"])
+            result = runner.invoke(main, ["peak", "search", "nonexistent"])
 
-                assert result.exit_code == 0
-                mock_client.close.assert_called_once()
+            assert result.exit_code == 0
+            mock_client.close.assert_called_once()
 
     def test_search_with_exception_handling(self):
         """Test that search handles exceptions properly."""
@@ -117,34 +119,36 @@ class TestSearchCommand:
         """Test search with --full when peak details fail to parse."""
         runner = CliRunner()
 
-        with patch("peakbagger.cli.PeakBaggerClient") as mock_client_class:
-            with patch("peakbagger.cli.PeakBaggerScraper") as mock_scraper_class:
-                with patch("peakbagger.cli.PeakFormatter") as mock_formatter_class:
-                    mock_client = Mock()
-                    mock_client.get.return_value = "<html>Test</html>"
-                    mock_client_class.return_value = mock_client
+        with (
+            patch("peakbagger.cli.PeakBaggerClient") as mock_client_class,
+            patch("peakbagger.cli.PeakBaggerScraper") as mock_scraper_class,
+            patch("peakbagger.cli.PeakFormatter") as mock_formatter_class,
+        ):
+            mock_client = Mock()
+            mock_client.get.return_value = "<html>Test</html>"
+            mock_client_class.return_value = mock_client
 
-                    mock_scraper = Mock()
-                    mock_scraper.parse_search_results.return_value = [
-                        SearchResult(
-                            name="Test Peak",
-                            url="peak.aspx?pid=1",
-                            pid="1",
-                            elevation_ft="1000",
-                            location="USA",
-                        )
-                    ]
-                    mock_scraper.parse_peak_detail.return_value = None  # Parsing failed
-                    mock_scraper_class.return_value = mock_scraper
+            mock_scraper = Mock()
+            mock_scraper.parse_search_results.return_value = [
+                SearchResult(
+                    name="Test Peak",
+                    url="peak.aspx?pid=1",
+                    pid="1",
+                    elevation_ft="1000",
+                    location="USA",
+                )
+            ]
+            mock_scraper.parse_peak_detail.return_value = None  # Parsing failed
+            mock_scraper_class.return_value = mock_scraper
 
-                    mock_formatter = Mock()
-                    mock_formatter_class.return_value = mock_formatter
+            mock_formatter = Mock()
+            mock_formatter_class.return_value = mock_formatter
 
-                    result = runner.invoke(main, ["peak", "search", "--full", "test"])
+            result = runner.invoke(main, ["peak", "search", "--full", "test"])
 
-                    assert result.exit_code == 0
-                    # Should call format_peaks with empty list
-                    mock_formatter.format_peaks.assert_called_once()
+            assert result.exit_code == 0
+            # Should call format_peaks with empty list
+            mock_formatter.format_peaks.assert_called_once()
 
 
 class TestShowCommand:
@@ -177,20 +181,22 @@ class TestAscentsCommand:
         """Test ascents when no ascents are found."""
         runner = CliRunner()
 
-        with patch("peakbagger.cli.PeakBaggerClient") as mock_client_class:
-            with patch("peakbagger.cli.PeakBaggerScraper") as mock_scraper_class:
-                mock_client = Mock()
-                mock_client.get.return_value = "<html>No ascents</html>"
-                mock_client_class.return_value = mock_client
+        with (
+            patch("peakbagger.cli.PeakBaggerClient") as mock_client_class,
+            patch("peakbagger.cli.PeakBaggerScraper") as mock_scraper_class,
+        ):
+            mock_client = Mock()
+            mock_client.get.return_value = "<html>No ascents</html>"
+            mock_client_class.return_value = mock_client
 
-                mock_scraper = Mock()
-                mock_scraper.parse_peak_ascents.return_value = []
-                mock_scraper_class.return_value = mock_scraper
+            mock_scraper = Mock()
+            mock_scraper.parse_peak_ascents.return_value = []
+            mock_scraper_class.return_value = mock_scraper
 
-                result = runner.invoke(main, ["peak", "ascents", "999"])
+            result = runner.invoke(main, ["peak", "ascents", "999"])
 
-                assert result.exit_code == 0
-                mock_client.close.assert_called_once()
+            assert result.exit_code == 0
+            mock_client.close.assert_called_once()
 
     def test_ascents_with_exception(self):
         """Test ascents exception handling."""
@@ -210,35 +216,35 @@ class TestAscentsCommand:
         """Test ascents with --limit flag."""
         runner = CliRunner()
 
-        with patch("peakbagger.cli.PeakBaggerClient") as mock_client_class:
-            with patch("peakbagger.cli.PeakBaggerScraper") as mock_scraper_class:
-                with patch("peakbagger.cli.PeakFormatter") as mock_formatter_class:
-                    mock_client = Mock()
-                    mock_client.get.return_value = "<html>Ascents</html>"
-                    mock_client_class.return_value = mock_client
+        with (
+            patch("peakbagger.cli.PeakBaggerClient") as mock_client_class,
+            patch("peakbagger.cli.PeakBaggerScraper") as mock_scraper_class,
+            patch("peakbagger.cli.PeakFormatter") as mock_formatter_class,
+        ):
+            mock_client = Mock()
+            mock_client.get.return_value = "<html>Ascents</html>"
+            mock_client_class.return_value = mock_client
 
-                    mock_scraper = Mock()
-                    # Create more ascents than limit
-                    ascents = [
-                        AscentModel(
-                            ascent_id=str(i), climber_name=f"Climber {i}", date="2024-01-01"
-                        )
-                        for i in range(10)
-                    ]
-                    mock_scraper.parse_peak_ascents.return_value = ascents
-                    mock_scraper_class.return_value = mock_scraper
+            mock_scraper = Mock()
+            # Create more ascents than limit
+            ascents = [
+                AscentModel(ascent_id=str(i), climber_name=f"Climber {i}", date="2024-01-01")
+                for i in range(10)
+            ]
+            mock_scraper.parse_peak_ascents.return_value = ascents
+            mock_scraper_class.return_value = mock_scraper
 
-                    mock_formatter = Mock()
-                    mock_formatter_class.return_value = mock_formatter
+            mock_formatter = Mock()
+            mock_formatter_class.return_value = mock_formatter
 
-                    result = runner.invoke(main, ["peak", "ascents", "--limit", "5", "999"])
+            result = runner.invoke(main, ["peak", "ascents", "--limit", "5", "999"])
 
-                    assert result.exit_code == 0
-                    # Should only format 5 ascents
-                    call_args = mock_formatter.format_search_results.call_args
-                    if call_args:
-                        formatted_ascents = call_args[0][0]
-                        assert len(formatted_ascents) == 5
+            assert result.exit_code == 0
+            # Should only format 5 ascents
+            call_args = mock_formatter.format_search_results.call_args
+            if call_args:
+                formatted_ascents = call_args[0][0]
+                assert len(formatted_ascents) == 5
 
 
 class TestStatsCommand:
@@ -248,20 +254,22 @@ class TestStatsCommand:
         """Test stats when no ascents found."""
         runner = CliRunner()
 
-        with patch("peakbagger.cli.PeakBaggerClient") as mock_client_class:
-            with patch("peakbagger.cli.PeakBaggerScraper") as mock_scraper_class:
-                mock_client = Mock()
-                mock_client.get.return_value = "<html>No ascents</html>"
-                mock_client_class.return_value = mock_client
+        with (
+            patch("peakbagger.cli.PeakBaggerClient") as mock_client_class,
+            patch("peakbagger.cli.PeakBaggerScraper") as mock_scraper_class,
+        ):
+            mock_client = Mock()
+            mock_client.get.return_value = "<html>No ascents</html>"
+            mock_client_class.return_value = mock_client
 
-                mock_scraper = Mock()
-                mock_scraper.parse_peak_ascents.return_value = []
-                mock_scraper_class.return_value = mock_scraper
+            mock_scraper = Mock()
+            mock_scraper.parse_peak_ascents.return_value = []
+            mock_scraper_class.return_value = mock_scraper
 
-                result = runner.invoke(main, ["peak", "stats", "999"])
+            result = runner.invoke(main, ["peak", "stats", "999"])
 
-                assert result.exit_code == 0
-                mock_client.close.assert_called_once()
+            assert result.exit_code == 0
+            mock_client.close.assert_called_once()
 
     def test_stats_with_exception(self):
         """Test stats exception handling."""
