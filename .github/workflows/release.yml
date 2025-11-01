@@ -47,12 +47,23 @@ jobs:
         run: uv pip install --system "setuptools>=61.0"
 
       - name: Release with Python Semantic Release
+        id: semantic-release
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
-        run: uv run semantic-release version
+        run: |
+          set +e
+          uv run semantic-release version
+          echo "exit_code=$?" >> $GITHUB_OUTPUT
+          set -e
+          # Check if dist/ directory was created (indicates new release)
+          if [ -d "dist" ]; then
+            echo "new_release=true" >> $GITHUB_OUTPUT
+          else
+            echo "new_release=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Publish to PyPI
-        if: steps.app-token.outcome == 'success'
+        if: steps.semantic-release.outputs.new_release == 'true'
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           print-hash: true
