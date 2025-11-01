@@ -105,49 +105,14 @@ BREAKING CHANGE: removed --full flag in favor of --detailed"
 
 ## Release Process
 
-Releases are **fully automated** via GitHub Actions:
+Releases are **fully automated** via GitHub Actions when you merge to `main`:
 
-1. Merge PR to `main` with conventional commit message
-2. GitHub Actions analyzes commits and bumps version
-3. CHANGELOG.md is updated
-4. Git tag and GitHub release are created
-5. Package is built and published to PyPI
+1. GitHub Actions analyzes commits and bumps version
+2. CHANGELOG.md is updated
+3. Git tag and GitHub release are created
+4. Package is built and published to PyPI
 
-**No manual steps needed.**
-
-### PyPI Publishing Setup (Maintainers Only)
-
-One-time setup to enable automated PyPI publishing:
-
-1. Go to <https://pypi.org/manage/account/publishing/>
-2. Click "Add a new pending publisher"
-3. Fill in:
-   - **PyPI Project Name**: `peakbagger`
-   - **Owner**: `dreamiurg`
-   - **Repository**: `peakbagger-cli`
-   - **Workflow**: `release.yml`
-   - **Environment**: (leave blank)
-4. Click "Add"
-
-After the first successful publish, the pending publisher becomes active and all future releases publish automatically.
-
-**Security:** Uses Trusted Publishing (OIDC) - no API tokens needed.
-
-**Test build locally:**
-
-```bash
-uv build
-ls -lh dist/
-uv run twine check dist/*
-```
-
-**Troubleshooting:** Check GitHub Actions logs at <https://github.com/dreamiurg/peakbagger-cli/actions>
-
-## Additional Resources
-
-- **Project guidelines**: See `CLAUDE.md` for detailed development rules
-- **GitHub App setup**: See `.github/GITHUB_APP_SETUP.md` for release workflow configuration
-- **Conventional Commits**: <https://www.conventionalcommits.org/>
+**No manual steps needed** - just use conventional commit messages.
 
 ## License
 
