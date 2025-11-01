@@ -220,15 +220,15 @@ Releases are **fully automated** via GitHub Actions:
 
 1. Push commits to `main` branch
 2. GitHub Actions runs python-semantic-release
-3. Version is bumped in pyproject.toml and **init**.py
-4. CHANGELOG.md is updated
+3. Version is bumped in [pyproject.toml](pyproject.toml) and `__init__.py`
+4. [CHANGELOG.md](CHANGELOG.md) is updated
 5. Git tag and GitHub release are created automatically
 
 ### Configuration
 
-Configuration is in `pyproject.toml` under `[tool.semantic_release]` section.
+Configuration is in [pyproject.toml](pyproject.toml) under `[tool.semantic_release]` section.
 
-The workflow is defined in `.github/workflows/release.yml`.
+The workflow is defined in [.github/workflows/release.yml](.github/workflows/release.yml).
 
 ### Manual Release Testing
 
@@ -265,24 +265,24 @@ When changing functionality:
 
 - Update code in `peakbagger/`
 - Update relevant examples in `examples/` if applicable
-- Update README.md if user-facing behavior changes
-- Update CONTRIBUTING.md if development process changes
+- Update [README.md](README.md) if user-facing behavior changes
+- Update [CONTRIBUTING.md](CONTRIBUTING.md) if development process changes
 
 ### Critical: When Output Formats Change
 
 **ALWAYS check and update documentation** when modifying CLI output:
 
-1. **README.md** - Check all "Sample Output" examples:
+1. [README.md](README.md) - Check all "Sample Output" examples:
    - Search command text output (line ~108)
    - Info command text output (line ~150)
    - Info command JSON output (line ~165)
 
-2. **CONTRIBUTING.md** - Check command examples in:
+2. [CONTRIBUTING.md](CONTRIBUTING.md) - Check command examples in:
    - Testing section
    - Development tips
    - Release examples
 
-3. **CLAUDE.md** - Update if new fields/formats are added
+3. [CLAUDE.md](CLAUDE.md) - Update if new fields/formats are added
 
 Output changes include:
 
@@ -324,7 +324,7 @@ Output changes include:
 
 If instructions conflict or are unclear:
 
-1. Check CONTRIBUTING.md for release process details
-2. Check pyproject.toml for configuration
+1. Check [CONTRIBUTING.md](CONTRIBUTING.md) for release process details
+2. Check [pyproject.toml](pyproject.toml) for configuration
 3. Check this file for project-specific rules
 4. When in doubt, ask the user before proceeding
