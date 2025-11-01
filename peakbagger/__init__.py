@@ -1,3 +1,3 @@
 """PeakBagger CLI - A command-line interface for PeakBagger.com"""
 
-__version__ = "1.8.0"
+__version__ = "1.9.0"

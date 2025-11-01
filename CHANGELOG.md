@@ -129,6 +129,52 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 
 <!-- version list -->
 
+## v1.9.0 (2025-11-01)
+
+### Continuous Integration
+
+- **deps**: Bump actions/checkout from 4 to 5
+  ([#42](https://github.com/dreamiurg/peakbagger-cli/pull/42),
+  [`65abe17`](https://github.com/dreamiurg/peakbagger-cli/commit/65abe17b3c42fe4920c994d921188d825f0e8052))
+
+- **deps**: Bump amannn/action-semantic-pull-request from 5 to 6
+  ([#43](https://github.com/dreamiurg/peakbagger-cli/pull/43),
+  [`0c5b20d`](https://github.com/dreamiurg/peakbagger-cli/commit/0c5b20d66ab9a01a048ee9919686fc67ed9b617c))
+
+- **deps**: Bump astral-sh/setup-uv from 5 to 7
+  ([#41](https://github.com/dreamiurg/peakbagger-cli/pull/41),
+  [`43e2b4c`](https://github.com/dreamiurg/peakbagger-cli/commit/43e2b4c77d0d64a940cc0ca04978e9ecf77891ef))
+
+### Documentation
+
+- Add PyPI badges to README ([#44](https://github.com/dreamiurg/peakbagger-cli/pull/44),
+  [`1ba35b8`](https://github.com/dreamiurg/peakbagger-cli/commit/1ba35b816aa4e9cf5361d1f5e88c2bcb4b49a37c))
+
+- Add reference to GitHub App setup guide for maintainers
+  ([#40](https://github.com/dreamiurg/peakbagger-cli/pull/40),
+  [`73851f8`](https://github.com/dreamiurg/peakbagger-cli/commit/73851f839739e72a929b467c2194fc4398acbe95))
+
+- Convert file name references to links in CLAUDE.md
+  ([#44](https://github.com/dreamiurg/peakbagger-cli/pull/44),
+  [`1ba35b8`](https://github.com/dreamiurg/peakbagger-cli/commit/1ba35b816aa4e9cf5361d1f5e88c2bcb4b49a37c))
+
+- Remove license and typed badges from README
+  ([#44](https://github.com/dreamiurg/peakbagger-cli/pull/44),
+  [`1ba35b8`](https://github.com/dreamiurg/peakbagger-cli/commit/1ba35b816aa4e9cf5361d1f5e88c2bcb4b49a37c))
+
+- Remove maintainer-only sections from CONTRIBUTING.md
+  ([#44](https://github.com/dreamiurg/peakbagger-cli/pull/44),
+  [`1ba35b8`](https://github.com/dreamiurg/peakbagger-cli/commit/1ba35b816aa4e9cf5361d1f5e88c2bcb4b49a37c))
+
+- Simplify CONTRIBUTING.md ([#44](https://github.com/dreamiurg/peakbagger-cli/pull/44),
+  [`1ba35b8`](https://github.com/dreamiurg/peakbagger-cli/commit/1ba35b816aa4e9cf5361d1f5e88c2bcb4b49a37c))
+
+### Features
+
+- Add automated PyPI publishing ([#44](https://github.com/dreamiurg/peakbagger-cli/pull/44),
+  [`1ba35b8`](https://github.com/dreamiurg/peakbagger-cli/commit/1ba35b816aa4e9cf5361d1f5e88c2bcb4b49a37c))
+
+
 ## v1.8.0 (2025-10-25)
 
 ### Bug Fixes
