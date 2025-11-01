@@ -5,8 +5,6 @@
 [![Python Version](https://img.shields.io/pypi/pyversions/peakbagger.svg)](https://pypi.org/project/peakbagger/)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/dreamiurg/peakbagger-cli/badge)](https://securityscorecards.dev/viewer/?uri=github.com/dreamiurg/peakbagger-cli)
 [![codecov](https://codecov.io/gh/dreamiurg/peakbagger-cli/branch/main/graph/badge.svg)](https://codecov.io/gh/dreamiurg/peakbagger-cli)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/dreamiurg/peakbagger-cli/blob/main/LICENSE)
-[![Types: Typed](https://img.shields.io/badge/types-typed-brightgreen.svg)](https://github.com/dreamiurg/peakbagger-cli/blob/main/peakbagger)
 
 A command-line interface for searching and retrieving mountain peak data from [PeakBagger.com](https://www.peakbagger.com).
 
