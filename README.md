@@ -1,6 +1,8 @@
 # peakbagger-cli
 
 [![CI](https://github.com/dreamiurg/peakbagger-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/dreamiurg/peakbagger-cli/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/peakbagger.svg)](https://pypi.org/project/peakbagger/)
+[![Python Version](https://img.shields.io/pypi/pyversions/peakbagger.svg)](https://pypi.org/project/peakbagger/)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/dreamiurg/peakbagger-cli/badge)](https://securityscorecards.dev/viewer/?uri=github.com/dreamiurg/peakbagger-cli)
 [![codecov](https://codecov.io/gh/dreamiurg/peakbagger-cli/branch/main/graph/badge.svg)](https://codecov.io/gh/dreamiurg/peakbagger-cli)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/dreamiurg/peakbagger-cli/blob/main/LICENSE)
