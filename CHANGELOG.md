@@ -129,6 +129,15 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 
 <!-- version list -->
 
+## v1.9.1 (2025-11-01)
+
+### Bug Fixes
+
+- Correct PyPI package name and GitHub URLs in README
+  ([#45](https://github.com/dreamiurg/peakbagger-cli/pull/45),
+  [`83fe830`](https://github.com/dreamiurg/peakbagger-cli/commit/83fe830102dbbef27ba62513ba21b9c6dfe5e35b))
+
+
 ## v1.9.0 (2025-11-01)
 
 ### Continuous Integration
