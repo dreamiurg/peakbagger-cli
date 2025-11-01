@@ -28,11 +28,11 @@ Run directly without installation using `uvx`:
 
 ```bash
 # Run commands directly
-uvx --from peakbagger-cli peakbagger peak search "Mount Rainier"
-uvx --from peakbagger-cli peakbagger peak show 2296
+uvx peakbagger peak search "Mount Rainier"
+uvx peakbagger peak show 2296
 
 # With options
-uvx --from peakbagger-cli peakbagger peak search "Denali" --format json
+uvx peakbagger peak search "Denali" --format json
 ```
 
 This fetches and runs the latest version automatically. No installation or virtual environment needed.
@@ -40,7 +40,7 @@ This fetches and runs the latest version automatically. No installation or virtu
 ### From PyPI
 
 ```bash
-pip install peakbagger-cli
+pip install peakbagger
 ```
 
 ### From Source
@@ -48,7 +48,7 @@ pip install peakbagger-cli
 Using `uv`:
 
 ```bash
-git clone https://github.com/yourusername/peakbagger-cli.git
+git clone https://github.com/dreamiurg/peakbagger-cli.git
 cd peakbagger-cli
 uv sync
 ```
@@ -56,7 +56,7 @@ uv sync
 Using `pip`:
 
 ```bash
-git clone https://github.com/yourusername/peakbagger-cli.git
+git clone https://github.com/dreamiurg/peakbagger-cli.git
 cd peakbagger-cli
 pip install -e .
 ```
@@ -634,8 +634,8 @@ python3 --version  # Should be 3.12 or higher
 
 ## Support
 
-- **Bug Reports & Feature Requests**: [GitHub Issues](https://github.com/yourusername/peakbagger-cli/issues)
-- **Questions & Discussions**: [GitHub Discussions](https://github.com/yourusername/peakbagger-cli/discussions)
+- **Bug Reports & Feature Requests**: [GitHub Issues](https://github.com/dreamiurg/peakbagger-cli/issues)
+- **Questions & Discussions**: [GitHub Discussions](https://github.com/dreamiurg/peakbagger-cli/discussions)
 
 ## License
 
