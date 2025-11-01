@@ -6,8 +6,8 @@ We release patches for security vulnerabilities in the latest version only.
 
 | Version | Supported          |
 | ------- | ------------------ |
-| Latest  | :white_check_mark: |
-| < Latest| :x:                |
+| Latest  | Yes                |
+| < Latest| No                 |
 
 ## Reporting a Vulnerability
 
@@ -21,7 +21,7 @@ We take security seriously. If you discover a security vulnerability in peakbagg
 2. Click "Report a vulnerability"
 3. Provide a detailed description of the vulnerability
 
-**Alternative:** Email the maintainer directly at <the@dreamiurg.net> with:
+**Alternative:** Email the maintainer directly with:
 
 - Description of the vulnerability
 - Steps to reproduce
