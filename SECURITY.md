@@ -1,73 +1,49 @@
 # Security Policy
 
-## Supported Versions
+## About This Project
 
-We release patches for security vulnerabilities in the latest version only.
-
-| Version | Supported          |
-| ------- | ------------------ |
-| Latest  | Yes                |
-| < Latest| No                 |
+This is a hobby project maintained by a single developer in my spare time. I'll do my best to address
+security issues, but please set realistic expectations.
 
 ## Reporting a Vulnerability
 
-We take security seriously. If you discover a security vulnerability in peakbagger-cli, please report it responsibly.
+If you find a security issue, please report it privately:
 
-### How to Report
-
-**Preferred:** Use GitHub's Security Advisories feature:
+**Option 1 (Preferred):** Use GitHub's private vulnerability reporting:
 
 1. Go to <https://github.com/dreamiurg/peakbagger-cli/security/advisories>
 2. Click "Report a vulnerability"
-3. Provide a detailed description of the vulnerability
+3. Describe the issue and how to reproduce it
 
-**Alternative:** Email the maintainer directly with:
+**Option 2:** Open a regular GitHub issue if the vulnerability is already public or low severity.
 
-- Description of the vulnerability
-- Steps to reproduce
-- Potential impact
-- Suggested fix (if you have one)
+## What to Expect
 
-### What to Expect
+**Response time:** I'll try to respond within a week or two, but it might take longer depending on my
+availability. This is a hobby project, not my day job.
 
-- **Initial Response:** Within 48 hours
-- **Status Update:** Within 5 business days
-- **Fix Timeline:** Depends on severity:
-  - Critical: Within 7 days
-  - High: Within 30 days
-  - Medium: Within 90 days
-  - Low: Best effort
+**Fixes:** Critical issues affecting data security or remote code execution will be prioritized. Less
+severe issues will be addressed as time permits.
 
-## Security Scope
+**Supported versions:** Only the latest release gets security updates. Old versions won't be patched.
 
-### In Scope
+## What Counts as a Security Issue?
 
-Security issues that qualify for reporting:
+**Real security issues:**
 
-- Vulnerabilities in package dependencies
-- Command injection vulnerabilities
-- Authentication or authorization bypass
-- Exposure of sensitive data
-- Cross-site scripting (XSS) in HTML parsing
-- Denial of service issues
+- Command injection or code execution vulnerabilities
+- Exposure of sensitive data (credentials, personal info)
+- Dependency vulnerabilities that affect this tool's usage
 
-### Out of Scope
+**Not security issues:**
 
-The following are NOT considered security issues:
+- Feature requests or general bugs
+- Issues that require physical access to your computer
+- Vulnerabilities in dependencies (report those upstream)
+- Rate limiting bypasses (that's between you and PeakBagger.com)
 
-- Feature requests
-- Questions about usage
-- Bugs without security impact
-- Issues in third-party dependencies (report to those projects)
-- Social engineering attacks
-- Physical attacks
-- Issues requiring compromised credentials
+## Using This Tool Safely
 
-## Best Practices
-
-When using peakbagger-cli:
-
-- Keep the package updated to the latest version
-- Use the official PyPI package: `pip install peakbagger`
-- Do not expose API credentials in version control
-- Follow rate limiting guidelines to avoid being blocked
+- Install from PyPI: `pip install peakbagger`
+- Keep it updated to get latest fixes
+- This tool scrapes public data from PeakBagger.com - there are no credentials or sensitive data to protect
