@@ -43,6 +43,9 @@ jobs:
       - name: Install dependencies
         run: uv sync
 
+      - name: Upgrade setuptools
+        run: uv pip install --system "setuptools>=61.0"
+
       - name: Release with Python Semantic Release
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
