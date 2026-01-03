@@ -166,6 +166,8 @@ class TestAscentAnalyzerCalculateStatistics:
         )
 
         # Wide window should capture more ascents in seasonal pattern
+        assert stats_wide.seasonal_pattern is not None
+        assert stats_narrow.seasonal_pattern is not None
         assert sum(stats_wide.seasonal_pattern.values()) >= sum(
             stats_narrow.seasonal_pattern.values()
         )
@@ -183,6 +185,7 @@ class TestAscentAnalyzerCalculateStatistics:
         )
 
         # Both ascents should be within seasonal window due to wraparound handling
+        assert stats.seasonal_pattern is not None
         assert sum(stats.seasonal_pattern.values()) >= 1
 
     def test_calculate_statistics_invalid_date_formats(self):
@@ -465,4 +468,5 @@ class TestAscentAnalyzerEdgeCases:
         )
 
         # With 365-day window, all ascents should be in seasonal pattern
+        assert stats.seasonal_pattern is not None
         assert sum(stats.seasonal_pattern.values()) == 12

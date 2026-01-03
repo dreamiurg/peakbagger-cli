@@ -37,8 +37,7 @@ dev = [
     "pytest-vcr>=1.0.2",
     "ruff>=0.8.0",
     "pre-commit>=3.0.0",
-    "mypy>=1.18.2",
-    "types-beautifulsoup4>=4.12.0.20250516",
+    "ty>=0.0.8",
     "vcrpy>=7.0.0",
 ]
 
@@ -94,12 +93,8 @@ python_files = "test_*.py"
 python_functions = "test_*"
 addopts = "-v --cov=peakbagger --cov-report=term-missing"
 
-[tool.mypy]
-python_version = "3.12"
-warn_return_any = true
-warn_unused_configs = true
-disallow_untyped_defs = false
-ignore_missing_imports = true
+[tool.ty.environment]
+python-version = "3.12"
 
 [tool.semantic_release]
 version_toml = ["pyproject.toml:project.version"]
@@ -132,12 +127,11 @@ tag_format = "$version"
 [dependency-groups]
 dev = [
     "commitizen>=4.9.1",
-    "mypy>=1.18.2",
     "pre-commit>=4.3.0",
     "pytest-cov>=7.0.0",
     "pytest-vcr>=1.0.2",
     "python-semantic-release>=10.4.1",
     "twine>=6.2.0",
-    "types-beautifulsoup4>=4.12.0.20250516",
+    "ty>=0.0.8",
     "vcrpy>=7.0.0",
 ]
