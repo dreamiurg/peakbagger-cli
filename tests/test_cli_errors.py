@@ -134,7 +134,7 @@ class TestSearchCommand:
                     name="Test Peak",
                     url="peak.aspx?pid=1",
                     pid="1",
-                    elevation_ft="1000",
+                    elevation_ft=1000,
                     location="USA",
                 )
             ]

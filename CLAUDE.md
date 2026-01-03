@@ -314,7 +314,7 @@ Output changes include:
 - pytest + pytest-cov
 - ruff
 - pre-commit
-- mypy
+- ty
 - python-semantic-release
 - commitizen
 

@@ -54,8 +54,8 @@ jobs:
       - name: Run ruff format check
         run: uv run ruff format --check peakbagger tests
 
-      - name: Run mypy
-        run: uv run mypy peakbagger --pretty
+      - name: Run ty
+        run: uvx ty check peakbagger
         continue-on-error: true
 
   test:
