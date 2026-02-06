@@ -26,25 +26,6 @@ updates:
           - "minor"
           - "patch"
 
-  # Node.js dependencies for semantic-release
-  - package-ecosystem: "npm"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    open-pull-requests-limit: 3
-    labels:
-      - "dependencies"
-      - "nodejs"
-    commit-message:
-      prefix: "chore"
-      include: "scope"
-    groups:
-      semantic-release:
-        patterns:
-          - "@semantic-release/*"
-          - "semantic-release"
-
   # GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -58,3 +39,7 @@ updates:
     commit-message:
       prefix: "ci"
       include: "scope"
+    groups:
+      actions:
+        patterns:
+          - "*"
