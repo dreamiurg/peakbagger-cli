@@ -178,6 +178,21 @@ PeakBagger.com.
 - **Bug Reports & Features**: [GitHub Issues](https://github.com/dreamiurg/peakbagger-cli/issues)
 - **Questions**: [GitHub Discussions](https://github.com/dreamiurg/peakbagger-cli/discussions)
 
+## Other Mountaineering & Outdoors Tools
+
+I climb, scramble, and hike a lot, and I keep building tools around it.
+If this one's useful to you, the others might be too:
+
+- **[mountaineers-mcp](https://github.com/dreamiurg/mountaineers-mcp)** --
+  MCP server that lets AI assistants search and browse mountaineers.org.
+  Activities, courses, trip reports, your account data.
+- **[mountaineers-assistant](https://github.com/dreamiurg/mountaineers-assistant)** --
+  Chrome extension that syncs your mountaineers.org activity history and
+  shows you stats, trends, and climbing partners you can't see on the site.
+- **[claude-mountaineering-skills](https://github.com/dreamiurg/claude-mountaineering-skills)** --
+  Claude Code plugin that generates route beta reports by pulling conditions,
+  forecasts, and trip reports from multiple mountaineering sites.
+
 ## License
 
 MIT License - see [LICENSE](LICENSE) file for details.
