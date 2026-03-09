@@ -24,7 +24,7 @@ def fetch_peak_details(peak_id: str) -> dict[str, Any] | None:
             text=True,
             check=True,
         )
-        return json.loads(result.stdout)  # type: ignore[no-any-return]
+        return json.loads(result.stdout)
     except subprocess.CalledProcessError as e:
         print(f"Error fetching peak {peak_id}: {e}", file=sys.stderr)
         return None

@@ -242,7 +242,7 @@ class TestAscentAnalyzerFilterByDateRange:
         filtered = AscentAnalyzer.filter_by_date_range(dated_ascents, after=after_date)
 
         assert len(filtered) == 3  # 2022, 2023, 2024
-        assert all(a.date and a.date >= "2022-01-01" for a in filtered)  # type: ignore[operator]
+        assert all(a.date and a.date >= "2022-01-01" for a in filtered)
 
     def test_filter_by_date_range_before_only(self, dated_ascents):
         """Test filtering with only 'before' parameter."""
@@ -250,7 +250,7 @@ class TestAscentAnalyzerFilterByDateRange:
         filtered = AscentAnalyzer.filter_by_date_range(dated_ascents, before=before_date)
 
         assert len(filtered) == 2  # 2020, 2021
-        assert all(a.date and a.date <= "2022-01-01" for a in filtered)  # type: ignore[operator]
+        assert all(a.date and a.date <= "2022-01-01" for a in filtered)
 
     def test_filter_by_date_range_both_bounds(self, dated_ascents):
         """Test filtering with both 'after' and 'before' parameters."""

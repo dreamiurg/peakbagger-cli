@@ -32,5 +32,6 @@ jobs:
           PR_URL: ${{ github.event.pull_request.html_url }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh pr comment "$PR_URL" --body \
-            "This is a **major version update** and will not be auto-merged. Please review the changelog for breaking changes before merging manually."
+          BODY="This is a **major version update** and will not be auto-merged."
+          BODY="$BODY Please review the changelog for breaking changes before merging manually."
+          gh pr comment "$PR_URL" --body "$BODY"
