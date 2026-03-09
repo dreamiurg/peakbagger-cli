@@ -132,7 +132,7 @@ class Ascent(BaseModel):
         }
 
         # Add trip report info
-        result["trip_report"] = {
+        trip_report: dict[str, Any] = {
             "has_report": self.has_trip_report,
             "word_count": self.trip_report_words,
         }
@@ -166,9 +166,10 @@ class Ascent(BaseModel):
 
         # Add full trip report text if present
         if self.trip_report_text:
-            result["trip_report"]["text"] = self.trip_report_text
+            trip_report["text"] = self.trip_report_text
         if self.trip_report_url:
-            result["trip_report"]["external_url"] = self.trip_report_url
+            trip_report["external_url"] = self.trip_report_url
+        result["trip_report"] = trip_report
 
         return result
 
