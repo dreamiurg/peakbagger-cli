@@ -5,6 +5,27 @@
 
 * add field parity and URLs to ascent show text output ([#18](https://github.com/dreamiurg/peakbagger-cli/issues/18)) ([5718c82](https://github.com/dreamiurg/peakbagger-cli/commit/5718c82eaeae17e83599cae22c29335f4daf8df2))
 
+## [1.10.0](https://github.com/dreamiurg/peakbagger-cli/compare/v1.9.3...v1.10.0) (2026-04-01)
+
+
+### Features
+
+* add Python library API for programmatic use ([#69](https://github.com/dreamiurg/peakbagger-cli/issues/69)) ([6e4f918](https://github.com/dreamiurg/peakbagger-cli/commit/6e4f91853bf6cf5ae7f78bfe0d0a3af016e4b00e))
+
+
+### Bug Fixes
+
+* correctly detect has_gpx and has_trip_report in ascent detail ([#67](https://github.com/dreamiurg/peakbagger-cli/issues/67)) ([fb8b0a1](https://github.com/dreamiurg/peakbagger-cli/commit/fb8b0a14f53d6ff42462f26fe5eb3576efb3e7a0))
+* remove invalid package-name input from release-please ([#72](https://github.com/dreamiurg/peakbagger-cli/issues/72)) ([b8e689f](https://github.com/dreamiurg/peakbagger-cli/commit/b8e689fd1948dd420ce1fb30b274c98a5a496386))
+* resolve code scanning alerts ([#74](https://github.com/dreamiurg/peakbagger-cli/issues/74)) ([5fb7cc9](https://github.com/dreamiurg/peakbagger-cli/commit/5fb7cc9217a14f376e1e282c917c5de02068bb9b))
+* suppress CodeQL false positives in formatters.py ([#57](https://github.com/dreamiurg/peakbagger-cli/issues/57)) ([6f5d958](https://github.com/dreamiurg/peakbagger-cli/commit/6f5d958ae5d084d64a7a9fd5700bc3da7fa68689))
+
+
+### Documentation
+
+* add cross-reference to other mountaineering tools ([#66](https://github.com/dreamiurg/peakbagger-cli/issues/66)) ([0249776](https://github.com/dreamiurg/peakbagger-cli/commit/0249776b48379fc0de4ed8cf4f951d7d4bcb518c))
+* streamline README by removing verbose sections ([#55](https://github.com/dreamiurg/peakbagger-cli/issues/55)) ([a13ecdf](https://github.com/dreamiurg/peakbagger-cli/commit/a13ecdf5f08dd055c28f0ed99bc4746199dec210))
+
 ## [1.6.3](https://github.com/dreamiurg/peakbagger-cli/compare/v1.6.2...v1.6.3) (2025-10-24)
 
 
