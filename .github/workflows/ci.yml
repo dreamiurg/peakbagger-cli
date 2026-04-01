@@ -129,7 +129,7 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v5
       - name: Install Semgrep
-        run: pip install semgrep
+        run: pip install semgrep==1.139.0
       - name: Run Semgrep
         run: semgrep scan --config auto --error .
 

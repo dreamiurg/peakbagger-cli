@@ -1,7 +1,6 @@
 """Output formatters for peak data (Rich tables and JSON)."""
 
 import json
-import re
 from datetime import datetime
 from typing import Any
 
@@ -11,26 +10,12 @@ from rich.text import Text
 
 from peakbagger.models import Ascent, AscentStatistics, Peak, SearchResult
 
-# Pattern matches emoji ranges. This regex is for display formatting only
-# (removing emojis from scraped text). Overlapping ranges are intentional
-# for comprehensive emoji coverage. Not used for security validation or
-# input sanitization.
-_EMOJI_PATTERN = re.compile(
-    "["
-    "\U0001f600-\U0001f64f"  # emoticons
-    "\U0001f300-\U0001f5ff"  # symbols & pictographs
-    "\U0001f680-\U0001f6ff"  # transport & map symbols
-    "\U0001f1e0-\U0001f1ff"  # flags (iOS)
-    "\U00002702-\U000027b0"
-    "\U000024c2-\U0001f251"
-    "]+",
-    flags=re.UNICODE,
-)
-
 
 def _strip_emojis(text: str) -> str:
-    """Remove emoji characters from text."""
-    return _EMOJI_PATTERN.sub("", text).strip()
+    """Remove emoji characters from text for clean table display."""
+    import unicodedata
+
+    return "".join(c for c in text if unicodedata.category(c) not in ("So", "Sk")).strip()
 
 
 class PeakFormatter:
