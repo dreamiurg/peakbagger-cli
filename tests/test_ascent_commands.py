@@ -48,3 +48,25 @@ def test_ascent_show_command_json(cli_runner) -> None:
     # Check that trip report text was extracted
     assert "text" in data["trip_report"]
     assert len(data["trip_report"]["text"]) > 100
+
+
+@pytest.mark.vcr()
+def test_ascent_show_detects_gpx_and_trip_report(cli_runner) -> None:
+    """Test that has_gpx and has_trip_report are correctly detected for ascent 3007019.
+
+    This ascent (Longs Peak, 2025-10-05) has both a GPX track and a trip report.
+    Regression test for: has_gpx was never set (GPX lives in right-side table);
+    has_trip_report was never set even when trip_report_text was populated.
+    """
+    result = cli_runner.invoke(main, ["ascent", "show", "3007019", "--format", "json"])
+
+    assert result.exit_code == 0
+
+    output_lines = result.output.strip().split("\n")
+    json_start = next(i for i, line in enumerate(output_lines) if line.startswith("{"))
+    data = json.loads("\n".join(output_lines[json_start:]))
+
+    assert data["has_gpx"] is True
+    assert data["trip_report"]["has_report"] is True
+    assert "text" in data["trip_report"]
+    assert len(data["trip_report"]["text"]) > 100
