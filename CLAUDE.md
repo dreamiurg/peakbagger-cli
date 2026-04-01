@@ -57,11 +57,11 @@ uv run pytest --cov=peakbagger
 # Build package
 uv build
 
-# Preview next release (dry-run)
-uv run semantic-release version --print
-
-# Create release (done automatically via GitHub Actions)
-# Just merge PR to main with conventional commit title
+# Makefile shortcuts (mirrors CI)
+make check      # lint + typecheck + complexity
+make ci         # check + coverage (85% threshold)
+make coverage   # tests with coverage report
+make complexity # lizard complexity analysis
 ```
 
 ## Commit Message Format
@@ -212,42 +212,23 @@ peakbagger/
 
 ## Release Process
 
-This project uses **python-semantic-release** for automated version management and releases.
+This project uses **Release Please** for automated version management and releases.
 
-### Automated Releases
+### How It Works
 
-Releases are **fully automated** via GitHub Actions:
-
-1. Push commits to `main` branch
-2. GitHub Actions runs python-semantic-release
-3. Version is bumped in [pyproject.toml](pyproject.toml) and `__init__.py`
-4. [CHANGELOG.md](CHANGELOG.md) is updated
-5. Git tag and GitHub release are created automatically
+1. Push conventional commits to `main` branch
+2. Release Please accumulates changes in an ongoing release PR
+3. Merge the release PR to cut a new version
+4. GitHub Actions builds and publishes to PyPI via OIDC trusted publishing
 
 ### Configuration
 
-Configuration is in [pyproject.toml](pyproject.toml) under `[tool.semantic_release]` section.
-
 The workflow is defined in [.github/workflows/release.yml](.github/workflows/release.yml).
-
-### Manual Release Testing
-
-To test what would be released:
-
-```bash
-# Print the next version without making changes
-uv run semantic-release version --print
-
-# Or test release without pushing (will update files locally)
-uv run semantic-release version --no-push --no-vcs-release
-```
 
 ### Version Strategy
 
-- Currently in `0.x.x` (pre-1.0 indicates beta/unstable)
-- Breaking changes in 0.x still bump MINOR (0.1.0 → 0.2.0)
-- After 1.0.0, breaking changes bump MAJOR
-- Releases are created automatically on push to main
+- Version bumps follow conventional commit prefixes: `feat:` = minor, `fix:` = patch, `feat!:` or `BREAKING CHANGE:` = major
+- Currently at v1.x (post-1.0 release)
 
 ## Common Mistakes to Avoid
 
@@ -315,8 +296,6 @@ Output changes include:
 - ruff
 - pre-commit
 - ty
-- python-semantic-release
-- commitizen
 
 **Always use `uv add` and `uv add --dev`** to manage dependencies.
 

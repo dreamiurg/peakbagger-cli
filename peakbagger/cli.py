@@ -12,7 +12,8 @@ from peakbagger.logging_config import configure_logging
 from peakbagger.scraper import PeakBaggerScraper
 
 if TYPE_CHECKING:
-    from peakbagger.models import Peak
+    from peakbagger.models import Ascent, Peak
+    from peakbagger.statistics import AscentAnalyzer
 
 # Module-level console for error messages (stderr to keep stdout clean for data)
 _console = Console(stderr=True)
@@ -28,6 +29,53 @@ def _error(message: str) -> None:
         message: Error message to display
     """
     _console.print(f"[bold red]Error:[/bold red] {message}")
+
+
+def _apply_date_filters(
+    ascent_list: list["Ascent"],
+    analyzer: "AscentAnalyzer",
+    within: str | None,
+    after: str | None,
+    before: str | None,
+) -> list["Ascent"]:
+    """Apply date filters to an ascent list.
+
+    Handles mutually exclusive --within vs --after/--before filters.
+    Raises click.Abort on invalid input.
+
+    Args:
+        ascent_list: List of ascents to filter.
+        analyzer: AscentAnalyzer instance for filtering operations.
+        within: Relative period string (e.g., '3m', '1y', '10d').
+        after: ISO date string for lower bound filter.
+        before: ISO date string for upper bound filter.
+
+    Returns:
+        Filtered list of ascents.
+    """
+    from datetime import datetime
+
+    if within and (after or before):
+        _error("--within cannot be combined with --after/--before")
+        raise click.Abort()
+
+    if within:
+        try:
+            period = analyzer.parse_within_period(within)
+            after_date = datetime.now() - period
+            return analyzer.filter_by_date_range(ascent_list, after=after_date)
+        except ValueError as e:
+            _error(str(e))
+            raise click.Abort() from e
+
+    if after or before:
+        after_date_opt = datetime.strptime(after, "%Y-%m-%d") if after else None
+        before_date_opt = datetime.strptime(before, "%Y-%m-%d") if before else None
+        return analyzer.filter_by_date_range(
+            ascent_list, after=after_date_opt, before=before_date_opt
+        )
+
+    return ascent_list
 
 
 @click.group()
@@ -298,14 +346,7 @@ def ascents(
 
       peakbagger peak ascents 1798 --format json
     """
-    from datetime import datetime
-
     from peakbagger.statistics import AscentAnalyzer
-
-    # Validate mutually exclusive date filters
-    if within and (after or before):
-        _error("--within cannot be combined with --after/--before")
-        raise click.Abort()
 
     client: PeakBaggerClient = PeakBaggerClient(rate_limit_seconds=rate_limit)
     scraper: PeakBaggerScraper = PeakBaggerScraper()
@@ -313,59 +354,32 @@ def ascents(
     analyzer: AscentAnalyzer = AscentAnalyzer()
 
     try:
-        # Fetch ascent list page
         url = "/climber/PeakAscents.aspx"
         params = {"pid": peak_id, "sort": "ascentdate", "u": "ft", "y": "9999"}
         html = client.get(url, params=params)
 
-        # If dump-html flag is set, print HTML and exit
         if ctx.obj.get("dump_html"):
             click.echo(html)
             return
 
-        # Parse ascents
         ascent_list = scraper.parse_peak_ascents(html)
-
         if not ascent_list:
             _error(f"No ascents found for peak ID {peak_id}")
             return
 
-        # Apply date filters
-        filtered_ascents = ascent_list
-        if within:
-            try:
-                period = analyzer.parse_within_period(within)
-                after_date: datetime = datetime.now() - period
-                filtered_ascents = analyzer.filter_by_date_range(filtered_ascents, after=after_date)
-            except ValueError as e:
-                _error(str(e))
-                raise click.Abort() from e
-        elif after or before:
-            after_date_opt = datetime.strptime(after, "%Y-%m-%d") if after else None
-            before_date_opt = datetime.strptime(before, "%Y-%m-%d") if before else None
-            filtered_ascents = analyzer.filter_by_date_range(
-                filtered_ascents, after=after_date_opt, before=before_date_opt
-            )
+        filtered_ascents = _apply_date_filters(ascent_list, analyzer, within, after, before)
 
-        # Apply metadata filters
         if with_gpx:
             filtered_ascents = [a for a in filtered_ascents if a.has_gpx]
-
         if with_tr:
             filtered_ascents = [a for a in filtered_ascents if a.has_trip_report]
 
-        # Display ascent list (not statistics)
-        # Create a simple statistics object just for formatting the list
         statistics = analyzer.calculate_statistics(filtered_ascents)
-
-        # Display only the list, not stats
-        # Pass limit to formatter to apply after sorting
         formatter.format_ascent_statistics(
             statistics,
-            ascents=filtered_ascents,  # Don't apply limit here
+            ascents=filtered_ascents,
             output_format=output_format,
-            show_list=True,  # Always show list for ascents command
-            limit=limit,  # Apply limit after sorting in formatter
+            limit=limit,
         )
 
     except Exception as e:
@@ -449,52 +463,27 @@ def stats(
 
     from peakbagger.statistics import AscentAnalyzer
 
-    # Validate mutually exclusive date filters
-    if within and (after or before):
-        _error("--within cannot be combined with --after/--before")
-        raise click.Abort()
-
     client: PeakBaggerClient = PeakBaggerClient(rate_limit_seconds=rate_limit)
     scraper: PeakBaggerScraper = PeakBaggerScraper()
     formatter: PeakFormatter = PeakFormatter()
     analyzer: AscentAnalyzer = AscentAnalyzer()
 
     try:
-        # Fetch ascent list page
         url = "/climber/PeakAscents.aspx"
         params = {"pid": peak_id, "sort": "ascentdate", "u": "ft", "y": "9999"}
         html = client.get(url, params=params)
 
-        # If dump-html flag is set, print HTML and exit
         if ctx.obj.get("dump_html"):
             click.echo(html)
             return
 
-        # Parse ascents
         ascent_list = scraper.parse_peak_ascents(html)
-
         if not ascent_list:
             _error(f"No ascents found for peak ID {peak_id}")
             return
 
-        # Apply date filters
-        filtered_ascents = ascent_list
-        if within:
-            try:
-                period = analyzer.parse_within_period(within)
-                after_date: datetime = datetime.now() - period
-                filtered_ascents = analyzer.filter_by_date_range(filtered_ascents, after=after_date)
-            except ValueError as e:
-                _error(str(e))
-                raise click.Abort() from e
-        elif after or before:
-            after_date_opt = datetime.strptime(after, "%Y-%m-%d") if after else None
-            before_date_opt = datetime.strptime(before, "%Y-%m-%d") if before else None
-            filtered_ascents = analyzer.filter_by_date_range(
-                filtered_ascents, after=after_date_opt, before=before_date_opt
-            )
+        filtered_ascents = _apply_date_filters(ascent_list, analyzer, within, after, before)
 
-        # Parse reference date for seasonal analysis
         ref_date = None
         if reference_date:
             try:
@@ -503,20 +492,12 @@ def stats(
                 _error(f"Invalid reference date format: {reference_date}")
                 raise click.Abort() from e
 
-        # Calculate statistics
         statistics = analyzer.calculate_statistics(
             filtered_ascents,
             reference_date=ref_date,
             seasonal_window_days=seasonal_window,
         )
-
-        # Display only statistics, not the list
-        formatter.format_ascent_statistics(
-            statistics,
-            ascents=None,  # Don't show list for stats command
-            output_format=output_format,
-            show_list=False,
-        )
+        formatter.format_ascent_statistics(statistics, output_format=output_format)
 
     except Exception as e:
         _error(str(e))

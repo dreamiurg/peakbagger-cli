@@ -91,46 +91,24 @@ skips = ["B101"]  # Skip assert_used warnings in tests
 testpaths = ["tests"]
 python_files = "test_*.py"
 python_functions = "test_*"
-addopts = "-v --cov=peakbagger --cov-report=term-missing"
+addopts = "-v --strict-markers"
+
+[tool.coverage.run]
+branch = true
+source = ["peakbagger"]
+
+[tool.coverage.report]
+fail_under = 85
+show_missing = true
 
 [tool.ty.environment]
 python-version = "3.12"
 
-[tool.semantic_release]
-version_toml = ["pyproject.toml:project.version"]
-branch = "main"
-upload_to_vcs_release = true
-# Keep false - GitHub Actions uses pypa/gh-action-pypi-publish for trusted publishing
-upload_to_pypi = false
-build_command = "uv build"
-commit_message = "chore(release): {version} [skip ci]"
-commit_author = "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
-
-[tool.semantic_release.changelog]
-exclude_commit_patterns = []
-
-[tool.semantic_release.changelog.default_templates]
-changelog_file = "CHANGELOG.md"
-
-[tool.semantic_release.changelog.environment]
-keep_trailing_newline = true
-
-[tool.commitizen]
-name = "cz_conventional_commits"
-version = "1.7.0"
-version_files = [
-    "pyproject.toml:version"
-]
-update_changelog_on_bump = true
-tag_format = "$version"
-
 [dependency-groups]
 dev = [
-    "commitizen>=4.9.1",
     "pre-commit>=4.3.0",
     "pytest-cov>=7.0.0",
     "pytest-vcr>=1.0.2",
-    "python-semantic-release>=10.4.1",
     "twine>=6.2.0",
     "ty>=0.0.8",
     "vcrpy>=7.0.0",

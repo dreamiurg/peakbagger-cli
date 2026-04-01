@@ -1,5 +1,7 @@
 """Data models for PeakBagger entities."""
 
+from __future__ import annotations
+
 from typing import Any
 
 from pydantic import BaseModel, Field
@@ -117,6 +119,48 @@ class Ascent(BaseModel):
     trip_report_text: str | None = Field(None, description="Full text of trip report")
     trip_report_url: str | None = Field(None, description="External URL if linked in trip report")
 
+    def _peak_info_dict(self) -> dict[str, Any] | None:
+        """Build peak info sub-dict, or None if no peak data present."""
+        if not (self.peak_name or self.peak_id):
+            return None
+        peak: dict[str, Any] = {}
+        if self.peak_name:
+            peak["name"] = self.peak_name
+        if self.peak_id:
+            peak["id"] = self.peak_id
+        if self.location:
+            peak["location"] = self.location
+        if self.elevation_ft is not None:
+            peak["elevation_ft"] = self.elevation_ft
+        if self.elevation_m is not None:
+            peak["elevation_m"] = self.elevation_m
+        return peak
+
+    def _gpx_metrics_dict(self) -> dict[str, Any] | None:
+        """Build GPX metrics sub-dict, or None if no GPX data present."""
+        if not (self.elevation_gain_ft or self.distance_mi or self.duration_hours):
+            return None
+        metrics: dict[str, Any] = {}
+        if self.elevation_gain_ft is not None:
+            metrics["elevation_gain_ft"] = self.elevation_gain_ft
+        if self.distance_mi is not None:
+            metrics["distance_mi"] = self.distance_mi
+        if self.duration_hours is not None:
+            metrics["duration_hours"] = self.duration_hours
+        return metrics
+
+    def _trip_report_dict(self) -> dict[str, Any]:
+        """Build trip report sub-dict."""
+        trip_report: dict[str, Any] = {
+            "has_report": self.has_trip_report,
+            "word_count": self.trip_report_words,
+        }
+        if self.trip_report_text:
+            trip_report["text"] = self.trip_report_text
+        if self.trip_report_url:
+            trip_report["external_url"] = self.trip_report_url
+        return trip_report
+
     def to_dict(self) -> dict[str, Any]:
         """Convert ascent to dictionary for JSON serialization."""
         result: dict[str, Any] = {
@@ -131,45 +175,18 @@ class Ascent(BaseModel):
             "url": f"https://www.peakbagger.com/climber/ascent.aspx?aid={self.ascent_id}",
         }
 
-        # Add trip report info
-        trip_report: dict[str, Any] = {
-            "has_report": self.has_trip_report,
-            "word_count": self.trip_report_words,
-        }
+        result["trip_report"] = self._trip_report_dict()
 
-        # Add detailed fields if present
         if self.ascent_type:
             result["ascent_type"] = self.ascent_type
 
-        if self.peak_name or self.peak_id:
-            result["peak"] = {}
-            if self.peak_name:
-                result["peak"]["name"] = self.peak_name
-            if self.peak_id:
-                result["peak"]["id"] = self.peak_id
-            if self.location:
-                result["peak"]["location"] = self.location
-            if self.elevation_ft is not None:
-                result["peak"]["elevation_ft"] = self.elevation_ft
-            if self.elevation_m is not None:
-                result["peak"]["elevation_m"] = self.elevation_m
+        peak = self._peak_info_dict()
+        if peak is not None:
+            result["peak"] = peak
 
-        # Add GPX metrics if any are present
-        if self.elevation_gain_ft or self.distance_mi or self.duration_hours:
-            result["gpx_metrics"] = {}
-            if self.elevation_gain_ft is not None:
-                result["gpx_metrics"]["elevation_gain_ft"] = self.elevation_gain_ft
-            if self.distance_mi is not None:
-                result["gpx_metrics"]["distance_mi"] = self.distance_mi
-            if self.duration_hours is not None:
-                result["gpx_metrics"]["duration_hours"] = self.duration_hours
-
-        # Add full trip report text if present
-        if self.trip_report_text:
-            trip_report["text"] = self.trip_report_text
-        if self.trip_report_url:
-            trip_report["external_url"] = self.trip_report_url
-        result["trip_report"] = trip_report
+        gpx_metrics = self._gpx_metrics_dict()
+        if gpx_metrics is not None:
+            result["gpx_metrics"] = gpx_metrics
 
         return result
 
