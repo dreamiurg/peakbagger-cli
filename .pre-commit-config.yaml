@@ -26,6 +26,8 @@ repos:
         exclude: ^tests/cassettes/
       - id: check-case-conflict
       - id: check-merge-conflict
+      - id: detect-private-key
+        exclude: ^\.github/GITHUB_APP_SETUP\.md$
 
       # Python-specific
       - id: check-ast
@@ -43,6 +45,22 @@ repos:
         args: [--fix]
       # Run the formatter
       - id: ruff-format
+
+  # Secret detection
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.24.3
+    hooks:
+      - id: gitleaks
+
+  # SAST - static application security testing
+  - repo: local
+    hooks:
+      - id: semgrep
+        name: semgrep SAST
+        entry: semgrep scan --config auto --error --quiet
+        language: system
+        pass_filenames: false
+        stages: [pre-commit]
 
   # Security checks
   - repo: https://github.com/PyCQA/bandit
@@ -79,7 +97,17 @@ repos:
         args: [-c=.yamllint.yaml]
         exclude: ^tests/cassettes/
 
+  # Pre-push hooks - heavier checks before pushing
+  - repo: local
+    hooks:
+      - id: pytest
+        name: tests
+        entry: uv run pytest --no-header -q
+        language: system
+        pass_filenames: false
+        stages: [pre-push]
+
 # Global settings
-default_install_hook_types: [pre-commit, commit-msg]
+default_install_hook_types: [pre-commit, commit-msg, pre-push]
 default_stages: [pre-commit]
 fail_fast: false

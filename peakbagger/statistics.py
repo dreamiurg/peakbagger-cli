@@ -1,10 +1,34 @@
 """Statistics calculation for peak ascents."""
 
+from __future__ import annotations
+
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING, ClassVar
 
 if TYPE_CHECKING:
     from peakbagger.models import Ascent, AscentStatistics
+
+
+def _parse_ascent_date(date_str: str) -> datetime | None:
+    """Parse an ascent date string in YYYY-MM-DD, YYYY-MM, or YYYY format.
+
+    Args:
+        date_str: Date string to parse.
+
+    Returns:
+        Parsed datetime, or None if the format is unrecognized or invalid.
+    """
+    date_parts = date_str.split("-")
+    try:
+        if len(date_parts) == 3:
+            return datetime.strptime(date_str, "%Y-%m-%d")
+        if len(date_parts) == 2:
+            return datetime.strptime(date_str, "%Y-%m")
+        if len(date_parts) == 1:
+            return datetime.strptime(date_str, "%Y")
+    except ValueError:
+        pass
+    return None
 
 
 class AscentAnalyzer:
@@ -26,11 +50,72 @@ class AscentAnalyzer:
     ]
 
     @staticmethod
+    def _parse_dated_ascents(ascents: list[Ascent]) -> list[tuple[Ascent, datetime]]:
+        """Parse ascent dates, returning only those with valid dates."""
+        dated: list[tuple[Ascent, datetime]] = []
+        for ascent in ascents:
+            if ascent.date:
+                parsed = _parse_ascent_date(ascent.date)
+                if parsed is not None:
+                    dated.append((ascent, parsed))
+        return dated
+
+    @staticmethod
+    def _count_temporal(
+        dated_ascents: list[tuple[Ascent, datetime]],
+        reference_date: datetime,
+    ) -> tuple[int, int, int]:
+        """Count ascents in the last 3 months, 1 year, and 5 years."""
+        last_3m = 0
+        last_1y = 0
+        last_5y = 0
+        cutoff_3m = reference_date - timedelta(days=90)
+        cutoff_1y = reference_date - timedelta(days=365)
+        cutoff_5y = reference_date - timedelta(days=365 * 5)
+        for _, date in dated_ascents:
+            if cutoff_3m <= date <= reference_date:
+                last_3m += 1
+            if cutoff_1y <= date <= reference_date:
+                last_1y += 1
+            if cutoff_5y <= date <= reference_date:
+                last_5y += 1
+        return last_3m, last_1y, last_5y
+
+    @staticmethod
+    def _build_monthly_distribution(
+        dated_ascents: list[tuple[Ascent, datetime]],
+    ) -> dict[str, int]:
+        """Build month-name to count mapping across all years."""
+        distribution = dict.fromkeys(AscentAnalyzer.MONTH_NAMES, 0)
+        for _, date in dated_ascents:
+            distribution[AscentAnalyzer.MONTH_NAMES[date.month - 1]] += 1
+        return distribution
+
+    @staticmethod
+    def _build_seasonal_pattern(
+        dated_ascents: list[tuple[Ascent, datetime]],
+        reference_date: datetime,
+        window_days: int,
+    ) -> dict[str, int]:
+        """Build seasonal pattern counting ascents within a day-of-year window."""
+        pattern = dict.fromkeys(AscentAnalyzer.MONTH_NAMES, 0)
+        ref_doy = reference_date.timetuple().tm_yday
+        for _, date in dated_ascents:
+            diff = date.timetuple().tm_yday - ref_doy
+            if diff > 180:
+                diff -= 365
+            elif diff < -180:
+                diff += 365
+            if abs(diff) <= window_days:
+                pattern[AscentAnalyzer.MONTH_NAMES[date.month - 1]] += 1
+        return pattern
+
+    @staticmethod
     def calculate_statistics(
-        ascents: list["Ascent"],
+        ascents: list[Ascent],
         reference_date: datetime | None = None,
         seasonal_window_days: int = 14,
-    ) -> "AscentStatistics":
+    ) -> AscentStatistics:
         """
         Calculate comprehensive statistics from ascent data.
 
@@ -47,73 +132,18 @@ class AscentAnalyzer:
         if reference_date is None:
             reference_date = datetime.now()
 
-        # Overall statistics
         total_ascents = len(ascents)
         ascents_with_gpx = sum(1 for a in ascents if a.has_gpx)
         ascents_with_trip_reports = sum(1 for a in ascents if a.has_trip_report)
 
-        # Parse dates for temporal analysis
-        dated_ascents = []
-        for ascent in ascents:
-            if ascent.date:
-                try:
-                    # Handle different date formats: YYYY-MM-DD, YYYY-MM, YYYY
-                    date_parts = ascent.date.split("-")
-                    if len(date_parts) == 3:
-                        date = datetime.strptime(ascent.date, "%Y-%m-%d")
-                    elif len(date_parts) == 2:
-                        date = datetime.strptime(ascent.date, "%Y-%m")
-                    elif len(date_parts) == 1:
-                        date = datetime.strptime(ascent.date, "%Y")
-                    else:
-                        continue
-                    dated_ascents.append((ascent, date))
-                except ValueError:
-                    continue
-
-        # Temporal breakdown (from reference date)
-        last_3_months = sum(
-            1
-            for _, date in dated_ascents
-            if reference_date - timedelta(days=90) <= date <= reference_date
+        dated_ascents = AscentAnalyzer._parse_dated_ascents(ascents)
+        last_3_months, last_year, last_5_years = AscentAnalyzer._count_temporal(
+            dated_ascents, reference_date
         )
-        last_year = sum(
-            1
-            for _, date in dated_ascents
-            if reference_date - timedelta(days=365) <= date <= reference_date
+        monthly_distribution = AscentAnalyzer._build_monthly_distribution(dated_ascents)
+        seasonal_pattern = AscentAnalyzer._build_seasonal_pattern(
+            dated_ascents, reference_date, seasonal_window_days
         )
-        last_5_years = sum(
-            1
-            for _, date in dated_ascents
-            if reference_date - timedelta(days=365 * 5) <= date <= reference_date
-        )
-
-        # Monthly distribution (all time)
-        monthly_distribution = dict.fromkeys(AscentAnalyzer.MONTH_NAMES, 0)
-        for _, date in dated_ascents:
-            month_name = AscentAnalyzer.MONTH_NAMES[date.month - 1]
-            monthly_distribution[month_name] += 1
-
-        # Seasonal pattern (ascents within window of reference date across all years)
-        seasonal_pattern = dict.fromkeys(AscentAnalyzer.MONTH_NAMES, 0)
-
-        # Calculate seasonal window based on day of year
-        for _, date in dated_ascents:
-            # Calculate days difference ignoring year
-            ref_day_of_year = reference_date.timetuple().tm_yday
-            ascent_day_of_year = date.timetuple().tm_yday
-
-            # Handle year wrap-around
-            diff = ascent_day_of_year - ref_day_of_year
-            if diff > 180:
-                diff -= 365
-            elif diff < -180:
-                diff += 365
-
-            # Check if within seasonal window
-            if abs(diff) <= seasonal_window_days:
-                month_name = AscentAnalyzer.MONTH_NAMES[date.month - 1]
-                seasonal_pattern[month_name] += 1
 
         return AscentStatistics(
             total_ascents=total_ascents,
@@ -128,10 +158,10 @@ class AscentAnalyzer:
 
     @staticmethod
     def filter_by_date_range(
-        ascents: list["Ascent"],
+        ascents: list[Ascent],
         after: datetime | None = None,
         before: datetime | None = None,
-    ) -> list["Ascent"]:
+    ) -> list[Ascent]:
         """
         Filter ascents by date range.
 
@@ -148,27 +178,16 @@ class AscentAnalyzer:
             if not ascent.date:
                 continue
 
-            try:
-                # Parse date
-                date_parts = ascent.date.split("-")
-                if len(date_parts) == 3:
-                    date = datetime.strptime(ascent.date, "%Y-%m-%d")
-                elif len(date_parts) == 2:
-                    date = datetime.strptime(ascent.date, "%Y-%m")
-                elif len(date_parts) == 1:
-                    date = datetime.strptime(ascent.date, "%Y")
-                else:
-                    continue
-
-                # Apply filters
-                if after and date < after:
-                    continue
-                if before and date > before:
-                    continue
-
-                filtered.append(ascent)
-            except ValueError:
+            date = _parse_ascent_date(ascent.date)
+            if date is None:
                 continue
+
+            if after and date < after:
+                continue
+            if before and date > before:
+                continue
+
+            filtered.append(ascent)
 
         return filtered
 

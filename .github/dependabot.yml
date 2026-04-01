@@ -11,17 +11,11 @@ updates:
       - "dependencies"
       - "python"
     commit-message:
-      prefix: "chore"
-      include: "scope"
+      prefix: "chore(deps)"
     groups:
-      # Group dev dependencies together
-      dev-dependencies:
+      minor-and-patch:
         patterns:
-          - "pytest*"
-          - "ruff"
-          - "mypy"
-          - "pre-commit"
-          - "types-*"
+          - "*"
         update-types:
           - "minor"
           - "patch"
@@ -37,8 +31,7 @@ updates:
       - "dependencies"
       - "github-actions"
     commit-message:
-      prefix: "ci"
-      include: "scope"
+      prefix: "ci(deps)"
     groups:
       actions:
         patterns:

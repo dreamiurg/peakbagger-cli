@@ -284,7 +284,7 @@ class TestFormatAscentStatistics:
         output = StringIO()
         with patch("sys.stdout", output):
             formatter.format_ascent_statistics(
-                stats, ascents=ascents, output_format="json", show_list=True, limit=10
+                stats, ascents=ascents, output_format="json", limit=10
             )
 
         # Verify JSON output includes ascents
@@ -326,7 +326,7 @@ class TestFormatAscentStatistics:
         output = StringIO()
         with patch("sys.stdout", output):
             formatter.format_ascent_statistics(
-                stats, ascents=ascents, output_format="json", show_list=True, limit=3
+                stats, ascents=ascents, output_format="json", limit=3
             )
 
         # Verify JSON output respects limit
