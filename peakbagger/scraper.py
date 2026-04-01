@@ -42,26 +42,26 @@ class PeakBaggerScraper:
             return results
 
         # Find the next table after the header
-        table: Tag | None = search_header.find_next("table", class_="gray")  # type: ignore[assignment]
+        table: Tag | None = search_header.find_next("table", class_="gray")
         if not table:
             logger.debug("No search results table found")
             return results
 
         # Skip header row, process data rows
-        rows: list[Tag] = table.find_all("tr")[1:]  # type: ignore[assignment]
+        rows: list[Tag] = table.find_all("tr")[1:]
         logger.debug(f"Found {len(rows)} result rows to process")
 
         for row in rows:
-            cells: list[Tag] = row.find_all("td")  # type: ignore[assignment]
+            cells: list[Tag] = row.find_all("td")
             if len(cells) < 5:  # Need at least: Type, Name, Location, Range, Elevation
                 continue
 
             # Extract peak link (2nd column)
-            link: Tag | None = cells[1].find("a", href=lambda x: x and "peak.aspx?pid=" in x)  # type: ignore[assignment]
+            link: Tag | None = cells[1].find("a", href=lambda x: x and "peak.aspx?pid=" in x)
             if not link:
                 continue
 
-            href: str = link["href"]  # type: ignore[assignment]
+            href: str = link["href"]
             name: str = link.get_text(strip=True)
 
             # Extract peak ID from URL
@@ -126,7 +126,7 @@ class PeakBaggerScraper:
 
         try:
             # Extract peak name and state from H1
-            h1: Tag | None = soup.find("h1")  # type: ignore[assignment]
+            h1: Tag | None = soup.find("h1")
             if not h1:
                 logger.debug("No H1 tag found in peak detail page")
                 return None
@@ -143,7 +143,7 @@ class PeakBaggerScraper:
             peak: Peak = Peak(pid=pid, name=name, state=state)
 
             # Extract elevation from H2
-            h2: Tag | None = soup.find("h2")  # type: ignore[assignment]
+            h2: Tag | None = soup.find("h2")
             if h2:
                 elevation_text: str = h2.get_text(strip=True)
                 # Format: "Elevation: 10,984 feet, 3348 meters"
@@ -310,7 +310,7 @@ class PeakBaggerScraper:
         ascents: list[Ascent] = []
 
         # Find all tables
-        tables: list[Tag] = soup.find_all("table")  # type: ignore[assignment]
+        tables: list[Tag] = soup.find_all("table")
         logger.debug(f"Found {len(tables)} tables in HTML")
 
         # Look for the data table with dynamic header detection
@@ -319,14 +319,14 @@ class PeakBaggerScraper:
         num_columns: int = 0
 
         for table in tables:
-            rows: list[Tag] = table.find_all("tr")  # type: ignore[assignment]
+            rows: list[Tag] = table.find_all("tr")
             if len(rows) < 10:
                 continue
 
             # Check if second row has expected headers
             if len(rows) > 1:
                 header_row: Tag = rows[1]
-                headers: list[Tag] = header_row.find_all(["th", "td"], recursive=False)  # type: ignore[assignment]
+                headers: list[Tag] = header_row.find_all(["th", "td"], recursive=False)
 
                 # Table must have reasonable number of columns (not the merged giant table)
                 if len(headers) < 3 or len(headers) > 20:
@@ -368,7 +368,7 @@ class PeakBaggerScraper:
         # Process data rows (skip first 2 rows: separator and header)
         for row in rows[2:]:
             # Use recursive=False to avoid counting cells in nested tables (e.g., route icons)
-            cells: list[Tag] = row.find_all(["td", "th"], recursive=False)  # type: ignore[assignment]
+            cells: list[Tag] = row.find_all(["td", "th"], recursive=False)
 
             # Skip rows that don't match the expected column count
             if len(cells) != num_columns:
@@ -378,7 +378,7 @@ class PeakBaggerScraper:
             climber_cell: Tag = cells[climber_idx]
             climber_link: Tag | None = climber_cell.find(
                 "a", href=lambda x: x and "climber.aspx?cid=" in x
-            )  # type: ignore[assignment]
+            )
             if not climber_link:
                 continue
 
@@ -391,7 +391,7 @@ class PeakBaggerScraper:
             date_cell: Tag = cells[date_idx]
             date_link: Tag | None = date_cell.find(
                 "a", href=lambda x: x and "ascent.aspx?aid=" in x
-            )  # type: ignore[assignment]
+            )
             if not date_link:
                 continue
 
@@ -415,7 +415,7 @@ class PeakBaggerScraper:
             has_gpx: bool = False
             if gps_idx != -1:
                 gps_cell: Tag = cells[gps_idx]
-                gps_img: Tag | None = gps_cell.find("img", src=lambda x: x and "GPS.gif" in x)  # type: ignore[assignment]
+                gps_img: Tag | None = gps_cell.find("img", src=lambda x: x and "GPS.gif" in x)
                 has_gpx = gps_img is not None
 
             # Check for trip report (optional column)
@@ -470,7 +470,7 @@ class PeakBaggerScraper:
 
         try:
             # Extract title: "Ascent of [Peak Name] on [Date]" or "Ascent of [Peak Name] in [Year]"
-            h1: Tag | None = soup.find("h1")  # type: ignore[assignment]
+            h1: Tag | None = soup.find("h1")
             if not h1:
                 logger.debug("No H1 tag found in ascent detail page")
                 return None
@@ -486,13 +486,13 @@ class PeakBaggerScraper:
                 peak_name = parts[0].replace("Ascent of ", "").strip()
 
             # Extract climber from H2: "Climber: [Name]"
-            h2: Tag | None = soup.find("h2")  # type: ignore[assignment]
+            h2: Tag | None = soup.find("h2")
             climber_name: str | None = None
             climber_id: str | None = None
             if h2:
                 climber_link: Tag | None = h2.find(
                     "a", href=lambda x: x and "climber.aspx?cid=" in x
-                )  # type: ignore[assignment]
+                )
                 if climber_link:
                     climber_name = climber_link.get_text(strip=True)
                     climber_href: str = climber_link["href"]  # type: ignore[assignment]
@@ -506,7 +506,7 @@ class PeakBaggerScraper:
             # Find the left gray table (width="49%", align="left")
             table: Tag | None = soup.find(
                 "table", class_="gray", attrs={"width": "49%", "align": "left"}
-            )  # type: ignore[assignment]
+            )
             if not table:
                 return None
 
@@ -519,9 +519,9 @@ class PeakBaggerScraper:
             )
 
             # Extract data from table rows
-            rows: list[Tag] = table.find_all("tr")  # type: ignore[assignment]
+            rows: list[Tag] = table.find_all("tr")
             for row in rows:
-                cells: list[Tag] = row.find_all("td", recursive=False)  # type: ignore[assignment]
+                cells: list[Tag] = row.find_all("td", recursive=False)
                 if len(cells) < 1:
                     continue
 
@@ -551,9 +551,9 @@ class PeakBaggerScraper:
                             ascent.trip_report_text = report_text.strip()
 
                         # Extract external URL if present
-                        url_link: Tag | None = cells[0].find("a", href=re.compile(r"^https?://"))  # type: ignore[assignment]
+                        url_link: Tag | None = cells[0].find("a", href=re.compile(r"^https?://"))
                         if url_link and url_link.get("href"):
-                            href = url_link["href"]  # type: ignore[assignment]
+                            href = str(url_link["href"])
                             # Only store if not peakbagger.com
                             if "peakbagger.com" not in href:
                                 ascent.trip_report_url = href
@@ -565,7 +565,7 @@ class PeakBaggerScraper:
                 # Get label from first cell
                 # Some labels have <b> tags, others are just text
                 label_cell = cells[0]
-                label_b: Tag | None = label_cell.find("b")  # type: ignore[assignment]
+                label_b: Tag | None = label_cell.find("b")
                 if label_b:
                     label: str = label_b.get_text(strip=True).rstrip(":")
                 else:
@@ -616,7 +616,7 @@ class PeakBaggerScraper:
                     # Extract peak link and ID
                     peak_link: Tag | None = value_cell.find(
                         "a", href=lambda x: x and "peak.aspx?pid=" in x
-                    )  # type: ignore[assignment]
+                    )
                     if peak_link:
                         ascent.peak_name = peak_link.get_text(strip=True)
                         peak_href: str = peak_link["href"]  # type: ignore[assignment]
