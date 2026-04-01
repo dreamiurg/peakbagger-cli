@@ -669,6 +669,21 @@ class PeakBaggerScraper:
                             minutes = int(time_match.group(2))
                             ascent.duration_hours = hours + (minutes / 60.0)
 
+            # Infer has_trip_report from extracted text
+            if ascent.trip_report_text:
+                ascent.has_trip_report = True
+
+            # Check for GPX track in the right-side table
+            right_table: Tag | None = soup.find(
+                "table", class_="gray", attrs={"width": "50%", "align": "right"}
+            )
+            if right_table:
+                gpx_link: Tag | None = right_table.find(
+                    "a", href=lambda x: x and "GPXFile.aspx" in x
+                )
+                if gpx_link:
+                    ascent.has_gpx = True
+
             logger.debug(f"Successfully parsed ascent detail for {ascent.climber_name}")
             return ascent
 
