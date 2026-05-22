@@ -50,3 +50,6 @@ jobs:
         uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b  # release/v1
         with:
           print-hash: true
+          # Don't fail the release if the version is already on PyPI (e.g. a
+          # re-run or double-trigger); skip the upload instead of erroring 400.
+          skip-existing: true
