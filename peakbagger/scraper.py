@@ -67,7 +67,7 @@ class PeakBaggerScraper:
         if len(cells) < 5:
             return None
 
-        link: Tag | None = cells[1].find("a", href=lambda x: x and "peak.aspx?pid=" in x)  # type: ignore[assignment]
+        link: Tag | None = cells[1].find("a", href=lambda x: bool(x and "peak.aspx?pid=" in x))  # type: ignore[assignment]
         if not link:
             return None
 
@@ -412,7 +412,9 @@ class PeakBaggerScraper:
     @staticmethod
     def _extract_climber_from_cell(cell: Tag) -> tuple[str, str | None] | None:
         """Extract climber name and ID from a table cell."""
-        climber_link: Tag | None = cell.find("a", href=lambda x: x and "climber.aspx?cid=" in x)  # type: ignore[assignment]
+        climber_link: Tag | None = cell.find(
+            "a", href=lambda x: bool(x and "climber.aspx?cid=" in x)
+        )  # type: ignore[assignment]
         if not climber_link:
             return None
         name: str = climber_link.get_text(strip=True)
@@ -424,7 +426,7 @@ class PeakBaggerScraper:
     @staticmethod
     def _extract_date_from_cell(cell: Tag) -> tuple[str, str | None] | None:
         """Extract ascent ID and date from a date table cell."""
-        date_link: Tag | None = cell.find("a", href=lambda x: x and "ascent.aspx?aid=" in x)  # type: ignore[assignment]
+        date_link: Tag | None = cell.find("a", href=lambda x: bool(x and "ascent.aspx?aid=" in x))  # type: ignore[assignment]
         if not date_link:
             return None
         date_text_value = PeakBaggerScraper._parse_ascent_list_date(date_link.get_text(strip=True))
@@ -439,7 +441,7 @@ class PeakBaggerScraper:
         """Check if a GPX track indicator exists in the GPS column."""
         if gps_idx == -1:
             return False
-        gps_img: Tag | None = cells[gps_idx].find("img", src=lambda x: x and "GPS.gif" in x)  # type: ignore[assignment]
+        gps_img: Tag | None = cells[gps_idx].find("img", src=lambda x: bool(x and "GPS.gif" in x))  # type: ignore[assignment]
         return gps_img is not None
 
     @staticmethod
@@ -530,7 +532,9 @@ class PeakBaggerScraper:
             "table", class_="gray", attrs={"width": "50%", "align": "right"}
         )
         if right_table:
-            gpx_link: Tag | None = right_table.find("a", href=lambda x: x and "GPXFile.aspx" in x)
+            gpx_link: Tag | None = right_table.find(
+                "a", href=lambda x: bool(x and "GPXFile.aspx" in x)
+            )
             if gpx_link:
                 ascent.has_gpx = True
 
@@ -557,7 +561,9 @@ class PeakBaggerScraper:
         climber_name: str | None = None
         climber_id: str | None = None
         if h2:
-            climber_link: Tag | None = h2.find("a", href=lambda x: x and "climber.aspx?cid=" in x)  # type: ignore[assignment]
+            climber_link: Tag | None = h2.find(
+                "a", href=lambda x: bool(x and "climber.aspx?cid=" in x)
+            )  # type: ignore[assignment]
             if climber_link:
                 climber_name = climber_link.get_text(strip=True)
                 climber_href: str = str(climber_link["href"])
@@ -681,7 +687,9 @@ class PeakBaggerScraper:
     @staticmethod
     def _parse_ascent_peak_field(ascent: Ascent, value_cell: Tag) -> None:
         """Parse peak link and ID from ascent detail."""
-        peak_link: Tag | None = value_cell.find("a", href=lambda x: x and "peak.aspx?pid=" in x)  # type: ignore[assignment]
+        peak_link: Tag | None = value_cell.find(
+            "a", href=lambda x: bool(x and "peak.aspx?pid=" in x)
+        )  # type: ignore[assignment]
         if peak_link:
             ascent.peak_name = peak_link.get_text(strip=True)
             peak_href: str = str(peak_link["href"])

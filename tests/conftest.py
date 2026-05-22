@@ -3,6 +3,12 @@
 import pytest
 
 
+@pytest.fixture(autouse=True)
+def isolate_cache_dir(tmp_path, monkeypatch):
+    """Point the clearance cache at a temp dir so tests never touch ~/.cache."""
+    monkeypatch.setenv("XDG_CACHE_HOME", str(tmp_path / "cache"))
+
+
 @pytest.fixture(scope="module")
 def vcr_config():
     """
