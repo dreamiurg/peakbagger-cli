@@ -80,3 +80,95 @@ class TestSolveChallenge:
 
         with pytest.raises(browser_transport.BrowserTransportUnavailableError, match="patchright"):
             browser_transport.solve_challenge("https://www.peakbagger.com/")
+
+
+class _FakePage:
+    def __init__(self, titles, ua="Mozilla/5.0 Fake", goto_error=None):
+        self._titles = list(titles)
+        self._ua = ua
+        self._goto_error = goto_error
+
+    def goto(self, url, **kwargs):
+        if self._goto_error:
+            raise self._goto_error
+
+    def title(self):
+        return self._titles.pop(0) if len(self._titles) > 1 else self._titles[0]
+
+    def evaluate(self, _script):
+        return self._ua
+
+
+class _FakeContext:
+    def __init__(self, page, cookies):
+        self.pages = [page]
+        self._cookies = cookies
+        self.closed = False
+
+    def new_page(self):
+        return self.pages[0]
+
+    def cookies(self):
+        return self._cookies
+
+    def close(self):
+        self.closed = True
+
+
+def _install_fake_patchright(monkeypatch, context):
+    """Inject a fake patchright.sync_api whose sync_playwright yields `context`."""
+    import sys
+    import types
+    from contextlib import contextmanager
+
+    @contextmanager
+    def sync_playwright():
+        yield types.SimpleNamespace(
+            chromium=types.SimpleNamespace(launch_persistent_context=lambda **kw: context)
+        )
+
+    pkg = types.ModuleType("patchright")
+    sub = types.ModuleType("patchright.sync_api")
+    sub.sync_playwright = sync_playwright  # ty: ignore[unresolved-attribute]
+    monkeypatch.setitem(sys.modules, "patchright", pkg)
+    monkeypatch.setitem(sys.modules, "patchright.sync_api", sub)
+
+
+class TestSolveChallengeWithFakeBrowser:
+    def test_returns_user_agent_and_cookies_on_success(self, monkeypatch):
+        cookies = [{"name": "cf_clearance", "value": "tok", "domain": ".peakbagger.com"}]
+        page = _FakePage(titles=["Just a moment...", "Search - Peakbagger.com"])
+        context = _FakeContext(page, cookies)
+        _install_fake_patchright(monkeypatch, context)
+
+        ua, returned = browser_transport.solve_challenge(
+            "https://www.peakbagger.com/search.aspx", timeout=5
+        )
+
+        assert ua == "Mozilla/5.0 Fake"
+        assert returned == cookies
+        assert context.closed is True
+
+    def test_raises_when_cf_clearance_missing(self, monkeypatch):
+        page = _FakePage(titles=["Peakbagger.com"])  # already cleared, but no cf cookie
+        context = _FakeContext(page, cookies=[{"name": "other", "value": "x"}])
+        _install_fake_patchright(monkeypatch, context)
+
+        with pytest.raises(browser_transport.ChallengeNotSolvedError, match="cf_clearance"):
+            browser_transport.solve_challenge("https://www.peakbagger.com/", timeout=5)
+
+    def test_raises_on_navigation_failure(self, monkeypatch):
+        page = _FakePage(titles=["x"], goto_error=RuntimeError("net::ERR"))
+        context = _FakeContext(page, cookies=[])
+        _install_fake_patchright(monkeypatch, context)
+
+        with pytest.raises(browser_transport.ChallengeNotSolvedError, match="Navigation"):
+            browser_transport.solve_challenge("https://www.peakbagger.com/", timeout=5)
+
+    def test_raises_on_timeout_when_challenge_never_clears(self, monkeypatch):
+        page = _FakePage(titles=["Just a moment..."])  # stays on challenge forever
+        context = _FakeContext(page, cookies=[])
+        _install_fake_patchright(monkeypatch, context)
+
+        with pytest.raises(browser_transport.ChallengeNotSolvedError, match="did not clear"):
+            browser_transport.solve_challenge("https://www.peakbagger.com/", timeout=0.01)
