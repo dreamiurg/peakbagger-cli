@@ -101,6 +101,20 @@ class PeakBaggerClient:
                 logger.debug(f"Rate limiting: waiting {wait_time:.2f}s before next request")
                 time.sleep(wait_time)
 
+    def _send(self, url: str, params: dict[str, str] | None) -> tuple[str, "Response", float]:
+        """Issue one rate-limited GET; returns (resolved_url, response, start_time)."""
+        self._wait_for_rate_limit()
+        if not url.startswith("http"):
+            url = f"{self.BASE_URL}/{url.lstrip('/')}"
+        start_time = time.time()
+        try:
+            response = self.session.get(url, params=params)
+        except Exception as e:
+            logger.error(f"Failed to fetch {url}: {e!s}")
+            raise Exception(f"Failed to fetch {url}: {e!s}") from e
+        self._last_request_time = time.time()
+        return url, response, start_time
+
     def get(
         self,
         url: str,
@@ -108,11 +122,7 @@ class PeakBaggerClient:
         *,
         _allow_solve: bool = True,
     ) -> str:
-        """
-        Make a GET request with rate limiting.
-
-        If the response is a Cloudflare managed challenge, the client solves it
-        once via a stealth browser and retries the request.
+        """Make a rate-limited GET, solving a Cloudflare challenge once if needed.
 
         Args:
             url: Full URL or path (if path, will be joined with BASE_URL)
@@ -120,26 +130,9 @@ class PeakBaggerClient:
 
         Returns:
             Response text (HTML)
-
-        Raises:
-            Exception: If request fails
         """
-        # Wait for rate limit
-        self._wait_for_rate_limit()
+        url, response, start_time = self._send(url, params)
 
-        # Build full URL if needed
-        if not url.startswith("http"):
-            url = f"{self.BASE_URL}/{url.lstrip('/')}"
-
-        try:
-            start_time = time.time()
-            response = self.session.get(url, params=params)
-            self._last_request_time = time.time()
-        except Exception as e:
-            logger.error(f"Failed to fetch {url}: {e!s}")
-            raise Exception(f"Failed to fetch {url}: {e!s}") from e
-
-        # Solve a Cloudflare managed challenge once, then retry the request.
         if self._is_cloudflare_challenge(response):
             if _allow_solve:
                 elapsed_ms = (time.time() - start_time) * 1000
@@ -160,10 +153,7 @@ class PeakBaggerClient:
             raise Exception(f"Failed to fetch {url}: {e!s}") from e
 
         elapsed_ms = (time.time() - start_time) * 1000
-
-        # Log HTTP request details at INFO level
         logger.info(f"GET {url} - {response.status_code} - {elapsed_ms:.0f}ms")
-
         return cast("str", response.text)
 
     def close(self) -> None:

@@ -111,6 +111,25 @@ def save_clearance(user_agent: str, cookies: list[dict[str, Any]]) -> None:
         logger.warning(f"Could not write clearance cache: {e}")
 
 
+def _navigate_until_cleared(page: Any, url: str, timeout: float) -> None:
+    """Navigate to ``url`` and wait until the Cloudflare challenge clears."""
+    try:
+        page.goto(url, wait_until="domcontentloaded", timeout=int(timeout * 1000))
+    except Exception as e:
+        raise ChallengeNotSolvedError(f"Navigation to {url} failed: {e}") from e
+
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        if "just a moment" not in page.title().lower():
+            return
+        time.sleep(min(1.0, max(0.0, deadline - time.monotonic())))
+    raise ChallengeNotSolvedError(
+        f"Cloudflare challenge did not clear within {timeout:.0f}s. "
+        "Try again; if the browser window did not appear, ensure Google "
+        "Chrome is installed (or set PEAKBAGGER_BROWSER_CHANNEL)."
+    )
+
+
 def solve_challenge(
     url: str,
     *,
@@ -119,15 +138,9 @@ def solve_challenge(
 ) -> tuple[str, list[dict[str, Any]]]:
     """Drive a stealth browser through the Cloudflare challenge for ``url``.
 
-    Args:
-        url: A URL on the challenged domain to navigate to.
-        timeout: Seconds to wait for the challenge to clear.
-        headless: Run without a visible window. Detected by Cloudflare, so the
-            default (visible) is strongly recommended.
-
-    Returns:
-        A ``(user_agent, cookies)`` tuple where ``cookies`` is the list of
-        cookie dicts (including ``cf_clearance``) for the browser context.
+    Returns a ``(user_agent, cookies)`` tuple, where ``cookies`` includes the
+    ``cf_clearance`` cookie. ``headless`` is detected by Cloudflare, so the
+    default (visible) is strongly recommended.
 
     Raises:
         BrowserTransportUnavailableError: patchright is not installed.
@@ -153,23 +166,7 @@ def solve_challenge(
         try:
             # launch_persistent_context opens a default page; reuse it.
             page = context.pages[0] if context.pages else context.new_page()
-            try:
-                page.goto(url, wait_until="domcontentloaded", timeout=int(timeout * 1000))
-            except Exception as e:
-                raise ChallengeNotSolvedError(f"Navigation to {url} failed: {e}") from e
-
-            deadline = time.monotonic() + timeout
-            while time.monotonic() < deadline:
-                if "just a moment" not in page.title().lower():
-                    break
-                time.sleep(min(1.0, max(0.0, deadline - time.monotonic())))
-            else:
-                raise ChallengeNotSolvedError(
-                    f"Cloudflare challenge did not clear within {timeout:.0f}s. "
-                    "Try again; if the browser window did not appear, ensure Google "
-                    "Chrome is installed (or set PEAKBAGGER_BROWSER_CHANNEL)."
-                )
-
+            _navigate_until_cleared(page, url, timeout)
             user_agent = cast("str", page.evaluate("() => navigator.userAgent"))
             cookies = cast("list[dict[str, Any]]", context.cookies())
         finally:

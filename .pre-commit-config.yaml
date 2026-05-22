@@ -81,6 +81,16 @@ repos:
         types: [python]
         pass_filenames: false
 
+  # Cyclomatic complexity / function size (mirrors the CI Complexity job)
+  - repo: local
+    hooks:
+      - id: lizard
+        name: lizard complexity
+        entry: uvx lizard@1.17.13 -l python -C 15 -L 60 -a 5 -w -x test_*.py -x *_test.py -x */cli.py peakbagger/
+        language: system
+        types: [python]
+        pass_filenames: false
+
   # Markdown linting
   - repo: https://github.com/igorshubovych/markdownlint-cli
     rev: v0.45.0
