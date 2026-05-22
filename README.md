@@ -37,6 +37,17 @@ uvx peakbagger peak show 2296
 pip install peakbagger
 ```
 
+### Cloudflare bypass (optional)
+
+PeakBagger.com sits behind a Cloudflare challenge that the default HTTP client
+cannot always pass. If you hit a `403`, install the `browser` extra, which adds a
+stealth-browser fallback (it briefly opens a real Chrome window to clear the
+challenge, then caches the result):
+
+```bash
+pip install 'peakbagger[browser]'   # requires Google Chrome installed
+```
+
 ## Usage
 
 ### Search for peaks
@@ -160,7 +171,9 @@ PeakBagger.com provides this data as a free service to the climbing community. U
 
 ## Troubleshooting
 
-**Cloudflare blocks**: Increase rate limit (`--rate-limit 3.0`) and wait before retrying.
+**Cloudflare blocks** (`403`): Install the stealth-browser fallback with
+`pip install 'peakbagger[browser]'` (requires Google Chrome). On the next `403`
+it opens a real Chrome window once to clear the challenge and caches the result.
 
 **No results**: Try different search terms or verify the peak ID is correct.
 

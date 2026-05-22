@@ -25,7 +25,6 @@ class TestPeakBaggerClientInitialization:
         assert client.rate_limit == 2.0
         assert client._last_request_time is None
         assert client.session is not None
-        assert "peakbagger-cli" in client.session.headers["User-Agent"]
 
     def test_init_custom_rate_limit(self):
         """Test client initialization with custom rate limit."""
@@ -33,15 +32,17 @@ class TestPeakBaggerClientInitialization:
 
         assert client.rate_limit == 5.0
 
-    def test_init_sets_user_agent(self):
-        """Test that user agent is properly set."""
+    def test_init_uses_cloudscraper_user_agent(self):
+        """Client keeps cloudscraper's browser User-Agent (no custom override).
+
+        A custom CLI User-Agent breaks cloudscraper's browser fingerprint and the
+        Cloudflare clearance cookie, so the session must use a real browser UA.
+        """
         client = PeakBaggerClient()
 
         user_agent = client.session.headers["User-Agent"]
-        assert "peakbagger-cli" in user_agent
-        assert "Python CLI tool" in user_agent
-        # Check for full GitHub URL to avoid CodeQL URL substring sanitization warning
-        assert "https://github.com/dreamiurg/peakbagger-cli" in user_agent
+        assert "Mozilla" in user_agent
+        assert "peakbagger-cli" not in user_agent
 
 
 class TestPeakBaggerClientRateLimiting:
@@ -242,6 +243,103 @@ class TestPeakBaggerClientGet:
             # Should not have double slashes
             assert called_url == "https://www.peakbagger.com/climber.aspx"
             assert "//" not in called_url.replace("https://", "")
+
+
+class TestPeakBaggerClientCloudflareChallenge:
+    """Tests for Cloudflare managed-challenge detection and solve-and-retry."""
+
+    @staticmethod
+    def _response(status_code, *, cf_mitigated=None, text="<html>ok</html>"):
+        resp = Mock()
+        resp.status_code = status_code
+        resp.headers = {"cf-mitigated": cf_mitigated} if cf_mitigated else {}
+        resp.text = text
+        return resp
+
+    def test_detects_challenge_via_header(self):
+        resp = self._response(403, cf_mitigated="challenge")
+        assert PeakBaggerClient._is_cloudflare_challenge(resp) is True
+
+    def test_detects_challenge_via_body(self):
+        resp = self._response(403, text="<title>Just a moment...</title>")
+        assert PeakBaggerClient._is_cloudflare_challenge(resp) is True
+
+    def test_non_403_is_not_challenge(self):
+        resp = self._response(200, cf_mitigated="challenge")
+        assert PeakBaggerClient._is_cloudflare_challenge(resp) is False
+
+    def test_plain_403_is_not_challenge(self):
+        resp = self._response(403, text="<html>Forbidden</html>")
+        assert PeakBaggerClient._is_cloudflare_challenge(resp) is False
+
+    def test_get_solves_challenge_then_retries(self):
+        client = PeakBaggerClient(rate_limit_seconds=0)
+
+        challenge = self._response(403, cf_mitigated="challenge")
+        success = self._response(200, text="<html>peak</html>")
+
+        with (
+            patch.object(client.session, "get", side_effect=[challenge, success]) as mock_get,
+            patch.object(client, "_solve_challenge") as mock_solve,
+        ):
+            result = client.get("peak.aspx", params={"pid": "1630"})
+
+        assert result == "<html>peak</html>"
+        mock_solve.assert_called_once()
+        assert mock_get.call_count == 2
+
+    def test_get_does_not_loop_when_challenge_persists(self):
+        client = PeakBaggerClient(rate_limit_seconds=0)
+
+        challenge = self._response(403, cf_mitigated="challenge")
+
+        with (
+            patch.object(client.session, "get", return_value=challenge) as mock_get,
+            patch.object(client, "_solve_challenge") as mock_solve,
+            pytest.raises(Exception, match="challenge not cleared by browser solve"),
+        ):
+            client.get("peak.aspx")
+
+        # _allow_solve=False on the retry stops a third attempt; the still-challenged
+        # response raises a clear error instead of looping.
+        mock_solve.assert_called_once()
+        assert mock_get.call_count == 2
+
+    def test_apply_clearance_sets_user_agent_and_cookies(self):
+        client = PeakBaggerClient()
+        cookies = [
+            {"name": "cf_clearance", "value": "tok", "domain": ".peakbagger.com", "path": "/"},
+        ]
+
+        with patch.object(client.session.cookies, "set") as mock_set:
+            client._apply_clearance("Mozilla/5.0 Stealth", cookies)
+
+        assert client.session.headers["User-Agent"] == "Mozilla/5.0 Stealth"
+        mock_set.assert_called_once_with("cf_clearance", "tok", domain=".peakbagger.com", path="/")
+
+    def test_init_applies_cached_clearance(self):
+        cached = {
+            "user_agent": "Mozilla/5.0 Cached",
+            "cookies": [{"name": "cf_clearance", "value": "c", "domain": ".x", "path": "/"}],
+        }
+        with patch("peakbagger.browser_transport.load_clearance", return_value=cached):
+            client = PeakBaggerClient()
+
+        assert client.session.headers["User-Agent"] == "Mozilla/5.0 Cached"
+
+    def test_solve_challenge_applies_and_caches(self):
+        client = PeakBaggerClient()
+        ua = "Mozilla/5.0 Solved"
+        cookies = [{"name": "cf_clearance", "value": "z", "domain": ".x", "path": "/"}]
+
+        with (
+            patch("peakbagger.browser_transport.solve_challenge", return_value=(ua, cookies)),
+            patch("peakbagger.browser_transport.save_clearance") as mock_save,
+        ):
+            client._solve_challenge("https://www.peakbagger.com/peak.aspx?pid=1630")
+
+        assert client.session.headers["User-Agent"] == ua
+        mock_save.assert_called_once_with(ua, cookies)
 
 
 class TestPeakBaggerClientSession:
