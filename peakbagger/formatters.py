@@ -179,7 +179,7 @@ class PeakFormatter:
                 self.console.print(f"External URL: {report.external_url}")
             self.console.print("")
             self.console.print(Text(report.text))
-            if report != reports[-1]:
+            if index < len(reports):
                 self.console.print("\n" + "-" * 80 + "\n")
 
     def _build_peak_details_table(self, peak: Peak) -> Table:

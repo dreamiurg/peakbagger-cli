@@ -427,6 +427,29 @@ def test_formatter_prints_trip_reports_as_text(
     assert "https://www.peakbagger.com/climber/ascent.aspx?aid=101" in output
 
 
+def test_formatter_separates_equal_trip_reports(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Formatter prints a separator between equal report objects."""
+    formatter = PeakFormatter()
+    report = TripReport(
+        ascent_id="101",
+        climber_name="Avery",
+        climber_id="501",
+        date="2025-07-10",
+        text="firm snow good steps",
+        word_count=4,
+        has_gpx=True,
+        route="South Ridge",
+    )
+
+    formatter.format_trip_reports([report, report.model_copy()], "text")
+
+    output = capsys.readouterr().out
+    assert output.count("-" * 80) == 1
+    assert "Trip Reports (2)" in output
+
+
 def test_formatter_prints_empty_trip_reports_message(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
