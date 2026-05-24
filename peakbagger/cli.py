@@ -10,6 +10,7 @@ from peakbagger.client import PeakBaggerClient
 from peakbagger.formatters import PeakFormatter
 from peakbagger.logging_config import configure_logging
 from peakbagger.scraper import PeakBaggerScraper
+from peakbagger.trip_reports import TripReportCollector
 
 if TYPE_CHECKING:
     from peakbagger.models import Ascent, Peak
@@ -78,6 +79,38 @@ def _apply_date_filters(
     return ascent_list
 
 
+def _validate_trip_report_filters(
+    *,
+    within: str | None,
+    after: str | None,
+    before: str | None,
+) -> None:
+    """Validate trip report filters before any client or collector work."""
+    from datetime import datetime
+
+    if within and (after or before):
+        raise click.UsageError("--within cannot be combined with --after/--before")
+
+    if within:
+        from peakbagger.statistics import AscentAnalyzer
+
+        try:
+            AscentAnalyzer.parse_within_period(within)
+        except ValueError as e:
+            raise click.BadParameter(str(e), param_hint="--within") from e
+
+    for option_name, value in (("--after", after), ("--before", before)):
+        if value is None:
+            continue
+        try:
+            datetime.strptime(value, "%Y-%m-%d")
+        except ValueError as e:
+            raise click.BadParameter(
+                f"{option_name} must be a date in YYYY-MM-DD format",
+                param_hint=option_name,
+            ) from e
+
+
 @click.group()
 @click.version_option(version=__version__)
 @click.option(
@@ -133,6 +166,105 @@ def peak() -> None:
 def ascent() -> None:
     """Commands for working with ascents."""
     pass
+
+
+@main.command("trip-reports")
+@click.argument("peak_id")
+@click.option(
+    "--format",
+    "output_format",
+    type=click.Choice(["text", "json"], case_sensitive=False),
+    default="text",
+    help="Output format (text or json)",
+)
+@click.option(
+    "--limit",
+    type=click.IntRange(min=1),
+    default=15,
+    show_default=True,
+    help="Maximum number of trip reports to display",
+)
+@click.option(
+    "--min-words",
+    type=click.IntRange(min=0),
+    default=1,
+    show_default=True,
+    help="Minimum trip report word count",
+)
+@click.option(
+    "--after",
+    type=str,
+    help="Include only ascents on or after this date (YYYY-MM-DD)",
+)
+@click.option(
+    "--before",
+    type=str,
+    help="Include only ascents on or before this date (YYYY-MM-DD)",
+)
+@click.option(
+    "--within",
+    type=str,
+    help="Include ascents within period from today (e.g., '3m', '1y', '10d')",
+)
+@click.option(
+    "--rate-limit",
+    type=click.FloatRange(min=0),
+    default=2.0,
+    help="Seconds between requests (default: 2.0)",
+)
+@click.pass_context
+def trip_reports(
+    ctx: click.Context,
+    peak_id: str,
+    output_format: str,
+    limit: int,
+    min_words: int,
+    after: str | None,
+    before: str | None,
+    within: str | None,
+    rate_limit: float,
+) -> None:
+    """
+    Get trip reports for a specific peak.
+
+    PEAK_ID: The PeakBagger peak ID (e.g., "1798" for Mount Pilchuck)
+
+    Examples:
+
+      peakbagger trip-reports 1798
+
+      peakbagger trip-reports 1798 --limit 5 --min-words 100
+
+      peakbagger trip-reports 1798 --within 1y --format json
+    """
+    _validate_trip_report_filters(within=within, after=after, before=before)
+
+    client: PeakBaggerClient = PeakBaggerClient(rate_limit_seconds=rate_limit)
+
+    try:
+        scraper: PeakBaggerScraper = PeakBaggerScraper()
+        formatter: PeakFormatter = PeakFormatter()
+        collector: TripReportCollector = TripReportCollector(client, scraper)
+
+        if ctx.obj.get("dump_html"):
+            click.echo(collector.fetch_summary_html(peak_id))
+            return
+
+        reports = collector.collect(
+            peak_id=peak_id,
+            limit=limit,
+            min_words=min_words,
+            within=within,
+            after=after,
+            before=before,
+        )
+        formatter.format_trip_reports(reports, output_format)
+
+    except Exception as e:
+        _error(str(e))
+        raise click.Abort() from e
+    finally:
+        client.close()
 
 
 @peak.command()

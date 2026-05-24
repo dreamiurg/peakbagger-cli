@@ -98,6 +98,16 @@ peakbagger ascent show 12963 --format json
 
 Includes trip reports and route information.
 
+### Get trip reports for a peak
+
+```bash
+peakbagger trip-reports 1798  # Mount Pilchuck
+peakbagger trip-reports 1798 --limit 5 --min-words 100
+peakbagger trip-reports 1798 --within 1y --format json
+```
+
+Filters: `--after DATE`, `--before DATE`, `--within PERIOD` (e.g., `3m`, `1y`, `10d`)
+
 ## Examples
 
 ### Automation with jq
@@ -106,6 +116,7 @@ Includes trip reports and route information.
 # Extract specific fields
 peakbagger peak show 2296 --format json | jq '.elevation.feet'
 peakbagger peak search "Rainier" --format json | jq '.[].pid'
+peakbagger trip-reports 1798 --format json | jq '.[].text'
 
 # Find peaks on a specific list
 peakbagger peak show 2296 --format json | jq '.peak_lists[] | select(.list_name | contains("Bulger"))'

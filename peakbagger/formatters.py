@@ -8,7 +8,7 @@ from rich.console import Console
 from rich.table import Table
 from rich.text import Text
 
-from peakbagger.models import Ascent, AscentStatistics, Peak, SearchResult
+from peakbagger.models import Ascent, AscentStatistics, Peak, SearchResult, TripReport
 
 
 def _strip_emojis(text: str) -> str:
@@ -95,6 +95,19 @@ class PeakFormatter:
                 if peak != peaks[-1]:  # Add separator between peaks
                     self.console.print("\n" + "─" * 80 + "\n")
 
+    def format_trip_reports(self, reports: list[TripReport], output_format: str = "text") -> None:
+        """
+        Format and print trip reports.
+
+        Args:
+            reports: List of TripReport objects
+            output_format: Either 'text' or 'json'
+        """
+        if output_format.lower() == "json":
+            self._print_json([report.to_dict() for report in reports])
+        else:
+            self._print_trip_reports(reports)
+
     def _print_json(self, data: dict[str, Any] | list[dict[str, Any]]) -> None:
         """Print data as formatted JSON.
 
@@ -141,6 +154,33 @@ class PeakFormatter:
             table.add_row(result.pid, result.name, location, range_name, elevation, url)
 
         self.console.print(table)
+
+    def _print_trip_reports(self, reports: list[TripReport]) -> None:
+        """Print trip reports as readable text."""
+        if not reports:
+            self.console.print("[yellow]No trip reports found.[/yellow]")
+            return
+
+        self.console.print(f"\n[bold cyan]Trip Reports ({len(reports)})[/bold cyan]\n")
+        for index, report in enumerate(reports, 1):
+            self.console.print(f"[bold]{index}. {report.climber_name}[/bold]")
+            metadata = [
+                f"Date: {report.date or 'Unknown'}",
+                f"Words: {report.word_count}",
+                f"GPX: {'Yes' if report.has_gpx else 'No'}",
+            ]
+            if report.route:
+                metadata.append(f"Route: {report.route}")
+            if report.climber_id:
+                metadata.append(f"Climber ID: {report.climber_id}")
+            self.console.print(" | ".join(metadata))
+            self.console.print(f"URL: {report.url}")
+            if report.external_url:
+                self.console.print(f"External URL: {report.external_url}")
+            self.console.print("")
+            self.console.print(Text(report.text))
+            if index < len(reports):
+                self.console.print("\n" + "-" * 80 + "\n")
 
     def _build_peak_details_table(self, peak: Peak) -> Table:
         """Build a Rich table with peak metric rows."""
