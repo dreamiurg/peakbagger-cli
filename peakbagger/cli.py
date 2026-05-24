@@ -79,6 +79,30 @@ def _apply_date_filters(
     return ascent_list
 
 
+def _validate_trip_report_filters(
+    *,
+    within: str | None,
+    after: str | None,
+    before: str | None,
+) -> None:
+    """Validate trip report filters before any client or collector work."""
+    from datetime import datetime
+
+    if within and (after or before):
+        raise click.UsageError("--within cannot be combined with --after/--before")
+
+    for option_name, value in (("--after", after), ("--before", before)):
+        if value is None:
+            continue
+        try:
+            datetime.strptime(value, "%Y-%m-%d")
+        except ValueError as e:
+            raise click.BadParameter(
+                f"{option_name} must be a date in YYYY-MM-DD format",
+                param_hint=option_name,
+            ) from e
+
+
 @click.group()
 @click.version_option(version=__version__)
 @click.option(
@@ -176,7 +200,7 @@ def ascent() -> None:
 )
 @click.option(
     "--rate-limit",
-    type=float,
+    type=click.FloatRange(min=0),
     default=2.0,
     help="Seconds between requests (default: 2.0)",
 )
@@ -205,12 +229,15 @@ def trip_reports(
 
       peakbagger trip-reports 1798 --within 1y --format json
     """
+    _validate_trip_report_filters(within=within, after=after, before=before)
+
     client: PeakBaggerClient = PeakBaggerClient(rate_limit_seconds=rate_limit)
-    scraper: PeakBaggerScraper = PeakBaggerScraper()
-    formatter: PeakFormatter = PeakFormatter()
-    collector: TripReportCollector = TripReportCollector(client, scraper)
 
     try:
+        scraper: PeakBaggerScraper = PeakBaggerScraper()
+        formatter: PeakFormatter = PeakFormatter()
+        collector: TripReportCollector = TripReportCollector(client, scraper)
+
         if ctx.obj.get("dump_html"):
             click.echo(collector.fetch_summary_html(peak_id))
             return

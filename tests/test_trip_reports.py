@@ -177,10 +177,12 @@ class StubTripReportCollector:
     def __init__(self, client: Any, scraper: Any) -> None:
         self.client = client
         self.scraper = scraper
+        self.fetch_calls: list[str] = []
         self.collect_calls: list[dict[str, Any]] = []
         StubTripReportCollector.last_instance = self
 
     def fetch_summary_html(self, peak_id: str) -> str:
+        self.fetch_calls.append(peak_id)
         return f"<html>summary for {peak_id}</html>"
 
     def collect(
@@ -232,9 +234,28 @@ class StubScraper:
     """Stub scraper for CLI tests."""
 
 
+class TrackingClient(StubClient):
+    """Stub client that keeps the most recent instance for failure-path checks."""
+
+    last_instance: "TrackingClient | None" = None
+
+    def __init__(self, rate_limit_seconds: float) -> None:
+        super().__init__(rate_limit_seconds)
+        TrackingClient.last_instance = self
+
+
+class RaisingScraper:
+    """Scraper stub that fails during construction."""
+
+    def __init__(self) -> None:
+        raise RuntimeError("scraper construction failed")
+
+
 @pytest.fixture
 def cli_runner() -> CliRunner:
     """Create a Click CLI test runner."""
+    StubTripReportCollector.last_instance = None
+    TrackingClient.last_instance = None
     return CliRunner(env={"COLUMNS": "200"})
 
 
@@ -474,6 +495,7 @@ def test_trip_reports_command_dump_html(
     assert result.exit_code == 0
     assert result.output == "<html>summary for 1798</html>\n"
     assert StubTripReportCollector.last_instance is not None
+    assert StubTripReportCollector.last_instance.fetch_calls == ["1798"]
     assert StubTripReportCollector.last_instance.collect_calls == []
 
 
@@ -483,3 +505,65 @@ def test_trip_reports_command_rejects_zero_limit(cli_runner: CliRunner) -> None:
 
     assert result.exit_code != 0
     assert "Invalid value for '--limit'" in result.output
+
+
+def test_trip_reports_command_rejects_conflicting_date_filters_before_collector(
+    cli_runner: CliRunner,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Click rejects conflicting date filters before collector work starts."""
+    monkeypatch.setattr("peakbagger.cli.PeakBaggerClient", StubClient)
+    monkeypatch.setattr("peakbagger.cli.PeakBaggerScraper", StubScraper)
+    monkeypatch.setattr("peakbagger.cli.TripReportCollector", StubTripReportCollector)
+
+    result = cli_runner.invoke(
+        main,
+        ["trip-reports", "1798", "--within", "1y", "--after", "2025-01-01"],
+    )
+
+    assert result.exit_code != 0
+    assert "--within cannot be combined with --after/--before" in result.output
+    assert StubTripReportCollector.last_instance is None
+
+
+@pytest.mark.parametrize("option", ["--after", "--before"])
+def test_trip_reports_command_rejects_invalid_date_before_collector(
+    cli_runner: CliRunner,
+    monkeypatch: pytest.MonkeyPatch,
+    option: str,
+) -> None:
+    """Click rejects invalid absolute dates before collector work starts."""
+    monkeypatch.setattr("peakbagger.cli.PeakBaggerClient", StubClient)
+    monkeypatch.setattr("peakbagger.cli.PeakBaggerScraper", StubScraper)
+    monkeypatch.setattr("peakbagger.cli.TripReportCollector", StubTripReportCollector)
+
+    result = cli_runner.invoke(main, ["trip-reports", "1798", option, "bad"])
+
+    assert result.exit_code != 0
+    assert f"{option} must be a date in YYYY-MM-DD format" in result.output
+    assert StubTripReportCollector.last_instance is None
+
+
+def test_trip_reports_command_closes_client_when_scraper_construction_fails(
+    cli_runner: CliRunner,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Client is closed when construction fails after client creation."""
+    monkeypatch.setattr("peakbagger.cli.PeakBaggerClient", TrackingClient)
+    monkeypatch.setattr("peakbagger.cli.PeakBaggerScraper", RaisingScraper)
+    monkeypatch.setattr("peakbagger.cli.TripReportCollector", StubTripReportCollector)
+
+    result = cli_runner.invoke(main, ["trip-reports", "1798"])
+
+    assert result.exit_code != 0
+    assert TrackingClient.last_instance is not None
+    assert TrackingClient.last_instance.closed is True
+    assert StubTripReportCollector.last_instance is None
+
+
+def test_trip_reports_command_rejects_negative_rate_limit(cli_runner: CliRunner) -> None:
+    """Click rejects negative rate limits before the command body runs."""
+    result = cli_runner.invoke(main, ["trip-reports", "1798", "--rate-limit", "-0.1"])
+
+    assert result.exit_code != 0
+    assert "Invalid value for '--rate-limit'" in result.output
