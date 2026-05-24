@@ -350,7 +350,8 @@ def test_collector_limit_counts_returned_reports_after_detail_validation() -> No
 
 def test_collector_rejects_conflicting_date_filters() -> None:
     """Relative and absolute date filters are mutually exclusive."""
-    collector = TripReportCollector(FakeClient(), FakeScraper())
+    client = FakeClient()
+    collector = TripReportCollector(client, FakeScraper())
 
     with pytest.raises(ValueError, match="--within cannot be combined"):
         collector.collect(
@@ -361,6 +362,49 @@ def test_collector_rejects_conflicting_date_filters() -> None:
             before=None,
             within="1y",
         )
+    assert client.requests == []
+
+
+@pytest.mark.parametrize(
+    ("option_name", "filters"),
+    [
+        ("--after", {"after": "not-a-date", "before": None, "within": None}),
+        ("--before", {"after": None, "before": "not-a-date", "within": None}),
+    ],
+)
+def test_collector_rejects_invalid_absolute_date_filters_before_fetch(
+    option_name: str,
+    filters: dict[str, str | None],
+) -> None:
+    """Collector validates absolute date filters before network requests."""
+    client = FakeClient()
+    collector = TripReportCollector(client, FakeScraper())
+
+    with pytest.raises(ValueError, match=f"Invalid {option_name} date format"):
+        collector.collect(
+            peak_id="1798",
+            limit=15,
+            min_words=1,
+            **filters,
+        )
+    assert client.requests == []
+
+
+def test_collector_rejects_invalid_within_filter_before_fetch() -> None:
+    """Collector validates relative date filters before network requests."""
+    client = FakeClient()
+    collector = TripReportCollector(client, FakeScraper())
+
+    with pytest.raises(ValueError, match="Invalid period format"):
+        collector.collect(
+            peak_id="1798",
+            limit=15,
+            min_words=1,
+            after=None,
+            before=None,
+            within="later",
+        )
+    assert client.requests == []
 
 
 def test_formatter_prints_trip_reports_as_json(

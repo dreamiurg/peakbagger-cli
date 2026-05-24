@@ -77,6 +77,7 @@ class TripReportCollector:
     ) -> list[TripReport]:
         """Collect filtered trip reports for a peak."""
         filters = _TripReportFilters(**options)
+        self._validate_filters(filters)
         summary_html = self.fetch_summary_html(peak_id)
         summaries = self.scraper.parse_peak_ascents(summary_html)
         candidates = self._filter_summaries(
@@ -114,6 +115,17 @@ class TripReportCollector:
             for ascent in reports
             if ascent.trip_report_words is None or ascent.trip_report_words >= filters.min_words
         ]
+
+    def _validate_filters(self, filters: _TripReportFilters) -> None:
+        """Validate filter options before any network work."""
+        if filters.within and (filters.after or filters.before):
+            raise ValueError("--within cannot be combined with --after/--before")
+        if filters.within:
+            self.analyzer.parse_within_period(filters.within)
+        if filters.after:
+            self._parse_filter_date(filters.after, "--after")
+        if filters.before:
+            self._parse_filter_date(filters.before, "--before")
 
     def _apply_date_filters(
         self,
