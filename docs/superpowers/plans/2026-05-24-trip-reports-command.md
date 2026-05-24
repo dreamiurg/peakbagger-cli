@@ -940,7 +940,7 @@ Expected: PASS.
 ## Self-Review
 
 - Spec coverage: The plan covers top-level command shape, JSON and text output,
-  summary filtering, date filters, word-count filters, rate limiting reuse, dump
+  summary filtering, date filters, word-count filters, rate-limiting reuse, dump
   HTML behavior, README docs, and preservation of existing commands.
 - Placeholder scan: No unresolved placeholder markers or unspecified test-writing steps remain.
 - Type consistency: `TripReport`, `TripReportCollector`, `count_report_words`,
