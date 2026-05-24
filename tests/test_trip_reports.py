@@ -526,6 +526,22 @@ def test_trip_reports_command_rejects_conflicting_date_filters_before_collector(
     assert StubTripReportCollector.last_instance is None
 
 
+def test_trip_reports_command_rejects_invalid_within_before_collector(
+    cli_runner: CliRunner,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Click rejects invalid relative periods before collector work starts."""
+    monkeypatch.setattr("peakbagger.cli.PeakBaggerClient", StubClient)
+    monkeypatch.setattr("peakbagger.cli.PeakBaggerScraper", StubScraper)
+    monkeypatch.setattr("peakbagger.cli.TripReportCollector", StubTripReportCollector)
+
+    result = cli_runner.invoke(main, ["trip-reports", "1798", "--within", "nope"])
+
+    assert result.exit_code != 0
+    assert "Invalid period format" in result.output
+    assert StubTripReportCollector.last_instance is None
+
+
 @pytest.mark.parametrize("option", ["--after", "--before"])
 def test_trip_reports_command_rejects_invalid_date_before_collector(
     cli_runner: CliRunner,

@@ -91,6 +91,14 @@ def _validate_trip_report_filters(
     if within and (after or before):
         raise click.UsageError("--within cannot be combined with --after/--before")
 
+    if within:
+        from peakbagger.statistics import AscentAnalyzer
+
+        try:
+            AscentAnalyzer.parse_within_period(within)
+        except ValueError as e:
+            raise click.BadParameter(str(e), param_hint="--within") from e
+
     for option_name, value in (("--after", after), ("--before", before)):
         if value is None:
             continue
