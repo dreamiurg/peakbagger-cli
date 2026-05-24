@@ -1,7 +1,13 @@
 """Tests for trip report collection and output."""
 
-import pytest
+import json
+from typing import Any
 
+import pytest
+from click.testing import CliRunner
+
+from peakbagger.cli import main
+from peakbagger.formatters import PeakFormatter
 from peakbagger.models import Ascent, TripReport
 from peakbagger.trip_reports import TripReportCollector, count_report_words
 
@@ -163,6 +169,75 @@ class DetailValidationScraper:
         return details.get(ascent_id)
 
 
+class StubTripReportCollector:
+    """Stub collector for CLI tests."""
+
+    last_instance: "StubTripReportCollector | None" = None
+
+    def __init__(self, client: Any, scraper: Any) -> None:
+        self.client = client
+        self.scraper = scraper
+        self.collect_calls: list[dict[str, Any]] = []
+        StubTripReportCollector.last_instance = self
+
+    def fetch_summary_html(self, peak_id: str) -> str:
+        return f"<html>summary for {peak_id}</html>"
+
+    def collect(
+        self,
+        *,
+        peak_id: str,
+        limit: int,
+        min_words: int,
+        within: str | None,
+        after: str | None,
+        before: str | None,
+    ) -> list[TripReport]:
+        self.collect_calls.append(
+            {
+                "peak_id": peak_id,
+                "limit": limit,
+                "min_words": min_words,
+                "within": within,
+                "after": after,
+                "before": before,
+            }
+        )
+        return [
+            TripReport(
+                ascent_id="101",
+                climber_name="Avery",
+                climber_id="501",
+                date="2025-07-10",
+                text="firm snow good steps",
+                word_count=4,
+                has_gpx=True,
+                route="South Ridge",
+            )
+        ]
+
+
+class StubClient:
+    """Stub client for CLI tests."""
+
+    def __init__(self, rate_limit_seconds: float) -> None:
+        self.rate_limit_seconds = rate_limit_seconds
+        self.closed = False
+
+    def close(self) -> None:
+        self.closed = True
+
+
+class StubScraper:
+    """Stub scraper for CLI tests."""
+
+
+@pytest.fixture
+def cli_runner() -> CliRunner:
+    """Create a Click CLI test runner."""
+    return CliRunner(env={"COLUMNS": "200"})
+
+
 def test_count_report_words_counts_peakbagger_text() -> None:
     """Word count treats normal words and contractions as words."""
     assert count_report_words("Snow was firm. Didn't use crampons.") == 6
@@ -265,3 +340,146 @@ def test_collector_rejects_conflicting_date_filters() -> None:
             before=None,
             within="1y",
         )
+
+
+def test_formatter_prints_trip_reports_as_json(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Formatter emits valid JSON for trip report lists."""
+    formatter = PeakFormatter()
+    formatter.format_trip_reports(
+        [
+            TripReport(
+                ascent_id="101",
+                climber_name="Avery",
+                climber_id="501",
+                date="2025-07-10",
+                text="firm snow good steps",
+                word_count=4,
+                has_gpx=True,
+                route="South Ridge",
+            )
+        ],
+        "json",
+    )
+
+    data = json.loads(capsys.readouterr().out)
+    assert data == [
+        {
+            "ascent_id": "101",
+            "url": "https://www.peakbagger.com/climber/ascent.aspx?aid=101",
+            "climber": {"name": "Avery", "id": "501"},
+            "date": "2025-07-10",
+            "text": "firm snow good steps",
+            "word_count": 4,
+            "has_gpx": True,
+            "route": "South Ridge",
+        }
+    ]
+
+
+def test_formatter_prints_trip_reports_as_text(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Formatter text output includes metadata and full report text."""
+    formatter = PeakFormatter()
+    formatter.format_trip_reports(
+        [
+            TripReport(
+                ascent_id="101",
+                climber_name="Avery",
+                climber_id="501",
+                date="2025-07-10",
+                text="firm snow good steps",
+                word_count=4,
+                has_gpx=True,
+                route="South Ridge",
+            )
+        ],
+        "text",
+    )
+
+    output = capsys.readouterr().out
+    assert "Trip Reports (1)" in output
+    assert "Avery" in output
+    assert "firm snow good steps" in output
+    assert "https://www.peakbagger.com/climber/ascent.aspx?aid=101" in output
+
+
+def test_formatter_prints_empty_trip_reports_message(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Formatter text output clearly reports empty trip report results."""
+    formatter = PeakFormatter()
+    formatter.format_trip_reports([], "text")
+
+    assert "No trip reports found." in capsys.readouterr().out
+
+
+def test_trip_reports_command_outputs_json(
+    cli_runner: CliRunner,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """CLI wires options into the collector and emits JSON."""
+    monkeypatch.setattr("peakbagger.cli.PeakBaggerClient", StubClient)
+    monkeypatch.setattr("peakbagger.cli.PeakBaggerScraper", StubScraper)
+    monkeypatch.setattr("peakbagger.cli.TripReportCollector", StubTripReportCollector)
+
+    result = cli_runner.invoke(
+        main,
+        [
+            "trip-reports",
+            "1798",
+            "--limit",
+            "5",
+            "--min-words",
+            "3",
+            "--after",
+            "2025-01-01",
+            "--format",
+            "json",
+            "--rate-limit",
+            "0",
+        ],
+    )
+
+    assert result.exit_code == 0
+    data = json.loads(result.output)
+    assert data[0]["ascent_id"] == "101"
+    assert StubTripReportCollector.last_instance is not None
+    assert StubTripReportCollector.last_instance.collect_calls == [
+        {
+            "peak_id": "1798",
+            "limit": 5,
+            "min_words": 3,
+            "within": None,
+            "after": "2025-01-01",
+            "before": None,
+        }
+    ]
+    assert StubTripReportCollector.last_instance.client.closed is True
+
+
+def test_trip_reports_command_dump_html(
+    cli_runner: CliRunner,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Global --dump-html prints the summary page and skips collection."""
+    monkeypatch.setattr("peakbagger.cli.PeakBaggerClient", StubClient)
+    monkeypatch.setattr("peakbagger.cli.PeakBaggerScraper", StubScraper)
+    monkeypatch.setattr("peakbagger.cli.TripReportCollector", StubTripReportCollector)
+
+    result = cli_runner.invoke(main, ["--dump-html", "trip-reports", "1798"])
+
+    assert result.exit_code == 0
+    assert result.output == "<html>summary for 1798</html>\n"
+    assert StubTripReportCollector.last_instance is not None
+    assert StubTripReportCollector.last_instance.collect_calls == []
+
+
+def test_trip_reports_command_rejects_zero_limit(cli_runner: CliRunner) -> None:
+    """Click rejects zero limits before the collector is called."""
+    result = cli_runner.invoke(main, ["trip-reports", "1798", "--limit", "0"])
+
+    assert result.exit_code != 0
+    assert "Invalid value for '--limit'" in result.output
