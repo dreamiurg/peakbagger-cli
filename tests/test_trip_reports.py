@@ -407,6 +407,41 @@ def test_collector_rejects_invalid_within_filter_before_fetch() -> None:
     assert client.requests == []
 
 
+@pytest.mark.parametrize("limit", [0, -1])
+def test_collector_rejects_invalid_limit_before_fetch(limit: int) -> None:
+    """Collector validates limit before network requests."""
+    client = FakeClient()
+    collector = TripReportCollector(client, FakeScraper())
+
+    with pytest.raises(ValueError, match="limit must be at least 1"):
+        collector.collect(
+            peak_id="1798",
+            limit=limit,
+            min_words=1,
+            after=None,
+            before=None,
+            within=None,
+        )
+    assert client.requests == []
+
+
+def test_collector_rejects_invalid_min_words_before_fetch() -> None:
+    """Collector validates min_words before network requests."""
+    client = FakeClient()
+    collector = TripReportCollector(client, FakeScraper())
+
+    with pytest.raises(ValueError, match="min_words must be non-negative"):
+        collector.collect(
+            peak_id="1798",
+            limit=15,
+            min_words=-1,
+            after=None,
+            before=None,
+            within=None,
+        )
+    assert client.requests == []
+
+
 def test_formatter_prints_trip_reports_as_json(
     capsys: pytest.CaptureFixture[str],
 ) -> None:

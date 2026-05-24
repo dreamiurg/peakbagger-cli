@@ -118,6 +118,10 @@ class TripReportCollector:
 
     def _validate_filters(self, filters: _TripReportFilters) -> None:
         """Validate filter options before any network work."""
+        if filters.limit < 1:
+            raise ValueError("limit must be at least 1")
+        if filters.min_words < 0:
+            raise ValueError("min_words must be non-negative")
         if filters.within and (filters.after or filters.before):
             raise ValueError("--within cannot be combined with --after/--before")
         if filters.within:
