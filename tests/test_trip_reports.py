@@ -348,6 +348,56 @@ def test_collector_limit_counts_returned_reports_after_detail_validation() -> No
     ]
 
 
+def test_collector_stops_fetching_when_limit_is_reached() -> None:
+    """Collector does not fetch more detail pages after satisfying the limit."""
+    client = FakeClient()
+    collector = TripReportCollector(client, FakeScraper())
+
+    reports = collector.collect(
+        peak_id="1798",
+        limit=1,
+        min_words=1,
+        after=None,
+        before=None,
+        within=None,
+    )
+
+    assert [report.ascent_id for report in reports] == ["101"]
+    assert client.requests == [
+        (
+            "/climber/PeakAscents.aspx",
+            {"pid": "1798", "sort": "ascentdate", "u": "ft", "y": "9999"},
+        ),
+        ("/climber/ascent.aspx", {"aid": "101"}),
+    ]
+
+
+def test_collector_applies_within_filter_before_detail_fetches() -> None:
+    """Collector supports relative date filters before detail-page fetches."""
+    client = FakeClient()
+    collector = TripReportCollector(client, FakeScraper())
+
+    reports = collector.collect(
+        peak_id="1798",
+        limit=10,
+        min_words=1,
+        after=None,
+        before=None,
+        within="100y",
+    )
+
+    assert [report.ascent_id for report in reports] == ["101", "104"]
+    assert client.requests == [
+        (
+            "/climber/PeakAscents.aspx",
+            {"pid": "1798", "sort": "ascentdate", "u": "ft", "y": "9999"},
+        ),
+        ("/climber/ascent.aspx", {"aid": "101"}),
+        ("/climber/ascent.aspx", {"aid": "102"}),
+        ("/climber/ascent.aspx", {"aid": "104"}),
+    ]
+
+
 def test_collector_rejects_conflicting_date_filters() -> None:
     """Relative and absolute date filters are mutually exclusive."""
     client = FakeClient()

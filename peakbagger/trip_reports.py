@@ -138,9 +138,6 @@ class TripReportCollector:
         filters: _TripReportFilters,
     ) -> list[Ascent]:
         """Apply relative or absolute date filters to ascent summaries."""
-        if filters.within and (filters.after or filters.before):
-            raise ValueError("--within cannot be combined with --after/--before")
-
         if filters.within:
             period = self.analyzer.parse_within_period(filters.within)
             return self.analyzer.filter_by_date_range(
@@ -161,10 +158,8 @@ class TripReportCollector:
         return summaries
 
     @staticmethod
-    def _parse_filter_date(value: str | None, option_name: str) -> datetime | None:
+    def _parse_filter_date(value: str, option_name: str) -> datetime:
         """Parse a YYYY-MM-DD filter date."""
-        if value is None:
-            return None
         try:
             return datetime.strptime(value, "%Y-%m-%d")
         except ValueError as e:
