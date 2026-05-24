@@ -82,15 +82,20 @@ class TripReportCollector:
         candidates = self._filter_summaries(
             summaries=summaries,
             filters=filters,
-        )[: filters.limit]
+        )
 
         reports: list[TripReport] = []
         for summary in candidates:
+            if len(reports) == filters.limit:
+                break
             detail_html = self.client.get("/climber/ascent.aspx", params={"aid": summary.ascent_id})
             detail = self.scraper.parse_ascent_detail(detail_html, summary.ascent_id)
             if detail is None or not detail.trip_report_text:
                 continue
-            report = self._build_report(detail=detail, summary=summary)
+            text = detail.trip_report_text.strip()
+            if not text:
+                continue
+            report = self._build_report(detail=detail, summary=summary, text=text)
             if report.word_count >= filters.min_words:
                 reports.append(report)
         return reports
@@ -152,9 +157,8 @@ class TripReportCollector:
             ) from e
 
     @staticmethod
-    def _build_report(*, detail: Ascent, summary: Ascent) -> TripReport:
+    def _build_report(*, detail: Ascent, summary: Ascent, text: str) -> TripReport:
         """Build a TripReport from detail data with summary fallbacks."""
-        text = detail.trip_report_text or ""
         return TripReport(
             ascent_id=detail.ascent_id,
             climber_name=detail.climber_name,

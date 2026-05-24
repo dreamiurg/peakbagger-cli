@@ -99,6 +99,70 @@ class FakeScraper:
         return details.get(ascent_id)
 
 
+class DetailValidationScraper:
+    """Fake scraper with early detail failures before a valid report."""
+
+    def parse_peak_ascents(self, html: str) -> list[Ascent]:
+        assert html == "summary-html"
+        return [
+            Ascent(
+                ascent_id="201",
+                climber_name="Emery",
+                date="2025-08-01",
+                has_trip_report=True,
+                trip_report_words=50,
+            ),
+            Ascent(
+                ascent_id="202",
+                climber_name="Finley",
+                date="2025-08-02",
+                has_trip_report=True,
+                trip_report_words=50,
+            ),
+            Ascent(
+                ascent_id="203",
+                climber_name="Gray",
+                date="2025-08-03",
+                has_trip_report=True,
+                trip_report_words=50,
+            ),
+            Ascent(
+                ascent_id="204",
+                climber_name="Harper",
+                date="2025-08-04",
+                has_trip_report=True,
+                trip_report_words=50,
+            ),
+        ]
+
+    def parse_ascent_detail(self, html: str, ascent_id: str) -> Ascent | None:
+        details = {
+            "201": Ascent(
+                ascent_id="201",
+                climber_name="Emery",
+                date="2025-08-01",
+                has_trip_report=True,
+                trip_report_text="   \n\t   ",
+            ),
+            "202": Ascent(
+                ascent_id="202",
+                climber_name="Finley",
+                date="2025-08-02",
+                has_trip_report=True,
+                trip_report_text="too short",
+            ),
+            "204": Ascent(
+                ascent_id="204",
+                climber_name="Harper",
+                date="2025-08-04",
+                has_trip_report=True,
+                trip_report_text="  " + " ".join(f"valid{i}" for i in range(12)) + "  ",
+            ),
+        }
+        assert html == f"detail-html-{ascent_id}"
+        return details.get(ascent_id)
+
+
 def test_count_report_words_counts_peakbagger_text() -> None:
     """Word count treats normal words and contractions as words."""
     assert count_report_words("Snow was firm. Didn't use crampons.") == 6
@@ -156,6 +220,35 @@ def test_collector_filters_before_detail_fetches() -> None:
             {"pid": "1798", "sort": "ascentdate", "u": "ft", "y": "9999"},
         ),
         ("/climber/ascent.aspx", {"aid": "101"}),
+    ]
+
+
+def test_collector_limit_counts_returned_reports_after_detail_validation() -> None:
+    """Collector keeps fetching candidates until it returns the requested reports."""
+    client = FakeClient()
+    collector = TripReportCollector(client, DetailValidationScraper())
+
+    reports = collector.collect(
+        peak_id="1798",
+        limit=1,
+        min_words=10,
+        after="2025-01-01",
+        before=None,
+        within=None,
+    )
+
+    assert [report.ascent_id for report in reports] == ["204"]
+    assert reports[0].text == " ".join(f"valid{i}" for i in range(12))
+    assert reports[0].word_count == 12
+    assert client.requests == [
+        (
+            "/climber/PeakAscents.aspx",
+            {"pid": "1798", "sort": "ascentdate", "u": "ft", "y": "9999"},
+        ),
+        ("/climber/ascent.aspx", {"aid": "201"}),
+        ("/climber/ascent.aspx", {"aid": "202"}),
+        ("/climber/ascent.aspx", {"aid": "203"}),
+        ("/climber/ascent.aspx", {"aid": "204"}),
     ]
 
 
