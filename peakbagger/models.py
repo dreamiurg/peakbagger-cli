@@ -191,6 +191,44 @@ class Ascent(BaseModel):
         return result
 
 
+class TripReport(BaseModel):
+    """Detailed trip report output for one ascent."""
+
+    ascent_id: str = Field(description="Ascent ID")
+    climber_name: str = Field(description="Name of climber")
+    climber_id: str | None = Field(None, description="Climber ID")
+    date: str | None = Field(None, description="Ascent date")
+    text: str = Field(description="Full trip report text")
+    word_count: int = Field(description="Number of words in trip report text")
+    has_gpx: bool = Field(False, description="Whether ascent has a GPX track")
+    route: str | None = Field(None, description="Route name")
+    external_url: str | None = Field(None, description="External trip report URL")
+
+    @property
+    def url(self) -> str:
+        """Return the PeakBagger ascent URL."""
+        return f"https://www.peakbagger.com/climber/ascent.aspx?aid={self.ascent_id}"
+
+    def to_dict(self) -> dict[str, Any]:
+        """Convert trip report to dictionary for JSON serialization."""
+        result: dict[str, Any] = {
+            "ascent_id": self.ascent_id,
+            "url": self.url,
+            "climber": {
+                "name": self.climber_name,
+                "id": self.climber_id,
+            },
+            "date": self.date,
+            "text": self.text,
+            "word_count": self.word_count,
+            "has_gpx": self.has_gpx,
+            "route": self.route,
+        }
+        if self.external_url:
+            result["external_url"] = self.external_url
+        return result
+
+
 class AscentStatistics(BaseModel):
     """Statistics about ascents of a peak."""
 
