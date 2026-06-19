@@ -164,6 +164,9 @@ jobs:
 
       - run: uv build
 
+      - name: Validate distribution metadata
+        run: python scripts/validate_distribution.py dist
+
   validate-pr-title:
     name: Validate PR title
     runs-on: ubuntu-latest

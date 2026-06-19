@@ -46,10 +46,10 @@ jobs:
       - name: Build package
         run: uv build
 
+      - name: Validate distribution metadata
+        run: python scripts/validate_distribution.py dist
+
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@cef221092ed1bacb1cc03d23a2d87d1d172e277b  # release/v1
         with:
           print-hash: true
-          # Don't fail the release if the version is already on PyPI (e.g. a
-          # re-run or double-trigger); skip the upload instead of erroring 400.
-          skip-existing: true
