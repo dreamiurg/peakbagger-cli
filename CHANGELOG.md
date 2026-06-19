@@ -5,6 +5,18 @@
 
 * add field parity and URLs to ascent show text output ([#18](https://github.com/dreamiurg/peakbagger-cli/issues/18)) ([5718c82](https://github.com/dreamiurg/peakbagger-cli/commit/5718c82eaeae17e83599cae22c29335f4daf8df2))
 
+## [1.11.0](https://github.com/dreamiurg/peakbagger-cli/compare/v1.10.0...v1.11.0) (2026-06-19)
+
+
+### Features
+
+* **cli:** add trip reports command ([#83](https://github.com/dreamiurg/peakbagger-cli/issues/83)) ([2219343](https://github.com/dreamiurg/peakbagger-cli/commit/22193433dca1664bc410b28bbf7cdfb7d8c71a64))
+
+
+### Bug Fixes
+
+* validate browser extra before publishing ([#88](https://github.com/dreamiurg/peakbagger-cli/issues/88)) ([3e0feda](https://github.com/dreamiurg/peakbagger-cli/commit/3e0feda5e93ffbef5f3506591b5fa98c4387f20a))
+
 ## [1.10.0](https://github.com/dreamiurg/peakbagger-cli/compare/v1.9.3...v1.10.0) (2026-05-22)
 
 
