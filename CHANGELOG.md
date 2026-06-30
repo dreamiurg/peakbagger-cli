@@ -5,6 +5,13 @@
 
 * add field parity and URLs to ascent show text output ([#18](https://github.com/dreamiurg/peakbagger-cli/issues/18)) ([5718c82](https://github.com/dreamiurg/peakbagger-cli/commit/5718c82eaeae17e83599cae22c29335f4daf8df2))
 
+## [1.11.1](https://github.com/dreamiurg/peakbagger-cli/compare/v1.11.0...v1.11.1) (2026-06-30)
+
+
+### Bug Fixes
+
+* release dependency compatibility update ([#90](https://github.com/dreamiurg/peakbagger-cli/issues/90)) ([5d36d21](https://github.com/dreamiurg/peakbagger-cli/commit/5d36d2112bd5e0d803cb9f499d75d5afd534884e))
+
 ## [1.11.0](https://github.com/dreamiurg/peakbagger-cli/compare/v1.10.0...v1.11.0) (2026-06-19)
 
 
