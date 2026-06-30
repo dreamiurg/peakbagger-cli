@@ -1,7 +1,7 @@
 """HTTP client for PeakBagger.com with rate limiting and Cloudflare bypass."""
 
 import time
-from typing import TYPE_CHECKING, Any, cast
+from typing import TYPE_CHECKING, Any
 
 import cloudscraper
 from loguru import logger
@@ -154,7 +154,7 @@ class PeakBaggerClient:
 
         elapsed_ms = (time.time() - start_time) * 1000
         logger.info(f"GET {url} - {response.status_code} - {elapsed_ms:.0f}ms")
-        return cast("str", response.text)
+        return response.text
 
     def close(self) -> None:
         """Close the session."""
