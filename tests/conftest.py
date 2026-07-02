@@ -9,6 +9,13 @@ def isolate_cache_dir(tmp_path, monkeypatch):
     monkeypatch.setenv("XDG_CACHE_HOME", str(tmp_path / "cache"))
 
 
+@pytest.fixture(autouse=True)
+def neutral_color_env(monkeypatch):
+    """Strip color-forcing env vars so Rich emits plain text under capture."""
+    monkeypatch.delenv("FORCE_COLOR", raising=False)
+    monkeypatch.delenv("CLICOLOR_FORCE", raising=False)
+
+
 @pytest.fixture(scope="module")
 def vcr_config():
     """
