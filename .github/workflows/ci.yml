@@ -75,7 +75,7 @@ jobs:
         run: uv sync --extra dev
 
       - name: Run ty
-        run: uvx ty check peakbagger
+        run: uv run ty check peakbagger
 
   test:
     name: Test on ${{ matrix.os }} - Python ${{ matrix.python-version }}
