@@ -1,0 +1,5 @@
+[apps._default]
+enabled = false
+
+[mcp_servers.notion_personal]
+url = "https://mcp.notion.com/mcp"
